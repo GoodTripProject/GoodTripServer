@@ -1,6 +1,7 @@
 package com.example.goodtripserver.places
 
 import PlacesResponce
+import PlacesResponse
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.net.http.*
 import org.springframework.http.*
@@ -38,10 +39,10 @@ class PlacesControler {
         val objectMapper = jacksonObjectMapper()//переместить
 
         if (response.statusCode() == 200) {//TODO сделать с HttpStatus.OK
-            val places = mutableListOf<PlacesResponce>()
+            val places = mutableListOf<PlacesResponse>()
             val responseObject = objectMapper.readTree(response.body())
             responseObject["results"].forEach {
-                val place = PlacesResponce(
+                val place = PlacesResponse(
                     name = it["name"].toString(),
                     icon = it["icon"].toString(),//мб тоже стоит сделать проверку
                     lat = it["geometry"]["location"]["lat"].asDouble(),

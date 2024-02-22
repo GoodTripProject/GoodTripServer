@@ -1,7 +1,7 @@
 import jakarta.validation.constraints.NotBlank
 import org.jetbrains.annotations.NotNull
 
-class PlacesResponce(
+class PlacesResponse(
     @NotBlank(message = "field \"name\" can't be null")
     val name: String,
     @NotNull
