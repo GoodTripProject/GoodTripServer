@@ -1,6 +1,7 @@
 package com.example.goodtripserver.places
 
-//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import PlacesResponce
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.net.http.*
 import org.springframework.http.*
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,28 +16,43 @@ import java.net.http.HttpRequest
 class PlacesControler {
 
 
-    private fun getUrl(placeParams: PlaceParams) =
+    private fun getUrl(placeRequest: PlaceRequest) =
         UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
-            .queryParam("location", placeParams.location.replaceFirst('%', '?'))//smth here
-            .queryParam("radius", placeParams.radius.toString())
-            .queryParam("key", "API_TOKEN")
+            .queryParam("location", placeRequest.location.replaceFirst('%', '?'))//smth here
+            .queryParam("radius", placeRequest.radius.toString())
+            .queryParam("key", /*TODO*/)
             .encode()
             .toUriString().replace('?', '%').replaceFirst('%', '?')//TODO сделать менее бабайским
 
 
     @GetMapping("/places")
     @ResponseBody
-            /*suspend*/ fun getNearPlaces(@RequestBody placeParams: PlaceParams): ResponseEntity<String> {//TODO поменять на Array<Place>
-        val url = getUrl(placeParams)
+            /*suspend*/ fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): Any {//TODO поменять на Array<Place>
+        val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(URI.create(url))
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-//        val objectMapper = jacksonObjectMapper()//понадобится
+        val objectMapper = jacksonObjectMapper()//переместить
 
+        if (response.statusCode() == 200) {//TODO сделать с HttpStatus.OK
+            val places = mutableListOf<PlacesResponce>()
+            val responseObject = objectMapper.readTree(response.body())
+            responseObject["results"].forEach {
+                val place = PlacesResponce(
+                    name = it["name"].toString(),
+                    icon = it["icon"].toString(),//мб тоже стоит сделать проверку
+                    lat = it["geometry"]["location"]["lat"].asDouble(),
+                    lng = it["geometry"]["location"]["lng"].asDouble(),
+                    rating = it?.get("rating")?.asInt() ?: 0
+                )
+                places.add(place)
+            }
+            return ResponseEntity.ok(places)
+        }
         //TODO ошибку тоже обработать
-        return ResponseEntity.ok(response.body())
+        return ResponseEntity.badRequest()
     }
 }
