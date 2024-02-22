@@ -1,3 +1,5 @@
+package com.example.goodtripserver.places
+
 import jakarta.validation.constraints.NotBlank
 import org.jetbrains.annotations.NotNull
 
