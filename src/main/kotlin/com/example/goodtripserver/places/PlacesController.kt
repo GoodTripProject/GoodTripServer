@@ -18,19 +18,19 @@ class PlacesController {
     private final val objectMapper = jacksonObjectMapper()
 
     private fun getUrl(placeRequest: PlaceRequest): String {
-        var url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+        val url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
             .queryParam("location", placeRequest.location.replaceFirst('%', '?'))//smth here
             .queryParam("radius", placeRequest.radius.toString())
-        if (!placeRequest.rankBy.isNullOrEmpty()) {
-            url = url.queryParam("rankBy", placeRequest.rankBy)
+        if (!placeRequest.rankBy.isNullOrEmpty()) { //TODO глянуть, как приходят данные
+            url.queryParam("rankBy", placeRequest.rankBy)
         }
-        if (placeRequest.type != null) {
-            url = url.queryParam("type", placeRequest.type)
+        placeRequest.type?.let {
+            url.queryParam("rankBy", placeRequest.rankBy)
         }
         return url.queryParam("key", "API_KEY")
             .encode()
             .toUriString().replace('?', '%')
-            .replaceFirst('%', '?')//TODO сделать менее бабайским и добавить поля черещ let
+            .replaceFirst('%', '?')//TODO сделать менее бабайским и добавить поля нормально
     }
 
     //TODO че по стилю

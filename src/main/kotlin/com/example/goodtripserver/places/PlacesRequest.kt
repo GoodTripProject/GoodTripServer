@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank
 import org.jetbrains.annotations.NotNull
 
 
-class PlaceRequest(
+data class PlaceRequest(
     @NotBlank(message = "field \"location\" can't be null")
     val location: String,
 
