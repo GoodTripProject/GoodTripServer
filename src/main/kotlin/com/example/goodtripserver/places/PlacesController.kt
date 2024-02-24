@@ -17,20 +17,28 @@ class PlacesController {
 
     private final val objectMapper = jacksonObjectMapper()
 
-    private fun getUrl(placeRequest: PlaceRequest) =
-        UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+    private fun getUrl(placeRequest: PlaceRequest): String {
+        var url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
             .queryParam("location", placeRequest.location.replaceFirst('%', '?'))//smth here
             .queryParam("radius", placeRequest.radius.toString())
-            .queryParam("key", "API_KEY")
+        if (!placeRequest.rankBy.isNullOrEmpty()) {
+            url = url.queryParam("rankBy", placeRequest.rankBy)
+        }
+        if (placeRequest.type != null) {
+            url = url.queryParam("type", placeRequest.type)
+        }
+        return url.queryParam("key", "API_KEY")
             .encode()
-            .toUriString().replace('?', '%').replaceFirst('%', '?')//TODO сделать менее бабайским
+            .toUriString().replace('?', '%')
+            .replaceFirst('%', '?')//TODO сделать менее бабайским и добавить поля черещ let
+    }
 
     //TODO че по стилю
     private fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString(),
-        icon = this["icon"].toString(),//мб тоже стоит сделать проверку
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
+        icon = this["icon"].toString(),//мб тоже стоит сделать проверку
         rating = this.get("rating")?.asInt() ?: 0
     )
 

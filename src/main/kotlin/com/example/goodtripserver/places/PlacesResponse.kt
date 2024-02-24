@@ -11,7 +11,7 @@ class PlacesResponse(
     @NotNull
     val lng: Double,
 
-    val icon: String,
+    val icon: String,//TODO поменять на фото
     @NotNull
     val rating: Int,
 )
