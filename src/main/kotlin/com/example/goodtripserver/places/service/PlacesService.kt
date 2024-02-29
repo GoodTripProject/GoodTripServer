@@ -1,21 +1,22 @@
-package com.example.goodtripserver.places
+package com.example.goodtripserver.places.service
 
+import com.example.goodtripserver.places.model.PlaceRequest
+import com.example.goodtripserver.places.model.PlacesResponse
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import java.net.http.*
-import org.springframework.http.*
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
+import java.net.http.HttpClient
 import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
-@RestController
-class PlacesController {
+@Service
+class PlacesService {
 
-    private final val objectMapper = jacksonObjectMapper()
+    private val objectMapper = jacksonObjectMapper()
 
     private fun getUrl(placeRequest: PlaceRequest): String {
         val url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
@@ -42,9 +43,7 @@ class PlacesController {
         rating = this.get("rating")?.asInt() ?: 0
     )
 
-    @GetMapping("/places")
-    @ResponseBody
-    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): Any {//TODO make it suspend
+    fun getNearPlaces(placeRequest: PlaceRequest): Any {
         val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
