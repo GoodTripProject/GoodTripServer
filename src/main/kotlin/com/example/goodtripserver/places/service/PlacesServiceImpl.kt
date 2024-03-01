@@ -20,9 +20,9 @@ class PlacesServiceImpl : PlacesService {
 
     private fun getUrl(placeRequest: PlaceRequest): String {
         val url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
-            .queryParam("location", placeRequest.location.replaceFirst('%', '?'))//smth here
+            .queryParam("location", placeRequest.location.replaceFirst('%', '?'))
             .queryParam("radius", placeRequest.radius.toString())
-        if (!placeRequest.rankBy.isNullOrEmpty()) { //TODO глянуть, как приходят данные
+        if (!placeRequest.rankBy.isNullOrEmpty()) {
             url.queryParam("rankBy", placeRequest.rankBy)
         }
         placeRequest.type?.let {
@@ -31,7 +31,7 @@ class PlacesServiceImpl : PlacesService {
         return url.queryParam("key", "API_KEY")
             .encode()
             .toUriString().replace('?', '%')
-            .replaceFirst('%', '?')//TODO сделать менее бабайским и добавить поля нормально
+            .replaceFirst('%', '?')
     }
 
     //TODO че по стилю
