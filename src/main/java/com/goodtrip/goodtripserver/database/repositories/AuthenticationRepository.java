@@ -2,6 +2,7 @@ package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.HibernateUtility;
 import com.goodtrip.goodtripserver.database.models.User;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -12,6 +13,7 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 import java.util.Optional;
+
 
 public class AuthenticationRepository {
 
@@ -69,6 +71,21 @@ public class AuthenticationRepository {
 
     public boolean isUserExists(String username) {
         return getSalt(username).isPresent();
+    }
+
+    public void updateToken(String username,String hashedPassword,String hashedToken){
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            Query query = session.createQuery(
+                    "update User m set m.hashedToken = :hashedToken " +
+                            " where m.username = :username" +
+                            " and m.hashedPassword = :hashedPassword"
+                    ,null).setParameter("hashedToken", hashedToken)
+                    .setParameter("username",username)
+                    .setParameter("hashedPassword",hashedPassword);
+            Transaction transaction = session.beginTransaction();
+            query.executeUpdate();
+            transaction.commit();
+        }
     }
 
 }
