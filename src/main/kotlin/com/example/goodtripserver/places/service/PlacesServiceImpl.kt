@@ -43,7 +43,7 @@ class PlacesServiceImpl : PlacesService {
         rating = this.get("rating")?.asInt() ?: 0
     )
 
-    override fun getNearPlaces(placeRequest: PlaceRequest): Any {
+    override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
         val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
