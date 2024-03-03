@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id 'org.springframework.boot' version '3.2.2'
+    id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
+    id 'java'
+    id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
 }
 
 group = 'com.example'
@@ -19,12 +21,22 @@ repositories {
 }
 
 dependencies {
+    implementation  'org.hibernate.orm:hibernate-platform:6.4.4.Final'
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+    implementation 'jakarta.transaction:jakarta.transaction-api'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.2'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 tasks.withType(KotlinCompile) {
