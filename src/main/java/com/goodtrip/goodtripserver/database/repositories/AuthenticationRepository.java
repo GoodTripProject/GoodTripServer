@@ -58,7 +58,7 @@ public class AuthenticationRepository {
     }
 
     /**
-     * Creates new user and add him to database (only if user with this login did not exist).
+     * Creates new user and add him to database (only if user with this login did not exist and token is unique).
      *
      * @param username       username (usually email)
      * @param handle         handle of user
@@ -67,11 +67,11 @@ public class AuthenticationRepository {
      * @param name           name
      * @param surname        surname
      * @param salt           salt to save his password
-     * @return true if user added, false if user existed
+     * @return true if user added, false if user existed or token is not unique
      */
     public boolean signUpifNotExists(String username, String handle, String hashedPassword,
                                      String hashedToken, String name, String surname, String salt) {
-        if (isUserExists(username)) {
+        if (isUserExists(username) || isTokenFree(hashedToken)) {
             return false;
         }
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
@@ -131,6 +131,35 @@ public class AuthenticationRepository {
             query.executeUpdate();
             transaction.commit();
         }
+    }
+
+    /**
+     * Login user with token.
+     *
+     * @param hashedToken token of user.
+     * @return Optional.empty() if token is not valid, User otherwise
+     */
+    public Optional<User> loginUserWithToken(String hashedToken) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            TypedQuery<User> query = session.createQuery(
+                            "from User m where m.hashedToken = :hashedToken", User.class)
+                    .setParameter("hashedToken", hashedToken);
+            List<User> results = query.getResultList();
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(results.getFirst());
+        }
+    }
+
+    /**
+     * Checks if token is free.
+     *
+     * @param hashedToken token
+     * @return true if token is free, false otherwise
+     */
+    public boolean isTokenFree(String hashedToken) {
+        return loginUserWithToken(hashedToken).isEmpty();
     }
 
 }
