@@ -58,7 +58,7 @@ public class AuthenticationRepository {
     }
 
     /**
-     * Creates new user and add him to database.
+     * Creates new user and add him to database (only if user with this login did not exist).
      *
      * @param username       username (usually email)
      * @param handle         handle of user
@@ -67,13 +67,18 @@ public class AuthenticationRepository {
      * @param name           name
      * @param surname        surname
      * @param salt           salt to save his password
+     * @return true if user added, false if user existed
      */
-    public void signUp(String username, String handle, String hashedPassword,
-                       String hashedToken, String name, String surname, String salt) {
+    public boolean signUpifNotExists(String username, String handle, String hashedPassword,
+                                     String hashedToken, String name, String surname, String salt) {
+        if (isUserExists(username)) {
+            return false;
+        }
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             session.persist(new User(username, handle, hashedPassword, hashedToken, name, surname, salt));
             transaction.commit();
+            return true;
         }
     }
 
