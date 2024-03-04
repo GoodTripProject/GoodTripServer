@@ -1,39 +1,20 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
-import com.goodtrip.goodtripserver.database.HibernateUtility;
 import com.goodtrip.goodtripserver.database.models.User;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-import java.util.List;
 import java.util.Optional;
-
 
 /**
  * Repository of authentication.
  */
-public class AuthenticationRepository {
-
+public interface AuthenticationRepository {
     /**
      * Get salt for user.
      *
      * @param username username (usually email)
      * @return Optional.empty() if user does not exist, salt of user otherwise.
      */
-    public Optional<String> getSalt(String username) {
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<String> query = session.createQuery(
-                            "select m.salt from User m where m.username = :username", String.class)
-                    .setParameter("username", username);
-            List<String> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
-        }
-    }
+    Optional<String> getSalt(String username);
 
     /**
      * Login user.
@@ -42,20 +23,7 @@ public class AuthenticationRepository {
      * @param hashedPassword hashed password
      * @return Optional.empty() if user have incorrect password or username, user otherwise
      */
-    public Optional<User> login(String username, String hashedPassword) {
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<User> query = session.createQuery(
-                            "from User m where m.username = :username" +
-                                    " and m.hashedPassword = :hashedPassword", User.class)
-                    .setParameter("username", username)
-                    .setParameter("hashedPassword", hashedPassword);
-            List<User> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
-        }
-    }
+    Optional<User> login(String username, String hashedPassword);
 
     /**
      * Creates new user and add him to database (only if user with this login did not exist and token is unique).
@@ -69,31 +37,8 @@ public class AuthenticationRepository {
      * @param salt           salt to save his password
      * @return true if user added, false if user existed or token is not unique
      */
-    public boolean signUpifNotExists(String username, String handle, String hashedPassword,
-                                     String hashedToken, String name, String surname, String salt) {
-        if (isUserExists(username) || !isTokenFree(hashedToken)) {
-            return false;
-        }
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(new User(username, handle, hashedPassword, hashedToken, name, surname, salt));
-            transaction.commit();
-            return true;
-        }
-    }
-
-    /**
-     * Delete user.
-     *
-     * @param user User
-     */
-    private void deleteUser(User user) {
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.remove(user);
-            transaction.commit();
-        }
-    }
+    boolean signUpifNotExists(String username, String handle, String hashedPassword,
+                              String hashedToken, String name, String surname, String salt);
 
     /**
      * Delete user from database if user exists.
@@ -101,13 +46,7 @@ public class AuthenticationRepository {
      * @param username       username (usually email).
      * @param hashedPassword hashed password of user.
      */
-    public void deleteUserIfExists(String username, String hashedPassword) {
-        Optional<User> user = login(username, hashedPassword);
-        if (user.isEmpty()) {
-            return;
-        }
-        deleteUser(user.get());
-    }
+    void deleteUserIfExists(String username, String hashedPassword);
 
     /**
      * Checks if user exists in database.
@@ -115,10 +54,7 @@ public class AuthenticationRepository {
      * @param username username (usually email)
      * @return true if user exists in database, false otherwise
      */
-    public boolean isUserExists(String username) {
-        return getSalt(username).isPresent();
-    }
-
+    boolean isUserExists(String username);
 
     /**
      * Update token of user if user exists.
@@ -127,20 +63,7 @@ public class AuthenticationRepository {
      * @param hashedPassword - hashed password of user.
      * @param hashedToken    - new hashed token.
      */
-    public void updateToken(String username, String hashedPassword, String hashedToken) {
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            Query query = session.createQuery(
-                            "update User m set m.hashedToken = :hashedToken " +
-                                    " where m.username = :username" +
-                                    " and m.hashedPassword = :hashedPassword"
-                            , null).setParameter("hashedToken", hashedToken)
-                    .setParameter("username", username)
-                    .setParameter("hashedPassword", hashedPassword);
-            Transaction transaction = session.beginTransaction();
-            query.executeUpdate();
-            transaction.commit();
-        }
-    }
+    void updateToken(String username, String hashedPassword, String hashedToken);
 
     /**
      * Login user with token.
@@ -148,18 +71,7 @@ public class AuthenticationRepository {
      * @param hashedToken token of user.
      * @return Optional.empty() if token is not valid, User otherwise
      */
-    public Optional<User> loginUserWithToken(String hashedToken) {
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<User> query = session.createQuery(
-                            "from User m where m.hashedToken = :hashedToken", User.class)
-                    .setParameter("hashedToken", hashedToken);
-            List<User> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
-        }
-    }
+    Optional<User> loginUserWithToken(String hashedToken);
 
     /**
      * Checks if token is free.
@@ -167,21 +79,12 @@ public class AuthenticationRepository {
      * @param hashedToken token
      * @return true if token is free, false otherwise
      */
-    public boolean isTokenFree(String hashedToken) {
-        return loginUserWithToken(hashedToken).isEmpty();
-    }
+    boolean isTokenFree(String hashedToken);
 
     /**
      * Deletes user with token.
      *
      * @param hashedToken token of user
      */
-    public void deleteUserWithToken(String hashedToken) {
-        Optional<User> user = loginUserWithToken(hashedToken);
-        if (user.isEmpty()) {
-            return;
-        }
-        deleteUser(user.get());
-    }
-
+    void deleteUserWithToken(String hashedToken);
 }

@@ -2,6 +2,7 @@ package com.goodtrip.goodtripserver.database;
 
 import com.goodtrip.goodtripserver.database.models.User;
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository;
+import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepositoryImplementation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthenticationTests {
-    AuthenticationRepository authenticationRepository = new AuthenticationRepository();
+    AuthenticationRepository authenticationRepository = new AuthenticationRepositoryImplementation();
 
     @Test
     public void simpleLoginFailTest() {
