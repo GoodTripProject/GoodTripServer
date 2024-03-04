@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.Optional;
 /**
  * Repository of authentication implementation.
  */
+@Repository
 public class AuthenticationRepositoryImplementation implements AuthenticationRepository {
 
     private <T> Optional<T> getFirstIfExists(List<T> results){
@@ -115,7 +117,7 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
     }
 
 
-    public void deleteUserWithToken(String hashedToken) {
+    public void deleteUserWithTokenIfExists(String hashedToken) {
         Optional<User> user = loginUserWithToken(hashedToken);
         if (user.isEmpty()) {
             return;
