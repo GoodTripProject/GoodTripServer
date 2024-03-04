@@ -25,7 +25,7 @@ public class AuthenticationTests {
     public void simpleSignUpTest() {
         authenticationRepository.deleteUserIfExists("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.login("a", "c"));
-        authenticationRepository.signUp("a", "b", "c", "d", "e", "f", "g");
+        authenticationRepository.signUpifNotExists("a", "b", "c", "d", "e", "f", "g");
         Optional<User> user = authenticationRepository.login("a", "c");
         assertTrue(user.isPresent());
         Optional<String> salt = authenticationRepository.getSalt("a");
@@ -33,12 +33,30 @@ public class AuthenticationTests {
             fail();
         }
         assertEquals("g", salt.get());
-        authenticationRepository.updateToken("a","c","new_token");
+        authenticationRepository.updateToken("a", "c", "new_token");
         Optional<User> refreshedUser = authenticationRepository.login("a", "c");
         assertTrue(refreshedUser.isPresent());
-        assertEquals("new_token",refreshedUser.get().getHashedToken());
+        assertEquals("new_token", refreshedUser.get().getHashedToken());
         assertTrue(authenticationRepository.isUserExists("a"));
         authenticationRepository.deleteUserIfExists("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.login("a", "c"));
+    }
+
+    @Test
+    public void multipleSignUpTest() {
+        authenticationRepository.deleteUserIfExists(
+                "a", "c");
+        assertTrue(authenticationRepository.signUpifNotExists(
+                "a", "b", "c", "d", "e", "f", "g"));
+        assertFalse(authenticationRepository.signUpifNotExists(
+                "a", "b", "c", "d", "e", "f", "g"));
+        assertFalse(authenticationRepository.signUpifNotExists(
+                "a", "b", "c", "d", "e", "f", "g"));
+        assertFalse(authenticationRepository.signUpifNotExists(
+                "a", "b", "c", "d", "e", "f", "g"));
+        authenticationRepository.deleteUserIfExists(
+                "a", "c");
+        assertEquals(Optional.empty(),
+                authenticationRepository.login("a","c"));
     }
 }
