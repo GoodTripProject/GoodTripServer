@@ -71,7 +71,7 @@ public class AuthenticationRepository {
      */
     public boolean signUpifNotExists(String username, String handle, String hashedPassword,
                                      String hashedToken, String name, String surname, String salt) {
-        if (isUserExists(username) || isTokenFree(hashedToken)) {
+        if (isUserExists(username) || !isTokenFree(hashedToken)) {
             return false;
         }
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
@@ -79,6 +79,19 @@ public class AuthenticationRepository {
             session.persist(new User(username, handle, hashedPassword, hashedToken, name, surname, salt));
             transaction.commit();
             return true;
+        }
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param user User
+     */
+    private void deleteUser(User user) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.remove(user);
+            transaction.commit();
         }
     }
 
@@ -93,11 +106,7 @@ public class AuthenticationRepository {
         if (user.isEmpty()) {
             return;
         }
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.remove(user.get());
-            transaction.commit();
-        }
+        deleteUser(user.get());
     }
 
     /**
@@ -160,6 +169,19 @@ public class AuthenticationRepository {
      */
     public boolean isTokenFree(String hashedToken) {
         return loginUserWithToken(hashedToken).isEmpty();
+    }
+
+    /**
+     * Deletes user with token.
+     *
+     * @param hashedToken token of user
+     */
+    public void deleteUserWithToken(String hashedToken) {
+        Optional<User> user = loginUserWithToken(hashedToken);
+        if (user.isEmpty()) {
+            return;
+        }
+        deleteUser(user.get());
     }
 
 }
