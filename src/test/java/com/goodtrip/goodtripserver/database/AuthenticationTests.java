@@ -69,6 +69,6 @@ public class AuthenticationTests {
                 "a", "b", "c", "d", "e", "f", "g"));
         assertFalse(authenticationRepository.isTokenFree("d"));
         assertTrue(authenticationRepository.loginUserWithToken("d").isPresent());
-        authenticationRepository.deleteUserWithToken("d");
+        authenticationRepository.deleteUserWithTokenIfExists("d");
     }
 }

@@ -82,9 +82,9 @@ public interface AuthenticationRepository {
     boolean isTokenFree(String hashedToken);
 
     /**
-     * Deletes user with token.
+     * Deletes user with token only if user exists.
      *
      * @param hashedToken token of user
      */
-    void deleteUserWithToken(String hashedToken);
+    void deleteUserWithTokenIfExists(String hashedToken);
 }
