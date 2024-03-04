@@ -22,7 +22,7 @@ public class AuthenticationTests {
     }
 
     @Test
-    public void simpleSignUpTest() {
+    public void simpleTest() {
         authenticationRepository.deleteUserIfExists("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.login("a", "c"));
         authenticationRepository.signUpifNotExists("a", "b", "c", "d", "e", "f", "g");
@@ -58,5 +58,16 @@ public class AuthenticationTests {
                 "a", "c");
         assertEquals(Optional.empty(),
                 authenticationRepository.login("a","c"));
+    }
+    @Test
+    public void tokenLoginTest(){
+        authenticationRepository.deleteUserIfExists(
+                "a", "c");
+        assertTrue(authenticationRepository.isTokenFree("d"));
+        assertTrue(authenticationRepository.signUpifNotExists(
+                "a", "b", "c", "d", "e", "f", "g"));
+        assertFalse(authenticationRepository.isTokenFree("d"));
+        assertTrue(authenticationRepository.loginUserWithToken("d").isPresent());
+        authenticationRepository.deleteUserWithToken("d");
     }
 }
