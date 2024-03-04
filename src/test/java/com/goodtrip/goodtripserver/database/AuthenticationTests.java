@@ -26,7 +26,7 @@ public class AuthenticationTests {
     public void simpleTest() {
         authenticationRepository.deleteUserIfExists("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.login("a", "c"));
-        authenticationRepository.signUpifNotExists("a", "b", "c", "d", "e", "f", "g");
+        authenticationRepository.signUpIfNotExists("a", "b", "c", "d", "e", "f", "g");
         Optional<User> user = authenticationRepository.login("a", "c");
         assertTrue(user.isPresent());
         Optional<String> salt = authenticationRepository.getSalt("a");
@@ -47,13 +47,13 @@ public class AuthenticationTests {
     public void multipleSignUpTest() {
         authenticationRepository.deleteUserIfExists(
                 "a", "c");
-        assertTrue(authenticationRepository.signUpifNotExists(
+        assertTrue(authenticationRepository.signUpIfNotExists(
                 "a", "b", "c", "d", "e", "f", "g"));
-        assertFalse(authenticationRepository.signUpifNotExists(
+        assertFalse(authenticationRepository.signUpIfNotExists(
                 "a", "b", "c", "d", "e", "f", "g"));
-        assertFalse(authenticationRepository.signUpifNotExists(
+        assertFalse(authenticationRepository.signUpIfNotExists(
                 "a", "b", "c", "d", "e", "f", "g"));
-        assertFalse(authenticationRepository.signUpifNotExists(
+        assertFalse(authenticationRepository.signUpIfNotExists(
                 "a", "b", "c", "d", "e", "f", "g"));
         authenticationRepository.deleteUserIfExists(
                 "a", "c");
@@ -65,7 +65,7 @@ public class AuthenticationTests {
         authenticationRepository.deleteUserIfExists(
                 "a", "c");
         assertTrue(authenticationRepository.isTokenFree("d"));
-        assertTrue(authenticationRepository.signUpifNotExists(
+        assertTrue(authenticationRepository.signUpIfNotExists(
                 "a", "b", "c", "d", "e", "f", "g"));
         assertFalse(authenticationRepository.isTokenFree("d"));
         assertTrue(authenticationRepository.loginUserWithToken("d").isPresent());

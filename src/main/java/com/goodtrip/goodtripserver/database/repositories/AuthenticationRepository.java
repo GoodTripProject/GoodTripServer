@@ -37,7 +37,7 @@ public interface AuthenticationRepository {
      * @param salt           salt to save his password
      * @return true if user added, false if user existed or token is not unique
      */
-    boolean signUpifNotExists(String username, String handle, String hashedPassword,
+    boolean signUpIfNotExists(String username, String handle, String hashedPassword,
                               String hashedToken, String name, String surname, String salt);
 
     /**

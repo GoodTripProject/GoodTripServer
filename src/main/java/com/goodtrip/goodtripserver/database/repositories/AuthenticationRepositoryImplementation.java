@@ -45,7 +45,7 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
         }
     }
 
-    public boolean signUpifNotExists(String username, String handle, String hashedPassword,
+    public boolean signUpIfNotExists(String username, String handle, String hashedPassword,
                                      String hashedToken, String name, String surname, String salt) {
         if (isUserExists(username) || !isTokenFree(hashedToken)) {
             return false;
