@@ -16,17 +16,18 @@ import java.util.Optional;
  */
 public class AuthenticationRepositoryImplementation implements AuthenticationRepository {
 
-
+    private <T> Optional<T> getFirstIfExists(List<T> results){
+        if (results.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(results.getFirst());
+    }
     public Optional<String> getSalt(String username) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             TypedQuery<String> query = session.createQuery(
                             "select m.salt from User m where m.username = :username", String.class)
                     .setParameter("username", username);
-            List<String> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
+            return getFirstIfExists(query.getResultList());
         }
     }
 
@@ -38,11 +39,7 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
                                     " and m.hashedPassword = :hashedPassword", User.class)
                     .setParameter("username", username)
                     .setParameter("hashedPassword", hashedPassword);
-            List<User> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
+            return getFirstIfExists(query.getResultList());
         }
     }
 
@@ -108,11 +105,7 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
             TypedQuery<User> query = session.createQuery(
                             "from User m where m.hashedToken = :hashedToken", User.class)
                     .setParameter("hashedToken", hashedToken);
-            List<User> results = query.getResultList();
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(results.getFirst());
+            return getFirstIfExists(query.getResultList());
         }
     }
 
