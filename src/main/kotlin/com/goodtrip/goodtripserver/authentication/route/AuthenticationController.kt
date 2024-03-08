@@ -1,8 +1,8 @@
-package com.goodtrip.goodtripserver.authorization.route
+package com.goodtrip.goodtripserver.authentication.route
 
-import com.goodtrip.goodtripserver.authorization.model.AuthorizationRequest
-import com.goodtrip.goodtripserver.authorization.model.RegistrationRequest
-import com.goodtrip.goodtripserver.authorization.service.AuthenticationService
+import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
+import com.goodtrip.goodtripserver.authentication.model.RegistrationRequest
+import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

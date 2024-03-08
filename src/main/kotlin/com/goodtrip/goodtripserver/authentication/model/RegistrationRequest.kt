@@ -1,9 +1,11 @@
-package com.goodtrip.goodtripserver.authorization.model
+package com.goodtrip.goodtripserver.authentication.model
 
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
 data class RegistrationRequest(
     @NotBlank
+    @Email
     val username: String,
     @NotBlank
     val handle: String,
