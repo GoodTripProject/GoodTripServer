@@ -112,6 +112,7 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
         }
     }
 
+
     @Override
     public Optional<User> getUserByEmail(String email) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
