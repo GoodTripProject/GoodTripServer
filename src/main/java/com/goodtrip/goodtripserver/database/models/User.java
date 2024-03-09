@@ -44,6 +44,8 @@ public class User implements UserDetails {
     @Column(name = "salt")
     private String salt;
 
+    //TODO возможно придется добавить роли(30минута)
+
     public User(String username, String handle, String hashedPassword, String hashedToken, String name, String surname, String salt) {
         this.username = username;
         this.handle = handle;

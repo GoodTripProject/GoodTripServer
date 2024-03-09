@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * Repository of authentication.
  */
-public interface AuthenticationRepository /*extends JpaRepository<User, Long>*/ {//TODO глянуть, не поломал ли
+public interface AuthenticationRepository {
     /**
      * Get salt for user.
      *
