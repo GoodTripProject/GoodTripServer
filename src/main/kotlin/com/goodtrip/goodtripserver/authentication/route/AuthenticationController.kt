@@ -25,13 +25,13 @@ class AuthenticationController {
     @ResponseBody
     @GetMapping("/login")
     fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
-        return authenticationService.login(authorizationRequest)
+        return ResponseEntity.ok(authenticationService.login(authorizationRequest))
     }
 
     @ResponseBody
     @PostMapping("/register")
     fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
-        return authenticationService.register(registerRequest)
+        return ResponseEntity.ok(authenticationService.register(registerRequest))
     }
 
 }
