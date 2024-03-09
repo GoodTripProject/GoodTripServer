@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 @RequiredArgsConstructor
 class JWTAuthenticationFilter : OncePerRequestFilter() {
+    val jwtService = JwtService()
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -22,7 +23,7 @@ class JWTAuthenticationFilter : OncePerRequestFilter() {
         }
         //Extract jwt token from header
         val jwt: String = authHeader.substring(7)
-        TODO( "extract username")
+        TODO("extract username")
 //        val username
     }
 }

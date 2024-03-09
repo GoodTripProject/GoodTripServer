@@ -2,21 +2,25 @@ package com.goodtrip.goodtripserver.authentication.config
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
+import java.util.*
+import kotlin.collections.HashMap
 
 @Service
 class JwtService {
     companion object {
         const val SECRET_KEY =
-            "EF6B58B503DAB031564EEDC7E14088E0938F36C87734E771333F1EEF8F31BE35" //TODO не забыть удалить точно
+            "EF6B58B503DAB031564EEDC7E14088E0938F36C87734E771333F1EEF8F31BE35" //TODO поменять потому что я забыл заменить его
     }
 
-    fun extractUsername(jwt: String): String {
-        TODO()
-    }
+    fun extractUsername(token: String) = extractClaim(token, Claims::getSubject)
+
+    fun <T> extractClaim(token: String, claimResolver: (Claims) -> T): T = claimResolver.invoke(extractAllClaims(token))
 
     private fun extractAllClaims(token: String): Claims =
         Jwts.parser().setSigningKey(getSignInKey()).build().parseClaimsJws(token).body
@@ -26,4 +30,15 @@ class JwtService {
         val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
         return Keys.hmacShaKeyFor(keyBytes)
     }
+
+    //TODO try to use non-deprecated methods
+    fun generateToken(claims: Map<String, Any>, userDetails: UserDetails): String =
+        Jwts.builder().setClaims(claims)
+            .setSubject(userDetails.username)
+            .setIssuedAt(Date(System.currentTimeMillis()))
+            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 24))
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact()
+
+    fun generateToken(userDetails: UserDetails) = generateToken(HashMap(), userDetails)
 }
