@@ -9,7 +9,8 @@ import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -29,10 +30,26 @@ class AuthenticationServiceImpl : AuthenticationService {
     @Autowired
     private lateinit var jwtService: JwtService
 
-    override fun login(request: AuthorizationRequest): AuthenticationResponse {
-        TODO()
-        //        return ResponseEntity.ok(authenticationRepository.login())
+    @Autowired
+    private lateinit var authenticationManager: AuthenticationManager
 
+    override fun login(request: AuthorizationRequest): AuthenticationResponse {
+        //TODO поменять на метод андрея
+        authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(
+                request.login,
+                request.password
+            )
+        )
+        val user = userRepository.findByUsername(request.login).orElseThrow()
+        val jwtToken = jwtService.generateToken(user)
+        return AuthenticationResponse(
+            handle = user.handle,
+            token = jwtToken,
+            name = user.name,
+            surname = user.surname,
+            url = null
+        )
     }
 
     override fun register(request: RegisterRequest): AuthenticationResponse {
