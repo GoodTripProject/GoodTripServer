@@ -41,4 +41,13 @@ class JwtService {
             .compact()
 
     fun generateToken(userDetails: UserDetails) = generateToken(HashMap(), userDetails)
+
+    fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
+        val username = extractUsername(token)
+        return username.equals(userDetails.username) && !isTokenExpired(token)
+    }
+
+    private fun isTokenExpired(token: String) = extractExpiration(token).before(Date())
+
+    private fun extractExpiration(token: String) = extractClaim(token, Claims::getExpiration)
 }
