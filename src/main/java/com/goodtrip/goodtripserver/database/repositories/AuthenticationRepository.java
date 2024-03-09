@@ -1,7 +1,6 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 

@@ -11,7 +11,6 @@ data class RegistrationRequest(
     val handle: String,
     @NotBlank
     val password: String,
-//    val token TODO понять
     @NotBlank
     val name: String,
     @NotBlank

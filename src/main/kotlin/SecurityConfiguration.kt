@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
@@ -24,10 +23,9 @@ import org.springframework.web.cors.CorsConfiguration
 @RequiredArgsConstructor
 class SecurityConfiguration {
     private val jwtAuthenticationFilter = JwtAuthenticationFilter()
-    private val userService: UserService? = null
+    private val userService = UserService()
 
     @Bean
-    @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
             .cors { cors: CorsConfigurer<HttpSecurity?> ->
@@ -48,7 +46,8 @@ class SecurityConfiguration {
             }
             .authorizeHttpRequests { request ->
                 request
-                    .requestMatchers("/auth/login").permitAll().requestMatchers("/auth/register").permitAll()
+                    .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers("/auth/register").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { manager: SessionManagementConfigurer<HttpSecurity?> ->
@@ -62,21 +61,17 @@ class SecurityConfiguration {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder() = BCryptPasswordEncoder()
+
 
     @Bean
     fun authenticationProvider(): AuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
-        authProvider.setUserDetailsService(userService!!.userDetailsService())
+        authProvider.setUserDetailsService(userService.userDetailsService())
         authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }
 
     @Bean
-    @Throws(Exception::class)
-    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
-        return config.authenticationManager
-    }
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
 }

@@ -39,11 +39,11 @@ class AuthenticationServiceImpl : AuthenticationService {
                     surname = user.surname
                 )
             )
+            //TODO а че я только jwt передаю, чекнуть, что будет, если буду передавать класс, либо отдельно подгружать другие данные
             return ResponseEntity.ok(jwt)
 
         } catch (e: NoSuchElementException) {
             return ResponseEntity.badRequest().body("User doesn't exist")
-
         }
 
     }
