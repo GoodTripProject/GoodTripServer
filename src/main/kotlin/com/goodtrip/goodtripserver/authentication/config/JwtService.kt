@@ -18,7 +18,7 @@ class JwtService {
             "EF6B58B503DAB031564EEDC7E14088E0938F36C87734E771333F1EEF8F31BE35" //TODO поменять потому что я забыл заменить его
     }
 
-    fun extractUsername(token: String) = extractClaim(token, Claims::getSubject)
+    fun extractUsername(token: String): String? = extractClaim(token, Claims::getSubject)
 
     fun <T> extractClaim(token: String, claimResolver: (Claims) -> T): T = claimResolver.invoke(extractAllClaims(token))
 

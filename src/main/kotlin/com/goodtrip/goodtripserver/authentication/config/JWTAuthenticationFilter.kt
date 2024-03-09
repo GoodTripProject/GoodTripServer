@@ -4,6 +4,10 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
@@ -11,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @RequiredArgsConstructor
 class JWTAuthenticationFilter : OncePerRequestFilter() {
     val jwtService = JwtService()
+    private lateinit var userService: UserDetailsService;
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -23,7 +28,17 @@ class JWTAuthenticationFilter : OncePerRequestFilter() {
         }
         //Extract jwt token from header
         val jwt: String = authHeader.substring(7)
-        TODO("extract username")
-//        val username
+        val username = jwtService.extractUsername(jwt)
+        if (username != null /*&& username.isNotEmpty()*/ && SecurityContextHolder.getContext().authentication == null) {//check that user is not connected yet
+            val userDetails = userService.loadUserByUsername(username)
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                val authToken = UsernamePasswordAuthenticationToken(userService, null, userDetails.authorities)
+
+                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                //update security context holder
+                SecurityContextHolder.getContext().authentication = authToken
+            }
+            filterChain.doFilter(request, response)
+        }
     }
 }
