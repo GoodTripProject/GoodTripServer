@@ -5,12 +5,12 @@ import lombok.Builder
 import lombok.NoArgsConstructor
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 data class AuthenticationResponse(
     val handle: String,
     val name: String,
     val surname: String,
     val token: String,
-    val url: java.net.URL
+    val url: java.net.URL?//мб не нужно '?'
 )

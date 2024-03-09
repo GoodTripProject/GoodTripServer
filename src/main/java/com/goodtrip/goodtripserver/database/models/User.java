@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Entity
-@Table(name = "users", schema = "public", catalog = "postgres")
 @Setter
 @Getter
 @Builder
+@Entity
+@Table(name = "users", schema = "public", catalog = "postgres")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -64,6 +64,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return hashedPassword;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

@@ -2,7 +2,7 @@ package com.goodtrip.goodtripserver.authentication.route
 
 import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
-import com.goodtrip.goodtripserver.authentication.model.RegistrationRequest
+import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,13 +24,13 @@ class AuthenticationController {
 
     @ResponseBody
     @GetMapping("/login")
-    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthorizationRequest> {
+    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
         return authenticationService.login(authorizationRequest)
     }
 
     @ResponseBody
     @PostMapping("/register")
-    fun register(@RequestBody registerRequest: RegistrationRequest): ResponseEntity<AuthenticationResponse> {
+    fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
         return authenticationService.register(registerRequest)
     }
 
