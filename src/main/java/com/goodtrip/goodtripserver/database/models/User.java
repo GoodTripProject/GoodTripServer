@@ -1,9 +1,7 @@
 package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +11,8 @@ import java.util.Collection;
 @Table(name = "users", schema = "public", catalog = "postgres")
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,20 +63,6 @@ public class User implements UserDetails {
     public String getPassword() {
         return hashedPassword;
     }
-
-    //почему-то без этого не работает
-    public String getHandle() {
-        return handle;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
 
     @Override
     public boolean isAccountNonExpired() {
