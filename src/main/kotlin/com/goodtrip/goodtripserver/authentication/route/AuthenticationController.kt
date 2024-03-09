@@ -1,8 +1,10 @@
 package com.goodtrip.goodtripserver.authentication.route
 
+import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegistrationRequest
 import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
+import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 class AuthenticationController {
 
     @Autowired
@@ -21,14 +24,14 @@ class AuthenticationController {
 
     @ResponseBody
     @GetMapping("/login")
-    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<Any> {
+    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthorizationRequest> {
         return authenticationService.login(authorizationRequest)
     }
 
     @ResponseBody
     @PostMapping("/register")
-    fun register(@RequestBody registrationRequest: RegistrationRequest): ResponseEntity<String> {
-        return authenticationService.register(registrationRequest)
+    fun register(@RequestBody registerRequest: RegistrationRequest): ResponseEntity<AuthenticationResponse> {
+        return authenticationService.register(registerRequest)
     }
 
 }

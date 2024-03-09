@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-data class AuthorizationResponse(
+data class AuthenticationResponse(
     val handle: String,
     val name: String,
     val surname: String,
