@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(name = "users", schema = "public", catalog = "postgres")
+@Table(name = "users", schema = "public", catalog = "GoodTripDatabase")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -39,6 +41,10 @@ public class User {
 
     @Column(name = "salt")
     private String salt;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<Trip> trips;
 
     public User(String username, String handle, String hashedPassword, String hashedToken, String name, String surname, String salt) {
         this.username = username;
