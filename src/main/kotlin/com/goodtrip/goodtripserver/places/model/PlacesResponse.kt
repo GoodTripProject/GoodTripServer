@@ -13,6 +13,8 @@ data class PlacesResponse(
 
     val icon: String,//TODO поменять на фото
 
-    val rating: Int
+    val rating: Int,
+
+    val placeId: String
 )
 

@@ -34,13 +34,13 @@ class PlacesServiceImpl : PlacesService {
             .replaceFirst('%', '?')
     }
 
-    //TODO че по стилю
     private fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
         icon = this["icon"].toString(),
-        rating = this.get("rating")?.asInt() ?: 0
+        rating = this.get("rating")?.asInt() ?: 0,
+        placeId = this.get("place_id").toString()//TODO потом проверить
     )
 
     override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {

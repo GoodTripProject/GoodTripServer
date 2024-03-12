@@ -23,7 +23,7 @@ class SecurityConfiguration {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { csrf -> csrf.disable() }//1:39
+        http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { requests ->
                 requests.requestMatchers("auth/login").permitAll()
                     .requestMatchers("auth/register").permitAll()
