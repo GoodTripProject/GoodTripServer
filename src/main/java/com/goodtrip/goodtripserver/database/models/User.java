@@ -7,12 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Setter
-@Getter
-@Builder
+@Data
+//@Builder
 @Entity
 @Table(name = "users", schema = "public", catalog = "postgres")
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +64,16 @@ public class User implements UserDetails {
         return hashedPassword;
     }
 
+    public String getHandle(){
+        return handle;
+    }
+
+    public String getName(){
+        return name;
+    }
+    public String getSurname(){
+        return surname;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

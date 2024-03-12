@@ -24,8 +24,8 @@ class AuthenticationServiceImpl : AuthenticationService {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    @Autowired
-    private lateinit var userRepository: UserRepository
+//    @Autowired
+//    private lateinit var userRepository: UserRepository
 
     @Autowired
     private lateinit var jwtService: JwtService
@@ -41,7 +41,7 @@ class AuthenticationServiceImpl : AuthenticationService {
                 request.password
             )
         )
-        val user = userRepository.findByUsername(request.login).orElseThrow()
+        val user = authenticationRepository.getUserByEmail(request.login).orElseThrow()
         val jwtToken = jwtService.generateToken(user)
         return AuthenticationResponse(
             handle = user.handle,
@@ -53,17 +53,19 @@ class AuthenticationServiceImpl : AuthenticationService {
     }
 
     override fun register(request: RegisterRequest): AuthenticationResponse {
-        val user = User.builder()
-            .username(request.username)
-            .name(request.name)
-            .surname(request.surname)
-            .hashedPassword(passwordEncoder.encode(request.password))//TODO заменить на хеширование андрея
-            .handle(request.handle)
-            .salt("TODO поменять на рандомную")
+        //TODO хешировать пароль
 
-            .build()
-        userRepository.save(user)//TODO поменять на метод Андрея
+        val user = User(request.username, request.handle, request.password," ", request.name, request.surname, "salt")
         val jwtToken = jwtService.generateToken(user)
+        authenticationRepository.signUpIfNotExists(
+            request.username,
+            request.handle,
+            request.password,
+            jwtToken,
+            request.name,
+            request.surname,
+            "salt"
+        )
         return AuthenticationResponse(
             handle = user.handle,
             token = jwtToken,

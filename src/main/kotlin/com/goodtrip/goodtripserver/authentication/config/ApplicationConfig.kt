@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.authentication.config
 
 import com.goodtrip.goodtripserver.authentication.repository.UserRepository
+import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -18,13 +19,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 @RequiredArgsConstructor
 class ApplicationConfig {
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var authenticationRepository: AuthenticationRepository
 
 
     @Bean
     fun userDetailsService(): UserDetailsService {
         return UserDetailsService { username: String ->
-            userRepository.findByUsername(username).orElseThrow { UsernameNotFoundException("User not found") }
+           authenticationRepository.getUserByEmail(username).orElseThrow { UsernameNotFoundException("User not found") }
         }
     }
 

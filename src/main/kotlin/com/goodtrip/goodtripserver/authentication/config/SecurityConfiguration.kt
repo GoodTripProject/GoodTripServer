@@ -16,20 +16,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 class SecurityConfiguration {
     @Autowired
-    private lateinit var athenticationProvider: AuthenticationProvider
+    private lateinit var authenticationProvider: AuthenticationProvider
 
-    @Autowired
-    private lateinit var jwtAuthenticationFilter: JWTAuthenticationFilter//TODO если что поменять на просто JWTblablabla()
+//    @Autowired
+    private var jwtAuthenticationFilter= JWTAuthenticationFilter()//TODO если что поменять на просто JWTblablabla()
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { requests ->
-                requests.requestMatchers("auth/login").permitAll()
-                    .requestMatchers("auth/register").permitAll()
+                requests.requestMatchers("/auth/login").permitAll()
+                    .requestMatchers("/auth/register").permitAll()
                     .anyRequest().authenticated()
             }.sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .authenticationProvider(athenticationProvider)
+            .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
