@@ -31,14 +31,12 @@ public interface AuthenticationRepository {
      * @param username       username (usually email)
      * @param handle         handle of user
      * @param hashedPassword hashed password
-     * @param hashedToken    hashed token
      * @param name           name
      * @param surname        surname
      * @param salt           salt to save his password
      * @return true if user added, false if user existed or token is not unique
      */
-    boolean signUpIfNotExists(String username, String handle, String hashedPassword,
-                              String hashedToken, String name, String surname, String salt);
+    boolean signUpIfNotExists(String username, String handle, String hashedPassword, String name, String surname, String salt);
 
     /**
      * Delete user from database if user exists.
@@ -56,22 +54,6 @@ public interface AuthenticationRepository {
      */
     boolean isUserExists(String username);
 
-    /**
-     * Update token of user if user exists.
-     *
-     * @param username       username - usually email.
-     * @param hashedPassword - hashed password of user.
-     * @param hashedToken    - new hashed token.
-     */
-    void updateToken(String username, String hashedPassword, String hashedToken);
-
-    /**
-     * Login user with token.
-     *
-     * @param hashedToken token of user.
-     * @return Optional.empty() if token is not valid, User otherwise
-     */
-    Optional<User> loginUserWithToken(String hashedToken);
 
     /**
      * Return user by Email
@@ -81,18 +63,4 @@ public interface AuthenticationRepository {
      */
     Optional<User> getUserByEmail(String email);
 
-    /**
-     * Checks if token is free.
-     *
-     * @param hashedToken token
-     * @return true if token is free, false otherwise
-     */
-    boolean isTokenFree(String hashedToken);
-
-    /**
-     * Deletes user with token only if user exists.
-     *
-     * @param hashedToken token of user
-     */
-    void deleteUserWithTokenIfExists(String hashedToken);
 }

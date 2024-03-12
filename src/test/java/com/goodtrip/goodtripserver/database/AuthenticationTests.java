@@ -26,7 +26,7 @@ public class AuthenticationTests {
     public void authentication_UserDoesNotExist_UserLoggedIn() {
         authenticationRepository.deleteUserIfExists("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.login("a", "c"));
-        authenticationRepository.signUpIfNotExists("a", "b", "c", "d", "e", "f", "g");
+        authenticationRepository.signUpIfNotExists("a", "b", "c", "e", "f", "g");
         Optional<User> user = authenticationRepository.login("a", "c");
         assertTrue(user.isPresent());
         Optional<String> salt = authenticationRepository.getSalt("a");
@@ -44,42 +44,17 @@ public class AuthenticationTests {
         authenticationRepository.deleteUserIfExists(
                 "a", "c");
         assertTrue(authenticationRepository.signUpIfNotExists(
-                "a", "b", "c", "d", "e", "f", "g"));
+                "a", "b", "c", "e", "f", "g"));
         assertFalse(authenticationRepository.signUpIfNotExists(
-                "a", "b", "c", "d", "e", "f", "g"));
+                "a", "b", "c", "e", "f", "g"));
         assertFalse(authenticationRepository.signUpIfNotExists(
-                "a", "b", "c", "d", "e", "f", "g"));
+                "a", "b", "c", "e", "f", "g"));
         assertFalse(authenticationRepository.signUpIfNotExists(
-                "a", "b", "c", "d", "e", "f", "g"));
+                "a", "b", "c", "e", "f", "g"));
         authenticationRepository.deleteUserIfExists(
                 "a", "c");
         assertEquals(Optional.empty(),
                 authenticationRepository.login("a","c"));
     }
-    @Test
-    public void tokenAuthentication_UserDoesNotExist_SignUpUser(){
-        authenticationRepository.deleteUserIfExists(
-                "a", "c");
-        assertTrue(authenticationRepository.isTokenFree("d"));
-        assertTrue(authenticationRepository.signUpIfNotExists(
-                "a", "b", "c", "d", "e", "f", "g"));
-        assertFalse(authenticationRepository.isTokenFree("d"));
-        assertTrue(authenticationRepository.loginUserWithToken("d").isPresent());
-        authenticationRepository.deleteUserWithTokenIfExists("d");
-    }
 
-    @Test
-    public void updateToken_UserDoesNotExist_TokenUpdated(){
-        authenticationRepository.deleteUserIfExists("a", "c");
-        authenticationRepository.signUpIfNotExists("a", "b", "c", "d", "e", "f", "g");
-        Optional<User> user = authenticationRepository.login("a", "c");
-        assertTrue(user.isPresent());
-        assertEquals("d", user.get().getHashedToken());
-        authenticationRepository.updateToken("a", "c", "new_token");
-        Optional<User> refreshedUser = authenticationRepository.login("a", "c");
-        assertTrue(refreshedUser.isPresent());
-        assertEquals("new_token", refreshedUser.get().getHashedToken());
-        assertTrue(authenticationRepository.isUserExists("a"));
-        authenticationRepository.deleteUserIfExists("a", "c");
-    }
 }

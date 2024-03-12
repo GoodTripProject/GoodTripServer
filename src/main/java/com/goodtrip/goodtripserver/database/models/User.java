@@ -7,11 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Data
-//@Builder
+@Setter
+@Getter
+@Builder
 @Entity
-@Table(name = "users", schema = "public", catalog = "postgres")
-//@AllArgsConstructor
+@Table(name = "users", schema = "public", catalog = "GoodTripDatabase")
+@AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +29,6 @@ public class User implements UserDetails {
     @Column(name = "hashed_password")
     private String hashedPassword;
 
-    @Column(name = "hashed_token")
-    private String hashedToken;
 
     @Column(name = "image_link")
     private String imageLink;
@@ -44,11 +43,10 @@ public class User implements UserDetails {
     private String salt;
 
 
-    public User(String username, String handle, String hashedPassword, String hashedToken, String name, String surname, String salt) {
+    public User(String username, String handle, String hashedPassword, String name, String surname, String salt) {
         this.username = username;
         this.handle = handle;
         this.hashedPassword = hashedPassword;
-        this.hashedToken = hashedToken;
         this.name = name;
         this.surname = surname;
         this.salt = salt;
@@ -64,16 +62,6 @@ public class User implements UserDetails {
         return hashedPassword;
     }
 
-    public String getHandle(){
-        return handle;
-    }
-
-    public String getName(){
-        return name;
-    }
-    public String getSurname(){
-        return surname;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
