@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor
 data class AuthorizationRequest(
     @NotBlank(message = "Login can't be empty")
     @Email
-    val login: String,
+    val username: String,
     @NotBlank(message = "Password can't be empty")
     val password: String
 

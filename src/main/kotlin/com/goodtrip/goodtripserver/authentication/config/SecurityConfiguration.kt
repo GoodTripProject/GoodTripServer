@@ -18,16 +18,16 @@ class SecurityConfiguration {
     @Autowired
     private lateinit var authenticationProvider: AuthenticationProvider
 
-//    @Autowired
-    private var jwtAuthenticationFilter= JWTAuthenticationFilter()//TODO если что поменять на просто JWTblablabla()
+    private var jwtAuthenticationFilter = JWTAuthenticationFilter()
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { requests ->
-                requests.requestMatchers("/auth/login").permitAll()
+                requests
+                    .requestMatchers("/auth/login").permitAll()
                     .requestMatchers("/auth/register").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().authenticated()//какого-то черта здесь проблема
             }.sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

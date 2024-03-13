@@ -1,6 +1,5 @@
 package com.goodtrip.goodtripserver.authentication.config
 
-import com.goodtrip.goodtripserver.authentication.repository.UserRepository
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired

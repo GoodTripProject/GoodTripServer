@@ -62,6 +62,17 @@ public class User implements UserDetails {
         return hashedPassword;
     }
 
+    public String getHandle(){
+        return handle;
+    }
+
+    public String getName(){
+        return name;
+    }
+    public String getSurname(){
+        return surname;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
