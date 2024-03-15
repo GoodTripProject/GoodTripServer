@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TripRepository {
@@ -51,9 +52,9 @@ public interface TripRepository {
      *
      * @param tripId       id of trip.
      * @param countryVisit country visit.
-     * @return true if trip exists, false otherwise.
+     *
      */
-    boolean addCountryVisit(Integer tripId, CountryVisit countryVisit);
+    void addCountryVisit(Integer tripId, CountryVisit countryVisit);
 
     /**
      * Delete trip.
@@ -72,5 +73,9 @@ public interface TripRepository {
     List<Trip> getTrips(int userId);
 
     boolean deleteCountryVisit(int countryVisitId);
+
+    Optional<Trip> getTripById(int tripId);
+
+    Optional<Note> getNoteById(int noteId);
 
 }

@@ -99,7 +99,7 @@ class TripTests {
     @Test
     void addCountryVisit_TripDoesNotExists_CountryVisitWithoutCitiesIsAdded() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
-        assertTrue(tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList())));
+        tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList()));
         List<CountryVisit> visits = getVisits();
         assertEquals(trip.getId(), visits.getFirst().getTripId());
         assertEquals("Country", visits.getFirst().getCountry());
@@ -127,7 +127,7 @@ class TripTests {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         List<CityVisit> cityVisits = List.of(new CityVisit("City1", 1, 1),
                 new CityVisit("City2", 2, 2), new CityVisit("City3", 3, 3));
-        assertTrue(tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", cityVisits)));
+        tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", cityVisits));
         List<CountryVisit> visits = getVisits();
         assertEquals(1, visits.size());
         List<CityVisit> addedCityVisits = visits.getFirst().getCities();
@@ -141,7 +141,7 @@ class TripTests {
     @Test
     void addDeleteCountryVisit_TripDoesNotExists_CountryVisitIsAddedAndDeleted(){
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
-        assertTrue(tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList())));
+        tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList()));
         List<CountryVisit> actualCountryVisit = getCountryVisits(1);
 
         int countryVisitId = actualCountryVisit.getFirst().getId();
