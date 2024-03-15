@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.database.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,4 +60,15 @@ public class Trip {
     @JoinColumn(name = "trip_id")
     private List<CountryVisit> visits;
 
+    public Trip(Integer userId, String title, Integer moneyInUsd, @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> visits) {
+        this.userId = userId;
+        this.title = title;
+        this.moneyInUsd = moneyInUsd;
+        this.mainPhotoUrl = mainPhotoUrl;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
+        this.state = state;
+        this.notes = notes;
+        this.visits = visits;
+    }
 }
