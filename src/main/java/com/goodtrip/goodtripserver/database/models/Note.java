@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.database.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,18 @@ public class Note {
 
     @Column(name="trip_id")
     private Integer tripId;
+
+    public Note(String title, @Nullable String photoUrl, String googlePlaceId, Integer tripId){
+        this.title = title;
+        this.photoUrl = photoUrl;
+        this.googlePlaceId = googlePlaceId;
+        this.tripId = tripId;
+    }
+
+    public Note(String title, @Nullable String photoUrl, String googlePlaceId){
+        this.title = title;
+        this.photoUrl = photoUrl;
+        this.googlePlaceId = googlePlaceId;
+    }
 
 }
