@@ -2,6 +2,7 @@ package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CountryVisit {
     @Column(name="country")
     private String country;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     @JoinColumn(name = "country_visit_id")
     private List<CityVisit> cities;
 

@@ -51,11 +51,11 @@ public class Trip {
     @Column(name = "state")
     private TripState state;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     @JoinColumn(name = "trip_id")
     private List<Note> notes;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
     @JoinColumn(name = "trip_id")
     private List<CountryVisit> visits;
 
