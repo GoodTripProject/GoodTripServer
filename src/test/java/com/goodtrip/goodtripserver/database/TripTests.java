@@ -21,7 +21,7 @@ class TripTests {
     static User user;
 
     private Trip createTrip(List<Note> notes, List<CountryVisit> visits) {
-        tripRepository.addTrip(user.getId(), "1", 2, "aa", new Date(222, 5, 3), new Date(222, 5, 3), TripState.IN_PROCESS, notes, visits);
+        tripRepository.addTrip(user.getId(), "1", 2, "aa", new Date(0), new Date(1), TripState.IN_PROCESS, notes, visits);
         List<Trip> trips = tripRepository.getTrips(user.getId());
         assertEquals(1, trips.size());
         return trips.getFirst();
