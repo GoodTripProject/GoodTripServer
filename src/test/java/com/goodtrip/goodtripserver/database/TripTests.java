@@ -145,7 +145,7 @@ class TripTests {
         List<CountryVisit> actualCountryVisit = getCountryVisits(1);
 
         int countryVisitId = actualCountryVisit.getFirst().getId();
-        tripRepository.deleteCountryVisit(countryVisitId);
+        assertTrue(tripRepository.deleteCountryVisit(countryVisitId));
         assertTrue(getCountryVisits(0).isEmpty());
         deleteTrip(trip.getId());
     }
