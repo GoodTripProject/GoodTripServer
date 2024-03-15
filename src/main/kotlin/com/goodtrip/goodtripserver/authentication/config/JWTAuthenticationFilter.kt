@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.authentication.config
 
 import com.goodtrip.goodtripserver.authentication.service.UserService
+import com.goodtrip.goodtripserver.authentication.service.UserServiceImpl
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -17,8 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JWTAuthenticationFilter : OncePerRequestFilter() {
     val jwtService = JwtService()
 
-    @Autowired
-    private lateinit var userService : UserService
+//    @Autowired
+    private val userService = UserServiceImpl()//TODO понять, в чем трабл
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -32,7 +33,8 @@ class JWTAuthenticationFilter : OncePerRequestFilter() {
         //Extract jwt token from header
         val jwt: String = authHeader.substring(7)
         val username = jwtService.extractUsername(jwt)
-        if (!username.isNullOrEmpty() && SecurityContextHolder.getContext().authentication == null) {//check that user is not connected yet
+        //check that user is not connected yet
+        if (!username.isNullOrEmpty() && SecurityContextHolder.getContext().authentication == null) {
             val userDetails = userService.loadUserByUsername(username)
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 val authToken = UsernamePasswordAuthenticationToken(userService, null, userDetails.authorities)
