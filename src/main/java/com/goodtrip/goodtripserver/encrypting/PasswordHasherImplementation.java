@@ -21,7 +21,7 @@ public class PasswordHasherImplementation implements PasswordHasher {
         }
     }
 
-    PasswordHasherImplementation() {
+    public PasswordHasherImplementation() {
         Properties saltProperties = new Properties();
         try {
             saltProperties.load(ClassLoader.getSystemClassLoader().getResourceAsStream("encryption.properties"));
@@ -31,7 +31,7 @@ public class PasswordHasherImplementation implements PasswordHasher {
         secretSalt = saltProperties.getProperty("salt");
     }
 
-    PasswordHasherImplementation(String secretSalt) {
+    public PasswordHasherImplementation(String secretSalt) {
         this.secretSalt = secretSalt;
     }
 

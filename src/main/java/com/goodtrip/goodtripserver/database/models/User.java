@@ -62,14 +62,15 @@ public class User implements UserDetails {
         return hashedPassword;
     }
 
-    public String getHandle(){
+    public String getHandle() {
         return handle;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    public String getSurname(){
+
+    public String getSurname() {
         return surname;
     }
 
