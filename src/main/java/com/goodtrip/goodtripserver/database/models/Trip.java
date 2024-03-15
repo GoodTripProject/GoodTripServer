@@ -32,6 +32,7 @@ public class Trip {
     private Integer moneyInUsd;
 
     @Column(name="main_photo_url")
+    @Nullable
     private String mainPhotoUrl;
 
     @Column(name = "departure_date", nullable = false)
