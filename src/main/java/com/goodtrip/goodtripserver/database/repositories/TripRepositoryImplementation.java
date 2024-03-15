@@ -68,24 +68,20 @@ public class TripRepositoryImplementation implements TripRepository {
 
     @Override
     public boolean deleteNote(Integer noteId) {
-        Optional<Note> noteOptional = getNoteById(noteId);
-        if (noteOptional.isEmpty()) {
-            return false;
-        }
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.remove(noteOptional.get());
+            MutationQuery query = session.createMutationQuery("delete from Note m where m.id = :noteId").setParameter("noteId", noteId);
+            int result = query.executeUpdate();
+            if (result == 0) {
+                return false;
+            }
             transaction.commit();
         }
         return true;
     }
 
     @Override
-    public boolean addCountryVisit(Integer tripId, CountryVisit countryVisit) {
-        Optional<Trip> tripOptional = getTripById(tripId);
-        if (tripOptional.isEmpty()) {
-            return false;
-        }
+    public void addCountryVisit(Integer tripId, CountryVisit countryVisit) {
         countryVisit.setTripId(tripId);
         List<CityVisit> countryVisitCities = countryVisit.getCities();
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
@@ -96,7 +92,6 @@ public class TripRepositoryImplementation implements TripRepository {
             setCitiesVisits(List.of(countryVisit), session);
             transaction.commit();
         }
-        return true;
     }
 
     public Optional<Trip> getTripById(int tripId) {
@@ -112,13 +107,13 @@ public class TripRepositoryImplementation implements TripRepository {
 
     @Override
     public boolean deleteTrip(int tripId) {
-        Optional<Trip> tripOptional = getTripById(tripId);
-        if (tripOptional.isEmpty()) {
-            return false;
-        }
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.remove(tripOptional.get());
+            MutationQuery query = session.createMutationQuery("delete from Trip m where m.id = :tripId").setParameter("tripId", tripId);
+            int result = query.executeUpdate();
+            if (result == 0) {
+                return false;
+            }
             transaction.commit();
         }
         return true;
