@@ -138,5 +138,26 @@ class TripTests {
         deleteTrip(trip.getId());
     }
 
+    @Test
+    void addDeleteCountryVisit_TripDoesNotExists_CountryVisitIsAddedAndDeleted(){
+        Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
+        assertTrue(tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList())));
+        List<CountryVisit> actualCountryVisit = getCountryVisits(1);
+
+        int countryVisitId = actualCountryVisit.getFirst().getId();
+        tripRepository.deleteCountryVisit(countryVisitId);
+        assertTrue(getCountryVisits(0).isEmpty());
+        deleteTrip(trip.getId());
+    }
+
+    @NotNull
+    private List<CountryVisit> getCountryVisits(int expectedCountOfCountryVisits) {
+        List<Trip> trips = tripRepository.getTrips(user.getId());
+        assertEquals(1,trips.size());
+        List<CountryVisit> actualCountryVisit = tripRepository.getTrips(user.getId()).getFirst().getVisits();
+        assertEquals(expectedCountOfCountryVisits,actualCountryVisit.size());
+        return actualCountryVisit;
+    }
+
 
 }
