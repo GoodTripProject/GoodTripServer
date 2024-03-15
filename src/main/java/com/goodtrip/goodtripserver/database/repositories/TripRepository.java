@@ -28,14 +28,47 @@ public interface TripRepository {
                     @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate,
                     TripState state, List<Note> notes, List<CountryVisit> countries);
 
+    /**
+     * Add note to trip.
+     *
+     * @param tripId id of trip.
+     * @param note note.
+     */
     void addNote(Integer tripId, Note note);
 
+    /**
+     * Delete note from trip.
+     *
+     * @param noteId id of note.
+     * @return true if note exists, false otherwise.
+     */
     boolean deleteNote(Integer noteId);
 
+    /**
+     * Add country visit to trip.
+     *
+     * @param tripId id of trip.
+     * @param countryVisit country visit.
+     * @return true if trip exists, false otherwise.
+     */
     boolean addCountryVisit(Integer tripId, CountryVisit countryVisit);
 
+    /**
+     * Delete trip.
+     *
+     * @param tripId id of note.
+     * @return true if trip exists, false otherwise.
+     */
     boolean deleteTrip(int tripId);
 
+    /**
+     * Get all trips of user.
+     *
+     * @param userId id of user.
+     * @return list of trips.
+     */
     List<Trip> getTrips(int userId);
+
+    boolean deleteCountryVisit(int countryVisitId);
 
 }

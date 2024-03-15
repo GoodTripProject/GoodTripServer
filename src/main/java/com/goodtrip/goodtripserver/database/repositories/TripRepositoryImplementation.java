@@ -5,10 +5,13 @@ import com.goodtrip.goodtripserver.database.models.*;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.MutationQuery;
+import org.hibernate.query.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 
+import javax.lang.model.type.NullType;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -141,6 +144,22 @@ public class TripRepositoryImplementation implements TripRepository {
                     .setParameter("userId", userId);
             return query.getResultList();
         }
+    }
+
+    @Override
+    public boolean deleteCountryVisit(int countryVisitId) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            MutationQuery query = session.createMutationQuery(
+                            "delete from CountryVisit m where m.id = :countryVisitId")
+                    .setParameter("countryVisitId", countryVisitId);
+            int result = query.executeUpdate();
+            if (result == 0){
+                return false;
+            }
+            transaction.commit();
+        }
+        return true;
     }
 
 }
