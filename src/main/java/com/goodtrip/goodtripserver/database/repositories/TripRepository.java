@@ -52,7 +52,6 @@ public interface TripRepository {
      *
      * @param tripId       id of trip.
      * @param countryVisit country visit.
-     *
      */
     void addCountryVisit(Integer tripId, CountryVisit countryVisit);
 
@@ -72,10 +71,28 @@ public interface TripRepository {
      */
     List<Trip> getTrips(int userId);
 
+    /**
+     * Delete country visit by id.
+     *
+     * @param countryVisitId id of country visit.
+     * @return true if country visit exists, false otherwise.
+     */
     boolean deleteCountryVisit(int countryVisitId);
 
+    /**
+     * Get trip by id.
+     *
+     * @param tripId id of trip.
+     * @return Optional.of if country visit exists, Optional.empty() otherwise.
+     */
     Optional<Trip> getTripById(int tripId);
 
+    /**
+     * Get note by id.
+     *
+     * @param noteId note id.
+     * @return Optional.of if note exists, Optional.empty() otherwise.
+     */
     Optional<Note> getNoteById(int noteId);
 
 }
