@@ -6,12 +6,10 @@ import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.MutationQuery;
-import org.hibernate.query.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 
-import javax.lang.model.type.NullType;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,15 +19,7 @@ import java.util.Optional;
 @Repository
 public class TripRepositoryImplementation implements TripRepository {
     @Override
-    public void addTrip(Integer userId,
-                        String title,
-                        Integer moneyInUsd,
-                        @Nullable String mainPhotoUrl,
-                        Date departureDate,
-                        Date arrivalDate,
-                        TripState state,
-                        List<Note> notes,
-                        List<CountryVisit> countries) {
+    public void addTrip(Integer userId, String title, Integer moneyInUsd, @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> countries) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             Trip newTrip = new Trip(userId, title, moneyInUsd, mainPhotoUrl, departureDate, arrivalDate, state, new ArrayList<>(), new ArrayList<>());
             Transaction transaction = session.beginTransaction();
@@ -67,9 +57,7 @@ public class TripRepositoryImplementation implements TripRepository {
 
     public Optional<Note> getNoteById(int noteId) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<Note> query = session.createQuery(
-                            "from Note m where m.id = :noteId", Note.class)
-                    .setParameter("noteId", noteId);
+            TypedQuery<Note> query = session.createQuery("from Note m where m.id = :noteId", Note.class).setParameter("noteId", noteId);
             List<Note> notes = query.getResultList();
             if (notes.isEmpty()) {
                 return Optional.empty();
@@ -77,6 +65,7 @@ public class TripRepositoryImplementation implements TripRepository {
             return Optional.of(notes.getFirst());
         }
     }
+
     @Override
     public boolean deleteNote(Integer noteId) {
         Optional<Note> noteOptional = getNoteById(noteId);
@@ -104,7 +93,7 @@ public class TripRepositoryImplementation implements TripRepository {
             countryVisit.setCities(Collections.emptyList());
             session.persist(countryVisit);
             countryVisit.setCities(countryVisitCities);
-            setCitiesVisits(List.of(countryVisit),session);
+            setCitiesVisits(List.of(countryVisit), session);
             transaction.commit();
         }
         return true;
@@ -112,9 +101,7 @@ public class TripRepositoryImplementation implements TripRepository {
 
     public Optional<Trip> getTripById(int tripId) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<Trip> query = session.createQuery(
-                            "from Trip m where m.id = :tripId", Trip.class)
-                    .setParameter("tripId", tripId);
+            TypedQuery<Trip> query = session.createQuery("from Trip m where m.id = :tripId", Trip.class).setParameter("tripId", tripId);
             List<Trip> trips = query.getResultList();
             if (trips.isEmpty()) {
                 return Optional.empty();
@@ -137,11 +124,9 @@ public class TripRepositoryImplementation implements TripRepository {
         return true;
     }
 
-    public List<Trip> getTrips(int userId){
+    public List<Trip> getTrips(int userId) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            TypedQuery<Trip> query = session.createQuery(
-                            "from Trip m where m.userId = :userId", Trip.class)
-                    .setParameter("userId", userId);
+            TypedQuery<Trip> query = session.createQuery("from Trip m where m.userId = :userId", Trip.class).setParameter("userId", userId);
             return query.getResultList();
         }
     }
@@ -150,11 +135,9 @@ public class TripRepositoryImplementation implements TripRepository {
     public boolean deleteCountryVisit(int countryVisitId) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            MutationQuery query = session.createMutationQuery(
-                            "delete from CountryVisit m where m.id = :countryVisitId")
-                    .setParameter("countryVisitId", countryVisitId);
+            MutationQuery query = session.createMutationQuery("delete from CountryVisit m where m.id = :countryVisitId").setParameter("countryVisitId", countryVisitId);
             int result = query.executeUpdate();
-            if (result == 0){
+            if (result == 0) {
                 return false;
             }
             transaction.commit();

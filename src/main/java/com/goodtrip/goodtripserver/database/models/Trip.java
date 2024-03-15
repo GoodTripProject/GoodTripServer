@@ -22,16 +22,16 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="money_in_usd")
+    @Column(name = "money_in_usd")
     private Integer moneyInUsd;
 
-    @Column(name="main_photo_url")
+    @Column(name = "main_photo_url")
     @Nullable
     private String mainPhotoUrl;
 
@@ -53,11 +53,11 @@ public class Trip {
     @Column(name = "state")
     private TripState state;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "trip_id")
     private List<Note> notes;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "trip_id")
     private List<CountryVisit> visits;
 

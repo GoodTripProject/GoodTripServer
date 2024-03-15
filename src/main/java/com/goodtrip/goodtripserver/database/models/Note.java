@@ -16,26 +16,26 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="photo_url")
+    @Column(name = "photo_url")
     private String photoUrl;
 
-    @Column(name="google_place_id")
+    @Column(name = "google_place_id")
     private String googlePlaceId;
 
-    @Column(name="trip_id")
+    @Column(name = "trip_id")
     private Integer tripId;
 
-    public Note(String title, @Nullable String photoUrl, String googlePlaceId, Integer tripId){
+    public Note(String title, @Nullable String photoUrl, String googlePlaceId, Integer tripId) {
         this.title = title;
         this.photoUrl = photoUrl;
         this.googlePlaceId = googlePlaceId;
         this.tripId = tripId;
     }
 
-    public Note(String title, @Nullable String photoUrl, String googlePlaceId){
+    public Note(String title, @Nullable String photoUrl, String googlePlaceId) {
         this.title = title;
         this.photoUrl = photoUrl;
         this.googlePlaceId = googlePlaceId;

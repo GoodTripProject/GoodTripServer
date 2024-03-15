@@ -1,6 +1,9 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
-import com.goodtrip.goodtripserver.database.models.*;
+import com.goodtrip.goodtripserver.database.models.CountryVisit;
+import com.goodtrip.goodtripserver.database.models.Note;
+import com.goodtrip.goodtripserver.database.models.Trip;
+import com.goodtrip.goodtripserver.database.models.TripState;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Repository;
 
@@ -13,26 +16,25 @@ public interface TripRepository {
     /**
      * Add trip to database and attach notes and visits (city to country, country to trip) to trip automatically.
      *
-     * @param userId user id in database.
-     * @param title title of trip.
-     * @param moneyInUsd budget of trip.
-     * @param mainPhotoUrl url to main photo.
+     * @param userId        user id in database.
+     * @param title         title of trip.
+     * @param moneyInUsd    budget of trip.
+     * @param mainPhotoUrl  url to main photo.
      * @param departureDate date of departure.
-     * @param arrivalDate date of arrival.
-     * @param state state of trip.
-     * @param notes notes to trip.
-     * @param countries country visits.
-     *
+     * @param arrivalDate   date of arrival.
+     * @param state         state of trip.
+     * @param notes         notes to trip.
+     * @param countries     country visits.
      */
     void addTrip(Integer userId, String title, Integer moneyInUsd,
-                    @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate,
-                    TripState state, List<Note> notes, List<CountryVisit> countries);
+                 @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate,
+                 TripState state, List<Note> notes, List<CountryVisit> countries);
 
     /**
      * Add note to trip.
      *
      * @param tripId id of trip.
-     * @param note note.
+     * @param note   note.
      */
     void addNote(Integer tripId, Note note);
 
@@ -47,7 +49,7 @@ public interface TripRepository {
     /**
      * Add country visit to trip.
      *
-     * @param tripId id of trip.
+     * @param tripId       id of trip.
      * @param countryVisit country visit.
      * @return true if trip exists, false otherwise.
      */

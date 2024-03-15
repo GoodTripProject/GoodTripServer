@@ -17,12 +17,13 @@ import java.util.Optional;
 @Repository
 public class AuthenticationRepositoryImplementation implements AuthenticationRepository {
 
-    private <T> Optional<T> getFirstIfExists(List<T> results){
+    private <T> Optional<T> getFirstIfExists(List<T> results) {
         if (results.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(results.getFirst());
     }
+
     public Optional<String> getSalt(String username) {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             TypedQuery<String> query = session.createQuery(

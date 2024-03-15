@@ -17,22 +17,23 @@ public class CountryVisit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="country")
+    @Column(name = "country")
     private String country;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "country_visit_id")
     private List<CityVisit> cities;
 
-    @Column(name="trip_id")
+    @Column(name = "trip_id")
     private Integer tripId;
-    public CountryVisit(String country, List<CityVisit> cities, Integer tripId){
+
+    public CountryVisit(String country, List<CityVisit> cities, Integer tripId) {
         this.country = country;
         this.cities = cities;
         this.tripId = tripId;
     }
 
-    public CountryVisit(String country, List<CityVisit> cities){
+    public CountryVisit(String country, List<CityVisit> cities) {
         this.country = country;
         this.cities = cities;
     }

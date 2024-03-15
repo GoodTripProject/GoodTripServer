@@ -39,7 +39,7 @@ public class User {
     @Column(name = "salt")
     private String salt;
 
-    @OneToMany(cascade=CascadeType.REMOVE,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Trip> trips;
 
