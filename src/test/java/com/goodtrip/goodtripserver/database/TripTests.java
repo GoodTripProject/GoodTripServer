@@ -52,7 +52,7 @@ class TripTests {
     }
 
     @Test
-    void addTrip_TripDoesNotExists_TripExistsAndDoesNotContainNotesAndVisits() {
+    public void addTrip_TripDoesNotExists_TripExistsAndDoesNotContainNotesAndVisits() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         assertEquals(user.getId(), trip.getUserId());
         assertEquals("1", trip.getTitle());
@@ -63,12 +63,12 @@ class TripTests {
     }
 
     @Test
-    void deleteTrip_TripDoesNotExists_DeleteTripReturnsFalse() {
+    public void deleteTrip_TripDoesNotExists_DeleteTripReturnsFalse() {
         assertFalse(tripRepository.deleteTrip(Integer.MAX_VALUE));
     }
 
     @Test
-    void addNote_TripDoesNotExists_SeveralNotesIsAddedAndHaveSameTripId() {
+    public void addNote_TripDoesNotExists_SeveralNotesIsAddedAndHaveSameTripId() {
         Trip trip = createTrip(List.of(new Note(UUID
                 .randomUUID().toString(), null, UUID.randomUUID().toString())), new ArrayList<>());
         for (int index = 0; index < 10; ++index) {
@@ -82,7 +82,7 @@ class TripTests {
     }
 
     @Test
-    void addDeleteNote_TripDoesNotExists_NotesIsAddedAndDeleted() {
+    public void addDeleteNote_TripDoesNotExists_NotesIsAddedAndDeleted() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         tripRepository.addNote(trip.getId(), new Note(UUID
                 .randomUUID().toString(), null, UUID.randomUUID().toString()));
@@ -97,7 +97,7 @@ class TripTests {
     }
 
     @Test
-    void addCountryVisit_TripDoesNotExists_CountryVisitWithoutCitiesIsAdded() {
+    public void addCountryVisit_TripDoesNotExists_CountryVisitWithoutCitiesIsAdded() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList()));
         List<CountryVisit> visits = getVisits();
@@ -123,7 +123,7 @@ class TripTests {
     }
 
     @Test
-    void addCountryVisit_TripDoesNotExists_CountryVisitWithSeveralCitiesIsAdded() {
+    public void addCountryVisit_TripDoesNotExists_CountryVisitWithSeveralCitiesIsAdded() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         List<CityVisit> cityVisits = List.of(new CityVisit("City1", 1, 1),
                 new CityVisit("City2", 2, 2), new CityVisit("City3", 3, 3));
@@ -139,7 +139,7 @@ class TripTests {
     }
 
     @Test
-    void addDeleteCountryVisit_TripDoesNotExists_CountryVisitIsAddedAndDeleted(){
+    public void addDeleteCountryVisit_TripDoesNotExists_CountryVisitIsAddedAndDeleted() {
         Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
         tripRepository.addCountryVisit(trip.getId(), new CountryVisit("Country", Collections.emptyList()));
         List<CountryVisit> actualCountryVisit = getCountryVisits(1);
@@ -153,11 +153,57 @@ class TripTests {
     @NotNull
     private List<CountryVisit> getCountryVisits(int expectedCountOfCountryVisits) {
         List<Trip> trips = tripRepository.getTrips(user.getId());
-        assertEquals(1,trips.size());
+        assertEquals(1, trips.size());
         List<CountryVisit> actualCountryVisit = tripRepository.getTrips(user.getId()).getFirst().getVisits();
-        assertEquals(expectedCountOfCountryVisits,actualCountryVisit.size());
+        assertEquals(expectedCountOfCountryVisits, actualCountryVisit.size());
         return actualCountryVisit;
     }
 
+    @NotNull
+    private List<Note> getNotes(int expectedCountOfNotes) {
+        List<Trip> trips = tripRepository.getTrips(user.getId());
+        assertEquals(1, trips.size());
+        List<Note> actualNotes = tripRepository.getTrips(user.getId()).getFirst().getNotes();
+        assertEquals(expectedCountOfNotes, actualNotes.size());
+        return actualNotes;
+    }
 
+    @Test
+    public void getTripById_TripDoesNotExist_TripExistsAndCanBeGettedById(){
+        Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
+        Optional<Trip> actualTrip = tripRepository.getTripById(trip.getId());
+        if (actualTrip.isEmpty()){
+            fail();
+        }
+        assertEquals(trip.getId(),actualTrip.get().getId());
+        assertEquals(trip.getUserId(),actualTrip.get().getUserId());
+        assertEquals(trip.getTitle(),actualTrip.get().getTitle());
+        assertEquals(trip.getState(),actualTrip.get().getState());
+        assertEquals(trip.getMoneyInUsd(),actualTrip.get().getMoneyInUsd());
+        assertEquals(trip.getDepartureDate(),actualTrip.get().getDepartureDate());
+        assertEquals(trip.getArrivalDate(),actualTrip.get().getArrivalDate());
+        deleteTrip(trip.getId());
+    }
+
+    @Test
+    public void getTripById_TripDoesNotExist_TripDoesNotExistAndCannotBeGettedById(){
+        Optional<Trip> actualTrip = tripRepository.getTripById(Integer.MAX_VALUE);
+        assertTrue(actualTrip.isEmpty());
+    }
+
+    @Test
+    public void getNoteById_NoteDoesNotExist_NoteDoesNotExistAndCannotBeGettedById(){
+        Optional<Note> actualNote = tripRepository.getNoteById(Integer.MAX_VALUE);
+        assertTrue(actualNote.isEmpty());
+    }
+
+    @Test
+    public void getNoteById_NoteExists_NoteCanBeGettedById(){
+        Trip trip = createTrip(Collections.emptyList(), Collections.emptyList());
+        tripRepository.addNote(trip.getId(),new Note("a",null,"b"));
+        Note actualNote = getNotes(1).getFirst();
+        assertEquals("a",actualNote.getTitle());
+        assertEquals("b",actualNote.getGooglePlaceId());
+        deleteTrip(trip.getId());
+    }
 }
