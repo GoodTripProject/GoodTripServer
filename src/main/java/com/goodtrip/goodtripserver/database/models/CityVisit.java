@@ -29,11 +29,17 @@ public class CityVisit {
     @Column(name="country_visit_id")
     private Integer countryVisitId;
 
-    double getLon(){
-        return point.x;
+    public CityVisit(String city, double lon, double lat) {
+        this.city = city;
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SRID);
+        this.point = geometryFactory.createPoint(new Coordinate(lon, lat));
     }
 
-    double getLat(){
-        return point.y;
+    public double getLon() {
+        return point.getX();
+    }
+
+    public double getLat() {
+        return point.getY();
     }
 }
