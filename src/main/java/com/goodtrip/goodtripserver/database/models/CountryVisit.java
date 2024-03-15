@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 @Table(name = "country_visits", schema = "public", catalog = "GoodTripDatabase")
 public class CountryVisit {
     @Id
@@ -24,4 +25,14 @@ public class CountryVisit {
 
     @Column(name="trip_id")
     private Integer tripId;
+    public CountryVisit(String country, List<CityVisit> cities, Integer tripId){
+        this.country = country;
+        this.cities = cities;
+        this.tripId = tripId;
+    }
+
+    public CountryVisit(String country, List<CityVisit> cities){
+        this.country = country;
+        this.cities = cities;
+    }
 }
