@@ -27,9 +27,7 @@ public interface TripRepository {
      * @param notes         notes to trip.
      * @param countries     country visits.
      */
-    void addTrip(Integer userId, String title, Integer moneyInUsd,
-                 @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate,
-                 TripState state, List<Note> notes, List<CountryVisit> countries);
+    void addTrip(Integer userId, String title, Integer moneyInUsd, @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> countries);
 
     /**
      * Add note to trip.
