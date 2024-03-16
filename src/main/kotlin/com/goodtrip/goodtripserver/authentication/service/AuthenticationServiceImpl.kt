@@ -6,7 +6,7 @@ import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
-import com.goodtrip.goodtripserver.encrypting.PasswordHasherImplementation
+import com.goodtrip.goodtripserver.encrypting.PasswordHasher
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,7 +20,9 @@ class AuthenticationServiceImpl : AuthenticationService {
 
     @Autowired
     private lateinit var jwtService: JwtService
-    private val hasher = PasswordHasherImplementation()
+
+    @Autowired
+    private lateinit var hasher: PasswordHasher
 
     override fun login(request: AuthorizationRequest): AuthenticationResponse {
         val salt = authenticationRepository.getSalt(request.username).get()
@@ -39,7 +41,6 @@ class AuthenticationServiceImpl : AuthenticationService {
     }
 
     override fun register(request: RegisterRequest): AuthenticationResponse {
-        //TODO хешировать пароль
         val salt = hasher.personalSalt
         val hashedPassword = hasher.hashPassword(request.password, salt)
         val user = User(

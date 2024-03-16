@@ -18,7 +18,7 @@ class SecurityConfiguration {
     @Autowired
     private lateinit var authenticationProvider: AuthenticationProvider
 
-    private var jwtAuthenticationFilter = JWTAuthenticationFilter()
+    private var jwtAuthenticationFilter = JwtAuthenticationFilter()
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -27,10 +27,12 @@ class SecurityConfiguration {
                 requests
                     .requestMatchers("/auth/login").permitAll()
                     .requestMatchers("/auth/register").permitAll()
-                    .anyRequest().authenticated()//какого-то черта здесь проблема
-            }.sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+                    .anyRequest().authenticated()
+            }
+            .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
         return http.build()
     }
 }

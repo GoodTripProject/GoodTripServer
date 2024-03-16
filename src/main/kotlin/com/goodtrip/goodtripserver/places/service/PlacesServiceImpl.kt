@@ -30,7 +30,8 @@ class PlacesServiceImpl : PlacesService {
         }
         return url.queryParam("key", "API_KEY")
             .encode()
-            .toUriString().replace('?', '%')
+            .toUriString()
+            .replace('?', '%')
             .replaceFirst('%', '?')
     }
 

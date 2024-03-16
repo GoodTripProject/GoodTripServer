@@ -1,6 +1,8 @@
 package com.goodtrip.goodtripserver.encrypting;
 
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -8,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.UUID;
 
-
+@Component
 public class PasswordHasherImplementation implements PasswordHasher {
     private final String secretSalt;
     private MessageDigest digest;
