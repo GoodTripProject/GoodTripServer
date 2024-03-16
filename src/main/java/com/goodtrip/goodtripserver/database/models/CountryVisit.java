@@ -1,15 +1,13 @@
 package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Table(name = "country_visits", schema = "public", catalog = "GoodTripDatabase")
 public class CountryVisit {

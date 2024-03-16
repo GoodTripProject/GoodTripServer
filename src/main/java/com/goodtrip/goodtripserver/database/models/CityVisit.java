@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 
 @Entity
 @NoArgsConstructor
-
+@Data
 @Table(name = "city_visits", schema = "public", catalog = "GoodTripDatabase")
 public class CityVisit {
     private final static int SRID = 4326;

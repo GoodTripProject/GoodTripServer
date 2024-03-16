@@ -2,13 +2,11 @@ package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Table(name = "notes", schema = "public", catalog = "GoodTripDatabase")
 public class Note {

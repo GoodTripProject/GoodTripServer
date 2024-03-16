@@ -2,9 +2,8 @@ package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -13,8 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Table(name = "trips", schema = "public", catalog = "GoodTripDatabase")
 public class Trip {

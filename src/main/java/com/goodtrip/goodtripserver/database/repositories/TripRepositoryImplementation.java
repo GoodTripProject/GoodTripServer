@@ -43,7 +43,15 @@ public class TripRepositoryImplementation implements TripRepository {
 
 
     @Override
-    public void addTrip(Integer userId, String title, Integer moneyInUsd, @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> countries) {
+    public void addTrip(Integer userId,
+                        String title,
+                        Integer moneyInUsd,
+                        @Nullable String mainPhotoUrl,
+                        Date departureDate,
+                        Date arrivalDate,
+                        TripState state,
+                        List<Note> notes,
+                        List<CountryVisit> countries) {
         try (Session session = getSession()) {
             Trip newTrip = new Trip(userId, title, moneyInUsd, mainPhotoUrl, departureDate, arrivalDate, state, new ArrayList<>(), new ArrayList<>());
             Transaction transaction = session.beginTransaction();
