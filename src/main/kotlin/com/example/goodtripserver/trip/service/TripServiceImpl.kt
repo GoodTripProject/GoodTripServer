@@ -1,6 +1,7 @@
 package com.example.goodtripserver.trip.service
 
 import com.example.goodtripserver.trip.model.AddNoteRequest
+import com.example.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.Trip
 import com.goodtrip.goodtripserver.database.repositories.TripRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,8 +27,23 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok(trip.get())
     }
 
+    override fun addTrip(request: AddTripRequest): ResponseEntity<String> {
+        tripRepository.addTrip(
+            request.userId,
+            request.title,
+            request.moneyInUsd,
+            request.mainPhotoUrl,
+            request.departureDate,
+            request.arrivalDate,
+            request.tripState,
+            request.notes,
+            request.countries
+        )
+        return ResponseEntity.ok().build()
+    }
+
     override fun deleteTrip(tripId: Int): ResponseEntity<String> {
-        if (tripRepository.deleteTrip(tripId)){
+        if (tripRepository.deleteTrip(tripId)) {
             return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
         }
         return ResponseEntity.ok("Trip deleted successfully")
