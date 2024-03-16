@@ -1,6 +1,6 @@
 package com.goodtrip.goodtripserver.database;
 
-import com.goodtrip.goodtripserver.database.models.User;
+import com.goodtrip.goodtripserver.database.models.*;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,7 +19,12 @@ public class HibernateUtility {
         } catch (IOException e) {
             // TODO: Log
         }
-        sessionFactory = new Configuration().mergeProperties(connectionProperties).addAnnotatedClass(User.class)
+        sessionFactory = new Configuration().mergeProperties(connectionProperties)
+                .addAnnotatedClass(User.class)
+                .addAnnotatedClass(Trip.class)
+                .addAnnotatedClass(Note.class)
+                .addAnnotatedClass(CountryVisit.class)
+                .addAnnotatedClass(CityVisit.class)
                 .buildSessionFactory();
     }
 

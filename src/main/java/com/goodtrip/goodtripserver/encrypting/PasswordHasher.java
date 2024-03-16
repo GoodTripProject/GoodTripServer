@@ -7,6 +7,7 @@ public interface PasswordHasher {
      * @return random string, which uses like personal salt of user.
      */
     String getPersonalSalt();
+
     /**
      * Hash password to save in database.
      *
