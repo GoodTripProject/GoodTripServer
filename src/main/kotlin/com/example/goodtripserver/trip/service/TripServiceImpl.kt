@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class TripServiceImpl : TripService {
-    @Autowired()
-    lateinit var tripRepository: TripRepository //TODO разобраться что не так
+    @Autowired
+    private lateinit var tripRepository: TripRepository //TODO разобраться что не так
 
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
@@ -27,17 +27,17 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok(trip.get())
     }
 
-    override fun addTrip(request: AddTripRequest): ResponseEntity<String> {
+    override fun addTrip(trip: AddTripRequest): ResponseEntity<String> {
         tripRepository.addTrip(
-            request.userId,
-            request.title,
-            request.moneyInUsd,
-            request.mainPhotoUrl,
-            request.departureDate,
-            request.arrivalDate,
-            request.tripState,
-            request.notes,
-            request.countries
+            trip.userId,
+            trip.title,
+            trip.moneyInUsd,
+            trip.mainPhotoUrl,
+            trip.departureDate,
+            trip.arrivalDate,
+            trip.tripState,
+            trip.notes,
+            trip.countries
         )
         return ResponseEntity.ok().build()
     }
