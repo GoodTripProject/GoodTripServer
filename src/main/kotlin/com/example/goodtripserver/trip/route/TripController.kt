@@ -4,6 +4,7 @@ import com.example.goodtripserver.trip.service.TripService
 import com.goodtrip.goodtripserver.database.models.Trip
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,10 +24,18 @@ class TripController {
         return tripService.getTrips(userId)
     }
 
-    @GetMapping
+    //TODO сделать, чтобы id был в пути вместо trip
+    @GetMapping("/trip")
     @ResponseBody
     fun getTripById(@RequestBody tripId: Int): ResponseEntity<Any> {
         return tripService.getTrip(tripId)
+    }
+
+    //TODO аналогично
+    @DeleteMapping("/trip")
+    @ResponseBody
+    fun deleteTripById(@RequestBody tripId: Int): ResponseEntity<String>{
+        return tripService.deleteTrip(tripId)
     }
 
 
