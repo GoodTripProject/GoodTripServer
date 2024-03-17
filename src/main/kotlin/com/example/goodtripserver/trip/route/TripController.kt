@@ -1,5 +1,6 @@
 package com.example.goodtripserver.trip.route
 
+import com.example.goodtripserver.trip.model.AddCountryRequest
 import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
 import com.example.goodtripserver.trip.service.TripService
@@ -68,4 +69,17 @@ class TripController {
         return tripService.addNote(request)
     }
 
+    //TODO аналогично
+    @PostMapping("/country")
+    @ResponseBody
+    fun addCountryVisit(@RequestBody request: AddCountryRequest): ResponseEntity<String> {
+        return tripService.addCountryVisit(request)
+    }
+
+    //TODO аналогично
+    @DeleteMapping("/country")
+    @ResponseBody
+    fun deleteCountryVisit(@RequestBody countryVisitId: Int): ResponseEntity<String> {
+        return tripService.deleteCountryVisit(countryVisitId)
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.goodtripserver.trip.service
 
+import com.example.goodtripserver.trip.model.AddCountryRequest
 import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.Trip
@@ -20,5 +21,10 @@ interface TripService {
     fun addNote(request: AddNoteRequest): ResponseEntity<String>
 
     fun deleteNote(noteId: Int): ResponseEntity<String>
+
+    fun addCountryVisit(addCountryRequest: AddCountryRequest): ResponseEntity<String>
+
+    fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
+
 
 }

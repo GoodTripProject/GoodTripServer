@@ -1,5 +1,6 @@
 package com.example.goodtripserver.trip.service
 
+import com.example.goodtripserver.trip.model.AddCountryRequest
 import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.Trip
@@ -69,5 +70,17 @@ class TripServiceImpl : TripService {
             return ResponseEntity.ok("Note deleted successfully")
         }
         return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
+    }
+
+    override fun addCountryVisit(addCountryRequest: AddCountryRequest): ResponseEntity<String> {
+        tripRepository.addCountryVisit(addCountryRequest.tripId, addCountryRequest.countryVisit)
+        return ResponseEntity.ok().build()
+    }
+
+    override fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String> {
+        if (tripRepository.deleteCountryVisit(countryVisitId)) {
+            return ResponseEntity.ok("Country deleted successfully")
+        }
+        return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")
     }
 }
