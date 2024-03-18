@@ -5,14 +5,17 @@ import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.Trip
 import com.goodtrip.goodtripserver.database.repositories.TripRepository
+import com.goodtrip.goodtripserver.database.repositories.TripRepositoryImplementation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class TripServiceImpl : TripService {
-    @Autowired
-    private lateinit var tripRepository: TripRepository //TODO разобраться что не так
+//    @Autowired
+//    private lateinit var tripRepository: TripRepository //TODO разобраться что не так
+
+    private val tripRepository = TripRepositoryImplementation()
 
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
@@ -61,7 +64,7 @@ class TripServiceImpl : TripService {
 
     //TODO сказать андрею, что лучше возвращать булл, была ли добавлена записка
     override fun addNote(request: AddNoteRequest): ResponseEntity<String> {
-        tripRepository.addNote(request.userId, request.note)
+//        tripRepository.addNote(request.userId, request.note)
         return ResponseEntity.ok().build()
     }
 
