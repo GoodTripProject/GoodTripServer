@@ -12,17 +12,17 @@ interface TripService {
 
     fun getTrip(tripId: Int): ResponseEntity<Any>
 
-    fun addTrip(trip: AddTripRequest): ResponseEntity<String>
+    fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String>
 
     fun deleteTrip(tripId: Int): ResponseEntity<String>
 
     fun getNote(noteId: Int): ResponseEntity<Any>
 
-    fun addNote(request: AddNoteRequest): ResponseEntity<String>
+    fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String>
 
     fun deleteNote(noteId: Int): ResponseEntity<String>
 
-    fun addCountryVisit(addCountryRequest: AddCountryRequest): ResponseEntity<String>
+    fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String>
 
     fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
 

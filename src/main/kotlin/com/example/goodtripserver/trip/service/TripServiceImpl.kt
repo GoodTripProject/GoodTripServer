@@ -3,10 +3,10 @@ package com.example.goodtripserver.trip.service
 import com.example.goodtripserver.trip.model.AddCountryRequest
 import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
+import com.goodtrip.goodtripserver.database.models.CountryVisit
+import com.goodtrip.goodtripserver.database.models.Note
 import com.goodtrip.goodtripserver.database.models.Trip
-import com.goodtrip.goodtripserver.database.repositories.TripRepository
 import com.goodtrip.goodtripserver.database.repositories.TripRepositoryImplementation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -31,9 +31,9 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok(trip.get())
     }
 
-    override fun addTrip(trip: AddTripRequest): ResponseEntity<String> {
+    override fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String> {
         tripRepository.addTrip(
-            trip.userId,
+            userId,
             trip.title,
             trip.moneyInUsd,
             trip.mainPhotoUrl,
@@ -63,8 +63,8 @@ class TripServiceImpl : TripService {
 
 
     //TODO сказать андрею, что лучше возвращать булл, была ли добавлена записка
-    override fun addNote(request: AddNoteRequest): ResponseEntity<String> {
-//        tripRepository.addNote(request.userId, request.note)
+    override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
+        tripRepository.addNote(userId, Note(note.title, note.photoUrl, note.googlePlaceId, note.tripId))
         return ResponseEntity.ok().build()
     }
 
@@ -75,8 +75,8 @@ class TripServiceImpl : TripService {
         return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
     }
 
-    override fun addCountryVisit(addCountryRequest: AddCountryRequest): ResponseEntity<String> {
-        tripRepository.addCountryVisit(addCountryRequest.tripId, addCountryRequest.countryVisit)
+    override fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String> {
+        tripRepository.addCountryVisit(tripId, CountryVisit(country.country, country.cities, tripId))
         return ResponseEntity.ok().build()
     }
 

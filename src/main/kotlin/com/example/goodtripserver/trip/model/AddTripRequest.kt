@@ -8,8 +8,6 @@ import java.sql.Date
 
 data class AddTripRequest(
 
-    val userId: Int,
-
     val title: String,
 
     val moneyInUsd: Int,

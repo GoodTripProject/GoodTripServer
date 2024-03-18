@@ -35,11 +35,10 @@ class TripController {
         return tripService.getTrip(tripId)
     }
 
-    //TODO
-    @PostMapping
+    @PostMapping("/{userId}")
     @ResponseBody
-    fun addTrip(@RequestBody trip: AddTripRequest): ResponseEntity<String> {
-        return tripService.addTrip(trip)
+    fun addTrip(@PathVariable userId: Int, @RequestBody trip: AddTripRequest): ResponseEntity<String> {
+        return tripService.addTrip(userId, trip)//TODO проверить, как работает (написать джейсончик)
     }
 
     @ResponseBody
@@ -60,23 +59,22 @@ class TripController {
         return tripService.deleteNote(noteId)
     }
 
-    //TODO
     @ResponseBody
     @PostMapping("/note/{userId}")
-    fun addNote(@RequestBody request: AddNoteRequest): ResponseEntity<String> {
-        return tripService.addNote(request)
+    fun addNote(@PathVariable userId: Int, @RequestBody note: AddNoteRequest): ResponseEntity<String> {
+        return tripService.addNote(userId, note)
     }
 
-    //TODO
+    //TODO спросить у андрея, что с id происходит
     @ResponseBody
     @PostMapping("/country/{tripId}")
-    fun addCountryVisit(@RequestBody request: AddCountryRequest): ResponseEntity<String> {
-        return tripService.addCountryVisit(request)
+    fun addCountryVisit(@PathVariable tripId: Int, @RequestBody country: AddCountryRequest): ResponseEntity<String> {
+        return tripService.addCountryVisit(tripId, country)
     }
 
-    //TODO аналогично
-    @DeleteMapping("/country/{countryVisitId}")
     @ResponseBody
+    @DeleteMapping("/country/{countryVisitId}")
+
     fun deleteCountryVisit(@PathVariable countryVisitId: Int): ResponseEntity<String> {
         return tripService.deleteCountryVisit(countryVisitId)
     }

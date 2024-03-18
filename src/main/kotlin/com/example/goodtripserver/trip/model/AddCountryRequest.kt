@@ -1,10 +1,10 @@
 package com.example.goodtripserver.trip.model
 
-import com.goodtrip.goodtripserver.database.models.CountryVisit
+import com.goodtrip.goodtripserver.database.models.CityVisit
 
 data class AddCountryRequest(
 
-    val tripId: Int,
+    val country: String,
 
-    val countryVisit: CountryVisit
+    val cities: List<CityVisit>
 )
