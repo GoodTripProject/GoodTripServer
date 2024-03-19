@@ -45,8 +45,6 @@ class TripServiceImpl : TripService {
         val notes = trip.notes.stream()
             .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
             .toList()
-//        val notes = ArrayList<Note>()
-//        trip.notes.forEach { notes.add(Note(it.title, it.photoUrl, it.googlePlaceId)) }
         tripRepository.addTrip(
             userId,
             trip.title,
