@@ -48,6 +48,11 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    implementation("org.locationtech.jts:jts-core:1.19.0")
+    implementation("org.postgis:postgis-jdbc:1.3.3") {
+        exclude(group = "org.postgis", module = "postgis-stubs")
+    }
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions {
