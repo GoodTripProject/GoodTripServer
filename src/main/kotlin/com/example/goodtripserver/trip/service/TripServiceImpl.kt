@@ -3,6 +3,7 @@ package com.example.goodtripserver.trip.service
 import com.example.goodtripserver.trip.model.AddCountryRequest
 import com.example.goodtripserver.trip.model.AddNoteRequest
 import com.example.goodtripserver.trip.model.AddTripRequest
+import com.goodtrip.goodtripserver.database.models.CityVisit
 import com.goodtrip.goodtripserver.database.models.CountryVisit
 import com.goodtrip.goodtripserver.database.models.Note
 import com.goodtrip.goodtripserver.database.models.Trip
@@ -32,6 +33,20 @@ class TripServiceImpl : TripService {
     }
 
     override fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String> {
+        val countries = ArrayList<CountryVisit>()
+        trip.countries.forEach { it ->
+            val country = ArrayList<CityVisit>()
+            it.cities.forEach {
+                country.add(CityVisit(it.city, it.longitude, it.latitude))
+            }
+            countries.add(CountryVisit(it.country, country))
+
+        }
+        val notes = trip.notes.stream()
+            .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
+            .toList()
+//        val notes = ArrayList<Note>()
+//        trip.notes.forEach { notes.add(Note(it.title, it.photoUrl, it.googlePlaceId)) }
         tripRepository.addTrip(
             userId,
             trip.title,
@@ -40,8 +55,8 @@ class TripServiceImpl : TripService {
             trip.departureDate,
             trip.arrivalDate,
             trip.tripState,
-            trip.notes,
-            trip.countries
+            notes,
+            countries
         )
         return ResponseEntity.ok().build()
     }
@@ -76,7 +91,9 @@ class TripServiceImpl : TripService {
     }
 
     override fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String> {
-        tripRepository.addCountryVisit(tripId, CountryVisit(country.country, country.cities, tripId))
+        val cities = ArrayList<CityVisit>()
+        country.cities.forEach { cities.add(CityVisit(it.city, it.longitude, it.latitude)) }
+        tripRepository.addCountryVisit(tripId, CountryVisit(country.country, cities, tripId))
         return ResponseEntity.ok().build()
     }
 
