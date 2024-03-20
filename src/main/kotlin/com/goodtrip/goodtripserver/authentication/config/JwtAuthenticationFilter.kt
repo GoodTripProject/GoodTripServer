@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.authentication.config
 
+import com.goodtrip.goodtripserver.authentication.service.UserService
 import com.goodtrip.goodtripserver.authentication.service.UserServiceImpl
 import io.jsonwebtoken.io.IOException
 import jakarta.servlet.FilterChain
@@ -7,6 +8,7 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
@@ -17,10 +19,11 @@ import kotlin.jvm.Throws
 @Component
 @RequiredArgsConstructor
 class JwtAuthenticationFilter : OncePerRequestFilter() {
-    val jwtService = JwtService()
+    @Autowired
+    private lateinit var jwtService : JwtService
 
-    //    @Autowired
-    private val userService = UserServiceImpl()//TODO понять, в чем трабл
+    @Autowired
+    private lateinit var userService : UserService
 
     override fun doFilterInternal(
         request: HttpServletRequest,
