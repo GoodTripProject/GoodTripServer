@@ -1,6 +1,5 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
-import com.goodtrip.goodtripserver.database.HibernateUtility;
 import com.goodtrip.goodtripserver.database.models.*;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
@@ -10,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class TripRepositoryImplementation implements TripRepository {
 
 
     private Session getSession() {
-        return HibernateUtility.getSessionFactory().openSession();
+        return null;
     }
 
     private void setCitiesVisits(@NotNull List<CountryVisit> countries, Session session) {
