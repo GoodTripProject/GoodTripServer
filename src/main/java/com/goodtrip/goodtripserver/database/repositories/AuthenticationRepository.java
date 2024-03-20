@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.User;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -8,8 +9,7 @@ import java.util.Optional;
 /**
  * Repository of authentication.
  */
-@Repository
-public interface AuthenticationRepository {
+public interface AuthenticationRepository extends CrudRepository<User,Integer> {
     /**
      * Get salt for user.
      *
@@ -25,7 +25,7 @@ public interface AuthenticationRepository {
      * @param hashedPassword hashed password
      * @return Optional.empty() if user have incorrect password or username, user otherwise
      */
-    Optional<User> login(String username, String hashedPassword);
+    Optional<User> findUserByUsernameAndHashedPassword(String username, String hashedPassword);
 
     /**
      * Creates new user and add him to database (only if user with this login did not exist and token is unique).
@@ -38,7 +38,7 @@ public interface AuthenticationRepository {
      * @param salt           salt to save his password
      * @return true if user added, false if user existed or token is not unique
      */
-    boolean signUpIfNotExists(String username, String handle, String hashedPassword, String name, String surname, String salt);
+    boolean addUserIfNotExists(String username, String handle, String hashedPassword, String name, String surname, String salt);
 
     /**
      * Delete user from database if user exists.
@@ -46,7 +46,7 @@ public interface AuthenticationRepository {
      * @param username       username (usually email).
      * @param hashedPassword hashed password of user.
      */
-    void deleteUserIfExists(String username, String hashedPassword);
+    void deleteUserIfExistsByUsernameAndHashedPassword(String username, String hashedPassword);
 
     /**
      * Checks if user exists in database.
@@ -54,5 +54,5 @@ public interface AuthenticationRepository {
      * @param username username (usually email)
      * @return true if user exists in database, false otherwise
      */
-    boolean isUserExists(String username);
+    boolean existsUserBy(String username);
 }
