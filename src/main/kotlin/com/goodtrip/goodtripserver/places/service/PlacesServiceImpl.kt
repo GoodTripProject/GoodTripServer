@@ -44,7 +44,7 @@ class PlacesServiceImpl : PlacesService {
         placeId = this.get("place_id").toString()//TODO потом проверить
     )
 
-    override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
+    override fun getNearPlaces(placeRequest: PlaceRequest): List<PlacesResponse>? {
         val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
@@ -56,14 +56,14 @@ class PlacesServiceImpl : PlacesService {
             val places = mutableListOf<PlacesResponse>()
             val responseObject = objectMapper.readTree(response.body())
             if (responseObject["status"].toString() == "\"INVALID_REQUEST\"") {
-                return ResponseEntity.badRequest().body("Invalid request")
+                return null
             }
             responseObject["results"].forEach {
                 val place = it.getPlace()
                 places.add(place)
             }
-            return ResponseEntity.ok(places)
+            return places
         }
-        return ResponseEntity.badRequest().body("Invalid request")
+        return null
     }
 }

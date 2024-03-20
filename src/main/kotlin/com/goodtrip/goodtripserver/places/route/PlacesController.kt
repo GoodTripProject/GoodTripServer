@@ -1,13 +1,10 @@
 package com.goodtrip.goodtripserver.places.route
 
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
+import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import com.goodtrip.goodtripserver.places.service.PlacesService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class PlacesController {
@@ -16,7 +13,14 @@ class PlacesController {
     private lateinit var placesService: PlacesService
     @GetMapping("/places")
     @ResponseBody
-    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): ResponseEntity<Any> {
+    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): List<PlacesResponse>? {
+        println("getNearPlaces + $placeRequest")
         return placesService.getNearPlaces(placeRequest)
+    }
+
+    @GetMapping("/hello")
+    @ResponseBody
+    fun getNearPlaces(): String {
+        return "Hello bitch"
     }
 }

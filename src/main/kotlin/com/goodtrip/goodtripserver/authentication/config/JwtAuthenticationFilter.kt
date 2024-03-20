@@ -1,7 +1,9 @@
 package com.goodtrip.goodtripserver.authentication.config
 
 import com.goodtrip.goodtripserver.authentication.service.UserServiceImpl
+import io.jsonwebtoken.io.IOException
 import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
@@ -10,19 +12,22 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import kotlin.jvm.Throws
 
 @Component
 @RequiredArgsConstructor
 class JwtAuthenticationFilter : OncePerRequestFilter() {
     val jwtService = JwtService()
 
-//    @Autowired
+    //    @Autowired
     private val userService = UserServiceImpl()//TODO понять, в чем трабл
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+
         val authHeader = request.getHeader("Authorization")
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response)
@@ -31,17 +36,28 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         //Extract jwt token from header
         val jwt: String = authHeader.substring(7)
         val username = jwtService.extractUsername(jwt)
+        println("jwt = $jwt");
+        println("username = $username");
         //check that user is not connected yet
         if (!username.isNullOrEmpty() && SecurityContextHolder.getContext().authentication == null) {
             val userDetails = userService.loadUserByUsername(username)
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                val authToken = UsernamePasswordAuthenticationToken(userService, null, userDetails.authorities)
+                println("jwt token is valid")
+                val authToken = UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.authorities
+                )
 
                 authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                //update security context holder
+
+                // Update security context holder
                 SecurityContextHolder.getContext().authentication = authToken
             }
-            filterChain.doFilter(request, response)
         }
+
+        println("perform filter chain")
+        filterChain.doFilter(request, response)
+
     }
 }

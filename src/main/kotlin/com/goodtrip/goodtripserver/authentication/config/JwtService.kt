@@ -1,14 +1,22 @@
 package com.goodtrip.goodtripserver.authentication.config
 
+import com.nimbusds.jose.jwk.source.ImmutableSecret
+import com.nimbusds.jose.proc.SecurityContext
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.springframework.context.annotation.Bean
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.util.*
+import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.HashMap
 
 @Service
@@ -27,9 +35,11 @@ class JwtService {
 //    Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt) TODO заменить
 
     private fun getSignInKey(): Key {
-        val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
+        val keyBytes = getKeyBytes(SECRET_KEY)
         return Keys.hmacShaKeyFor(keyBytes)
     }
+
+    private fun getKeyBytes(key: String) =  Decoders.BASE64.decode(key)
 
     //TODO try to use non-deprecated methods
     fun generateToken(claims: Map<String, Any>, userDetails: UserDetails): String =
@@ -50,4 +60,5 @@ class JwtService {
     private fun isTokenExpired(token: String) = extractExpiration(token).before(Date())
 
     private fun extractExpiration(token: String) = extractClaim(token, Claims::getExpiration)
+
 }
