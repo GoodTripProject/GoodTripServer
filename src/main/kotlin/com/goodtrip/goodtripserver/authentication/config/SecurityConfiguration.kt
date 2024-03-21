@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.filter.OncePerRequestFilter
 
 @Configuration
 @EnableWebSecurity
@@ -18,7 +19,8 @@ class SecurityConfiguration {
     @Autowired
     private lateinit var authenticationProvider: AuthenticationProvider
 
-    private var jwtAuthenticationFilter = JwtAuthenticationFilter()
+    @Autowired
+    private lateinit var jwtAuthenticationFilter: OncePerRequestFilter
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {

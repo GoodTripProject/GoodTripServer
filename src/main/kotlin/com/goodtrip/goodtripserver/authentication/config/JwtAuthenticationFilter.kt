@@ -1,10 +1,12 @@
 package com.goodtrip.goodtripserver.authentication.config
 
+import com.goodtrip.goodtripserver.authentication.service.UserService
 import com.goodtrip.goodtripserver.authentication.service.UserServiceImpl
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
@@ -14,10 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 @RequiredArgsConstructor
 class JwtAuthenticationFilter : OncePerRequestFilter() {
-    val jwtService = JwtService()
+    @Autowired
+    private lateinit var jwtService: JwtService
 
-//    @Autowired
-    private val userService = UserServiceImpl()//TODO понять, в чем трабл
+    //    @Autowired
+    private lateinit var userService: UserService//TODO понять, в чем трабл
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -35,7 +38,11 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         if (!username.isNullOrEmpty() && SecurityContextHolder.getContext().authentication == null) {
             val userDetails = userService.loadUserByUsername(username)
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                val authToken = UsernamePasswordAuthenticationToken(userService, null, userDetails.authorities)
+                val authToken = UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.authorities
+                )
 
                 authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
                 //update security context holder

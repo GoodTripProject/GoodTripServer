@@ -27,9 +27,11 @@ class JwtService {
 //    Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt) TODO заменить
 
     private fun getSignInKey(): Key {
-        val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
+        val keyBytes = getKeyBytes(SECRET_KEY)
         return Keys.hmacShaKeyFor(keyBytes)
     }
+
+    private fun getKeyBytes(key: String) = Decoders.BASE64.decode(key)
 
     //TODO try to use non-deprecated methods
     fun generateToken(claims: Map<String, Any>, userDetails: UserDetails): String =

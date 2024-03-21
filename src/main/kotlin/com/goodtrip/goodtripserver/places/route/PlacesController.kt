@@ -14,6 +14,7 @@ class PlacesController {
 
     @Autowired
     private lateinit var placesService: PlacesService
+
     @GetMapping("/places")
     @ResponseBody
     fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): ResponseEntity<Any> {
