@@ -19,7 +19,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
     private lateinit var jwtService: JwtService
 
-    //    @Autowired
+    @Autowired
     private lateinit var userService: UserService//TODO понять, в чем трабл
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -48,7 +48,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 //update security context holder
                 SecurityContextHolder.getContext().authentication = authToken
             }
-            filterChain.doFilter(request, response)
         }
+        filterChain.doFilter(request, response)
+
     }
 }
