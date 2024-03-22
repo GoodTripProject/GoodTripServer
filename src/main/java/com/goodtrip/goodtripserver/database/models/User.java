@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 
 @Setter
 @Getter
@@ -13,6 +16,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "users", schema = "public", catalog = "GoodTripDatabase")
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +46,9 @@ public class User implements UserDetails {
     @Column(name = "salt")
     private String salt;
 
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Trip> trips;
 
     public User(String username, String handle, String hashedPassword, String name, String surname, String salt) {
         this.username = username;
