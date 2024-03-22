@@ -28,7 +28,7 @@ class PlacesServiceImpl : PlacesService {
         placeRequest.type?.let {
             url.queryParam("rankBy", placeRequest.rankBy)
         }
-        return url.queryParam("key", "API_KEY")
+        return url.queryParam("key", "API_KEY")//TODO вставить ключ
             .encode()
             .toUriString()
             .replace('?', '%')
