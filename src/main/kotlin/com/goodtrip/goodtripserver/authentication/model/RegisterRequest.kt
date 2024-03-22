@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank
 import lombok.Builder
 
 @Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
 data class RegisterRequest(
     @NotBlank
     @Email

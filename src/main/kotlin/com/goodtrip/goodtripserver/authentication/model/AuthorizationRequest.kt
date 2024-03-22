@@ -7,8 +7,6 @@ import lombok.Builder
 import lombok.NoArgsConstructor
 
 @Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
 data class AuthorizationRequest(
     @NotBlank(message = "Login can't be empty")
     @Email

@@ -1,8 +1,6 @@
 package com.goodtrip.goodtripserver.authentication.model
 
 
-//@NoArgsConstructor
-//@AllArgsConstructor
 data class AuthenticationResponse(
     val handle: String,
     val name: String,

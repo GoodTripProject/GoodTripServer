@@ -1,7 +1,6 @@
 package com.goodtrip.goodtripserver.authentication.config
 
 import com.goodtrip.goodtripserver.authentication.service.UserService
-import com.goodtrip.goodtripserver.authentication.service.UserServiceImpl
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
