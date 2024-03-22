@@ -19,7 +19,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     private lateinit var jwtService: JwtService
 
     @Autowired
-    private lateinit var userService: UserService//TODO понять, в чем трабл
+    private lateinit var userService: UserService
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
