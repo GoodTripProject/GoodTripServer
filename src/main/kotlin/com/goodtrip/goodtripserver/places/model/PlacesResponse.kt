@@ -1,4 +1,4 @@
-package com.example.goodtripserver.places.model
+package com.goodtrip.goodtripserver.places.model
 
 import jakarta.validation.constraints.NotBlank
 
@@ -13,6 +13,8 @@ data class PlacesResponse(
 
     val icon: String,//TODO поменять на фото
 
-    val rating: Int
+    val rating: Int,
+
+    val placeId: String
 )
 

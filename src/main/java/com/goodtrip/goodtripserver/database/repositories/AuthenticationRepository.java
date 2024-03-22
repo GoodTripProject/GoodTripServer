@@ -1,14 +1,12 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.User;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 /**
  * Repository of authentication.
  */
-@Repository
 public interface AuthenticationRepository {
     /**
      * Get salt for user.
@@ -55,4 +53,14 @@ public interface AuthenticationRepository {
      * @return true if user exists in database, false otherwise
      */
     boolean isUserExists(String username);
+
+
+    /**
+     * Return user by Email
+     *
+     * @param email user email
+     * @return Optional.empty() if user doesn't exist, User otherwise
+     */
+    Optional<User> getUserByEmail(String email);
+
 }

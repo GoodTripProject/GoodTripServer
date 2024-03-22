@@ -1,4 +1,4 @@
-package com.example.goodtripserver.places.model
+package com.goodtrip.goodtripserver.places.model
 
 import jakarta.validation.constraints.NotBlank
 

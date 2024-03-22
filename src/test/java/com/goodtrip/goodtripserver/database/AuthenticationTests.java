@@ -56,4 +56,5 @@ public class AuthenticationTests {
         assertEquals(Optional.empty(),
                 authenticationRepository.login("a","c"));
     }
+
 }

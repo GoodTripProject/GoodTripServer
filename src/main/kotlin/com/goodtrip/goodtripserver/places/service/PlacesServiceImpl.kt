@@ -1,7 +1,7 @@
-package com.example.goodtripserver.places.service
+package com.goodtrip.goodtripserver.places.service
 
-import com.example.goodtripserver.places.model.PlaceRequest
-import com.example.goodtripserver.places.model.PlacesResponse
+import com.goodtrip.goodtripserver.places.model.PlaceRequest
+import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.http.HttpStatus
@@ -28,22 +28,23 @@ class PlacesServiceImpl : PlacesService {
         placeRequest.type?.let {
             url.queryParam("rankBy", placeRequest.rankBy)
         }
-        return url.queryParam("key", "API_KEY")
+        return url.queryParam("key", "API_KEY")//TODO вставить ключ
             .encode()
-            .toUriString().replace('?', '%')
+            .toUriString()
+            .replace('?', '%')
             .replaceFirst('%', '?')
     }
 
-    //TODO че по стилю
     private fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
         icon = this["icon"].toString(),
-        rating = this.get("rating")?.asInt() ?: 0
+        rating = this.get("rating")?.asInt() ?: 0,
+        placeId = this.get("place_id").toString()//TODO потом проверить
     )
 
-    override fun getNearPlaces(placeRequest: PlaceRequest): Any {
+    override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
         val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
