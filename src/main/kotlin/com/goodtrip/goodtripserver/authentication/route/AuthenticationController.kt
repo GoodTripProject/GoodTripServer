@@ -7,7 +7,6 @@ import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,7 +22,7 @@ class AuthenticationController {
     lateinit var authenticationService: AuthenticationService
 
     @ResponseBody
-    @GetMapping("/login")
+    @PostMapping("/login")
     fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
         return ResponseEntity.ok(authenticationService.login(authorizationRequest))
     }

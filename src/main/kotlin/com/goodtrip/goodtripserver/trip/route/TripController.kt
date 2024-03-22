@@ -1,9 +1,9 @@
-package com.example.goodtripserver.trip.route
+package com.goodtrip.goodtripserver.trip.route
 
-import com.example.goodtripserver.trip.model.AddCountryRequest
-import com.example.goodtripserver.trip.model.AddNoteRequest
-import com.example.goodtripserver.trip.model.AddTripRequest
-import com.example.goodtripserver.trip.service.TripService
+import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
+import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
+import com.goodtrip.goodtripserver.trip.model.AddTripRequest
+import com.goodtrip.goodtripserver.trip.service.TripService
 import com.goodtrip.goodtripserver.database.models.Trip
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
