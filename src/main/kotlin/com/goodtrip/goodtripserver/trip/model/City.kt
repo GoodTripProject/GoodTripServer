@@ -1,4 +1,4 @@
-package com.example.goodtripserver.trip.model
+package com.goodtrip.goodtripserver.trip.model
 
 data class City(
 

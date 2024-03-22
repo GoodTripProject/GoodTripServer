@@ -1,8 +1,8 @@
-package com.example.goodtripserver.trip.service
+package com.goodtrip.goodtripserver.trip.service
 
-import com.example.goodtripserver.trip.model.AddCountryRequest
-import com.example.goodtripserver.trip.model.AddNoteRequest
-import com.example.goodtripserver.trip.model.AddTripRequest
+import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
+import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
+import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.CityVisit
 import com.goodtrip.goodtripserver.database.models.CountryVisit
 import com.goodtrip.goodtripserver.database.models.Note
