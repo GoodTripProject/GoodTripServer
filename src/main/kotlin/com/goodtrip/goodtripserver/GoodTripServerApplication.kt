@@ -1,4 +1,4 @@
-package com.example.goodtripserver
+package com.goodtrip.goodtripserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

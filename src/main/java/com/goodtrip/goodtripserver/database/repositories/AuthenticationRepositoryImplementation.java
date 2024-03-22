@@ -85,4 +85,13 @@ public class AuthenticationRepositoryImplementation implements AuthenticationRep
     }
 
 
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            TypedQuery<User> query = session.createQuery("from User m where m.username = :email", User.class)
+                    .setParameter("email", email);
+            return getFirstIfExists(query.getResultList());
+        }
+    }
+
 }
