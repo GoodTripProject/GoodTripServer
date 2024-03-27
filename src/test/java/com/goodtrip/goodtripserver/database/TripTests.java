@@ -2,22 +2,28 @@ package com.goodtrip.goodtripserver.database;
 
 import com.goodtrip.goodtripserver.database.models.*;
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository;
-import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepositoryImplementation;
 import com.goodtrip.goodtripserver.database.repositories.TripRepository;
 import com.goodtrip.goodtripserver.database.repositories.TripRepositoryImplementation;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.sql.Date;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@SpringBootTest
+@EnableJpaRepositories("com.goodtrip.goodtripserver.database.repositories")
+@EnableAutoConfiguration
 class TripTests {
     TripRepository tripRepository = new TripRepositoryImplementation();
-
+    @Autowired
+    private static AuthenticationRepository authenticationRepository;
     static User user;
 
     private Trip createTrip(List<Note> notes, List<CountryVisit> visits) {
@@ -34,11 +40,10 @@ class TripTests {
 
     @BeforeAll
     public static void setAuthenticationRepository() {
-        AuthenticationRepository authenticationRepository = new AuthenticationRepositoryImplementation();
         String username = UUID.randomUUID().toString().substring(0, 31);
         String password = UUID.randomUUID().toString().substring(0, 31);
-        authenticationRepository.signUpIfNotExists(username, UUID.randomUUID().toString().substring(0, 31), password, "a", "b", "");
-        Optional<User> temp = authenticationRepository.login(username, password);
+        authenticationRepository.addUserIfNotExists(username, UUID.randomUUID().toString().substring(0, 31), password, "a", "b", "");
+        Optional<User> temp = authenticationRepository.findUserByUsernameAndHashedPassword(username, password);
         if (temp.isEmpty()) {
             fail();
         }
@@ -47,8 +52,7 @@ class TripTests {
 
     @AfterAll
     public static void deleteUser() {
-        AuthenticationRepository authenticationRepository = new AuthenticationRepositoryImplementation();
-        authenticationRepository.deleteUserIfExists(user.getUsername(), user.getHashedPassword());
+        authenticationRepository.deleteUserIfExistsByUsernameAndHashedPassword(user.getUsername(), user.getHashedPassword());
     }
 
     @Test

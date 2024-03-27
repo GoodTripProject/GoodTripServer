@@ -1,10 +1,11 @@
-package com.goodtrip.goodtripserver
+package com.example.goodtripserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
-@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
+@SpringBootApplication
+@EnableJpaRepositories("com.goodtrip.goodtripserver.database.repositories")
 class GoodTripServerApplication
 
 fun main(args: Array<String>) {
