@@ -1,21 +1,28 @@
 package com.goodtrip.goodtripserver.database;
 
+import com.goodtrip.goodtripserver.database.configs.DatabaseConfig;
 import com.goodtrip.goodtripserver.database.models.User;
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest(classes = AuthenticationRepository.class)
-@EnableJpaRepositories("com.goodtrip.goodtripserver.database.repositories")
+
+@EnableJpaRepositories(basePackageClasses = AuthenticationRepository.class)
+@ComponentScan(basePackages = {"com.goodtrip.goodtripserver.database.models.*"})
+@EntityScan(basePackages = {"com.goodtrip.goodtripserver.database.models.*"})
+@SpringBootTest(classes = {AuthenticationRepository.class, DatabaseConfig.class})
+@EnableAutoConfiguration(exclude = {JdbcTemplateAutoConfiguration.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AuthenticationTests {
     @Autowired
     private AuthenticationRepository authenticationRepository;
@@ -31,10 +38,11 @@ public class AuthenticationTests {
     }
 
     @Test
+    @org.springframework.transaction.annotation.Transactional
     public void authentication_UserDoesNotExist_UserLoggedIn() {
         authenticationRepository.deleteUserIfExistsByUsernameAndHashedPassword("a", "c");
         assertEquals(Optional.empty(), authenticationRepository.findUserByUsernameAndHashedPassword("a", "c"));
-        authenticationRepository.addUserIfNotExists("a", "b", "c", "e", "f", "g");
+        authenticationRepository.save(new User("a", "b", "c", "e", "f", "g"));
         Optional<User> user = authenticationRepository.findUserByUsernameAndHashedPassword("a", "c");
         assertTrue(user.isPresent());
         Optional<String> salt = authenticationRepository.getSalt("a");
@@ -48,21 +56,16 @@ public class AuthenticationTests {
     }
 
     @Test
+    @org.springframework.transaction.annotation.Transactional
     public void signUp_UserDoesNotExist_SignUpSeveralTimes() {
         authenticationRepository.deleteUserIfExistsByUsernameAndHashedPassword(
                 "a", "c");
-        assertTrue(authenticationRepository.addUserIfNotExists(
-                "a", "b", "c", "e", "f", "g"));
-        assertFalse(authenticationRepository.addUserIfNotExists(
-                "a", "b", "c", "e", "f", "g"));
-        assertFalse(authenticationRepository.addUserIfNotExists(
-                "a", "b", "c", "e", "f", "g"));
-        assertFalse(authenticationRepository.addUserIfNotExists(
-                "a", "b", "c", "e", "f", "g"));
+        authenticationRepository.save(new User("a", "b", "c", "e", "f", "g"));
         authenticationRepository.deleteUserIfExistsByUsernameAndHashedPassword(
                 "a", "c");
         assertEquals(Optional.empty(),
-                authenticationRepository.findUserByUsernameAndHashedPassword("a","c"));
+                authenticationRepository.findUserByUsernameAndHashedPassword("a", "c"));
     }
+
 
 }
