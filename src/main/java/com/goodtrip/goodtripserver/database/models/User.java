@@ -1,24 +1,20 @@
 package com.goodtrip.goodtripserver.database.models;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Setter
-@Getter
-@Builder
 @Entity
 @Table(name = "users", schema = "public", catalog = "GoodTripDatabase")
-@AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -33,7 +29,6 @@ public class User implements UserDetails {
     @Column(name = "hashed_password")
     private String hashedPassword;
 
-
     @Column(name = "image_link")
     private String imageLink;
 
@@ -46,7 +41,7 @@ public class User implements UserDetails {
     @Column(name = "salt")
     private String salt;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private List<Trip> trips;
 
@@ -59,9 +54,8 @@ public class User implements UserDetails {
         this.salt = salt;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public Integer getId() {
+        return id;
     }
 
     @Override
@@ -81,7 +75,6 @@ public class User implements UserDetails {
         return surname;
     }
 
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -100,5 +93,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 }

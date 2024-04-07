@@ -18,7 +18,7 @@ public class CountryVisit {
     @Column(name = "country")
     private String country;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "country_visit_id")
     private List<CityVisit> cities;
 
