@@ -9,5 +9,5 @@ data class AddNoteRequest(
 
     val googlePlaceId: String,
 
-    val tripId: Int?
+    val tripId: Int
 )

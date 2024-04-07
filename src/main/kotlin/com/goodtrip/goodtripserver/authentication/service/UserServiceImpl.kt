@@ -12,6 +12,6 @@ class UserServiceImpl : UserService {
     private lateinit var authenticationRepository: AuthenticationRepository
 
     override fun loadUserByUsername(email: String?): UserDetails {
-        return authenticationRepository.getUserByEmail(email).get()
+        return authenticationRepository.getUserByUsername(email).get()
     }
 }
