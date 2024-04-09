@@ -27,11 +27,12 @@ class AuthenticationServiceImpl : AuthenticationService {
     override fun login(request: AuthorizationRequest): AuthenticationResponse {
         val salt = authenticationRepository.getSalt(request.username).get()
         val user = authenticationRepository
-            .login(request.username, hasher.hashPassword(request.password, salt))
+            .findUserByUsernameAndHashedPassword(request.username, hasher.hashPassword(request.password, salt))
             .get()//TODO заменить на нормальную ошибку
         val jwtToken = jwtService.generateToken(user)
 
         return AuthenticationResponse(
+            id = user.id,
             handle = user.handle,
             token = jwtToken,
             name = user.name,
@@ -52,19 +53,22 @@ class AuthenticationServiceImpl : AuthenticationService {
             salt
         )
         val jwtToken = jwtService.generateToken(user)
-        authenticationRepository.signUpIfNotExists(
-            request.username,
-            request.handle,
-            hashedPassword,
-            request.name,
-            request.surname,
-            salt
+        val userWithId = authenticationRepository.save(
+            User(
+                request.username,
+                request.handle,
+                hashedPassword,
+                request.name,
+                request.surname,
+                salt
+            )
         )
         return AuthenticationResponse(
-            handle = user.handle,
+            id = userWithId.id,
+            handle = userWithId.handle,
             token = jwtToken,
-            name = user.name,
-            surname = user.surname,
+            name = userWithId.name,
+            surname = userWithId.surname,
             url = null
         )
 

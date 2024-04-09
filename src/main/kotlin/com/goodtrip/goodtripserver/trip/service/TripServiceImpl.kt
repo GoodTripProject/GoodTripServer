@@ -1,26 +1,37 @@
 package com.goodtrip.goodtripserver.trip.service
 
-import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
-import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
-import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.database.models.CityVisit
 import com.goodtrip.goodtripserver.database.models.CountryVisit
 import com.goodtrip.goodtripserver.database.models.Note
 import com.goodtrip.goodtripserver.database.models.Trip
-import com.goodtrip.goodtripserver.database.repositories.TripRepositoryImplementation
+import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
+import com.goodtrip.goodtripserver.database.repositories.CountryVisitRepository
+import com.goodtrip.goodtripserver.database.repositories.NoteRepository
+import com.goodtrip.goodtripserver.database.repositories.TripRepository
+import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
+import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
+import com.goodtrip.goodtripserver.trip.model.AddTripRequest
+import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class TripServiceImpl : TripService {
-//    @Autowired
-//    private lateinit var tripRepository: TripRepository //TODO разобраться что не так
+    @Autowired
+    private lateinit var tripRepository: TripRepository
 
-    private val tripRepository = TripRepositoryImplementation()
+    @Autowired
+    private lateinit var noteRepository: NoteRepository
 
+    @Autowired
+    private lateinit var countryVisitRepository: CountryVisitRepository
+
+    @Autowired
+    private lateinit var authenticationRepository: AuthenticationRepository
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
-        val trips = tripRepository.getTrips(userId)
+        val trips = tripRepository.getTripsByUserId(userId)
         return ResponseEntity.ok(trips)
     }
 
@@ -33,6 +44,9 @@ class TripServiceImpl : TripService {
     }
 
     override fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String> {
+        if (!authenticationRepository.existsById(userId)) {
+            return ResponseEntity.badRequest().body("User with id '${userId}' not exist")
+        }
         val countries = ArrayList<CountryVisit>()
         trip.countries.forEach { it ->
             val country = ArrayList<CityVisit>()
@@ -45,7 +59,7 @@ class TripServiceImpl : TripService {
         val notes = trip.notes.stream()
             .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
             .toList()
-        tripRepository.addTrip(
+        tripRepository.saveTripAndWire(
             userId,
             trip.title,
             trip.moneyInUsd,
@@ -59,15 +73,16 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok().build()
     }
 
+    @Transactional
     override fun deleteTrip(tripId: Int): ResponseEntity<String> {
-        if (tripRepository.deleteTrip(tripId)) {
+        if (tripRepository.deleteTripById(tripId) <= 0) {
             return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
         }
         return ResponseEntity.ok("Trip deleted successfully")
     }
 
     override fun getNote(noteId: Int): ResponseEntity<Any> {
-        val note = tripRepository.getNoteById(noteId)
+        val note = noteRepository.getNoteById(noteId)
         if (note.isEmpty) {
             return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
         }
@@ -75,28 +90,35 @@ class TripServiceImpl : TripService {
     }
 
 
-    //TODO сказать андрею, что лучше возвращать булл, была ли добавлена записка
     override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
-        tripRepository.addNote(userId, Note(note.title, note.photoUrl, note.googlePlaceId, note.tripId))
-        return ResponseEntity.ok().build()
+        if (tripRepository.existsById(note.tripId)) {
+            noteRepository.save(Note(note.title, note.photoUrl, note.googlePlaceId, note.tripId))
+            return ResponseEntity.ok().build()
+        }
+        return ResponseEntity.badRequest().body("Trip with id '${note.tripId}' not exist")
     }
 
+    @Transactional
     override fun deleteNote(noteId: Int): ResponseEntity<String> {
-        if (tripRepository.deleteNote(noteId)) {
+        if (noteRepository.deleteNoteById(noteId) > 0) {
             return ResponseEntity.ok("Note deleted successfully")
         }
         return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
     }
 
     override fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String> {
+        if (!tripRepository.existsById(tripId)) {
+            return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
+        }
         val cities = ArrayList<CityVisit>()
         country.cities.forEach { cities.add(CityVisit(it.city, it.longitude, it.latitude)) }
-        tripRepository.addCountryVisit(tripId, CountryVisit(country.country, cities, tripId))
+        countryVisitRepository.save(CountryVisit(country.country, cities, tripId))
         return ResponseEntity.ok().build()
     }
 
+    @Transactional
     override fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String> {
-        if (tripRepository.deleteCountryVisit(countryVisitId)) {
+        if (countryVisitRepository.deleteCountryVisitById(countryVisitId) > 0) {
             return ResponseEntity.ok("Country deleted successfully")
         }
         return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")

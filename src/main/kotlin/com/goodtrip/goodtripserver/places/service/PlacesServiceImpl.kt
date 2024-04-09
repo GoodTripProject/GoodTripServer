@@ -1,9 +1,9 @@
 package com.goodtrip.goodtripserver.places.service
 
-import com.goodtrip.goodtripserver.places.model.PlaceRequest
-import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.goodtrip.goodtripserver.places.model.PlaceRequest
+import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service

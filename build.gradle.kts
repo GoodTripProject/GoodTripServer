@@ -26,8 +26,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.hibernate.orm:hibernate-platform:6.4.4.Final")
-    implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
     implementation("jakarta.transaction:jakarta.transaction-api")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
