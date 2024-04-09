@@ -53,7 +53,7 @@ class AuthenticationServiceImpl : AuthenticationService {
             salt
         )
         val jwtToken = jwtService.generateToken(user)
-        authenticationRepository.save(
+        val userWithId = authenticationRepository.save(
             User(
                 request.username,
                 request.handle,
@@ -64,11 +64,11 @@ class AuthenticationServiceImpl : AuthenticationService {
             )
         )
         return AuthenticationResponse(
-            id = user.id,
-            handle = user.handle,
+            id = userWithId.id,
+            handle = userWithId.handle,
             token = jwtToken,
-            name = user.name,
-            surname = user.surname,
+            name = userWithId.name,
+            surname = userWithId.surname,
             url = null
         )
 
