@@ -92,7 +92,7 @@ class TripServiceImpl : TripService {
 
     override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
         if (tripRepository.existsById(note.tripId)) {
-            noteRepository.save(Note(note.title, note.photoUrl, note.googlePlaceId, note.tripId))
+            noteRepository.save(Note(note.title, note.photoUrl,note.text, note.googlePlaceId, note.tripId))
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.badRequest().body("Trip with id '${note.tripId}' not exist")
