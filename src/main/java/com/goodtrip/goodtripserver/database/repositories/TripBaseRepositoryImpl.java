@@ -31,11 +31,13 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
             manager.persist(note);
         }
         for (CountryVisit visit : countries) {
+            visit.setTripId(newTrip.getId());
             manager.persist(visit);
             manager.flush();
             for (CityVisit cityVisit : visit.getCities()) {
                 cityVisit.setCountryVisitId(visit.getId());
                 manager.persist(cityVisit);
+                manager.flush();
             }
         }
     }
