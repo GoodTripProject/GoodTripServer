@@ -7,6 +7,8 @@ data class AddNoteRequest(
 
     val photoUrl: String?,
 
+    val text: String,
+
     val googlePlaceId: String,
 
     val tripId: Int

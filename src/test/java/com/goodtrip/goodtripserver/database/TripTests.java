@@ -143,7 +143,7 @@ class TripTests {
         Trip trip;
 
         private Note saveNote() {
-            return noteRepository.save(new Note("a", null, "b", trip.getId()));
+            return noteRepository.save(new Note("a", null,"nu", "b", trip.getId()));
         }
 
         @Transactional

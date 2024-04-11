@@ -29,7 +29,7 @@ public class Note {
     @Column(name = "trip_id")
     private Integer tripId;
 
-    public Note(String title, @Nullable String photoUrl, String googlePlaceId, Integer tripId) {
+    public Note(String title, @Nullable String photoUrl, String text, String googlePlaceId, Integer tripId) {
         this.title = title;
         this.photoUrl = photoUrl;
         this.googlePlaceId = googlePlaceId;
