@@ -26,6 +26,8 @@ repositories {
 }
 
 dependencies {
+    implementation("org.hibernate:hibernate-spatial:6.4.4.Final")
+
     implementation("jakarta.transaction:jakarta.transaction-api")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
@@ -46,8 +48,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-
+    implementation("com.graphhopper.external:jackson-datatype-jts:0.10-2.5-1")
     implementation("org.locationtech.jts:jts-core:1.19.0")
+
     implementation("org.postgis:postgis-jdbc:1.3.3") {
         exclude(group = "org.postgis", module = "postgis-stubs")
     }
