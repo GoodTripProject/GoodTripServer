@@ -23,6 +23,9 @@ public class Note {
     @Column(name = "google_place_id")
     private String googlePlaceId;
 
+    @Column(name = "text")
+    private String text;
+
     @Column(name = "trip_id")
     private Integer tripId;
 
