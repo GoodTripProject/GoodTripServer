@@ -54,9 +54,10 @@ public class DatabaseConfig {
 
     final Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
+
         hibernateProperties.setProperty("hibernate.connection.url", environment.getProperty("spring.datasource.url"));
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        hibernateProperties.setProperty("hibernate.dialect", environment.getProperty("spring.jpa.properties.hibernate.dialect"));
         hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", "false");
         return hibernateProperties;
     }

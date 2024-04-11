@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "country_visits", schema = "public", catalog = "GoodTripDatabase")
-public class CountryVisit {
+public class CountryVisit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -35,4 +36,5 @@ public class CountryVisit {
         this.country = country;
         this.cities = cities;
     }
+
 }
