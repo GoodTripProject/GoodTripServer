@@ -31,6 +31,7 @@ public class Note {
 
     public Note(String title, @Nullable String photoUrl, String text, String googlePlaceId, Integer tripId) {
         this.title = title;
+        this.text = text;
         this.photoUrl = photoUrl;
         this.googlePlaceId = googlePlaceId;
         this.tripId = tripId;
