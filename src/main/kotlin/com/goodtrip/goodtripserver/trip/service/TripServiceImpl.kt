@@ -30,7 +30,6 @@ class TripServiceImpl : TripService {
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
-
         val trips = tripRepository.getTripsByUserId(userId)
         return ResponseEntity.ok(trips)
     }

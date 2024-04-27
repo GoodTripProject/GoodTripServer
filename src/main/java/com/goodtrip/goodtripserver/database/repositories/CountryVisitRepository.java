@@ -9,7 +9,7 @@ public interface CountryVisitRepository extends CrudRepository<CountryVisit, Int
      * Delete country visit by id.
      *
      * @param countryVisitId id of country visit.
-     * @return true if country visit exists, false otherwise.
+     * @return 1 or more if country visit exists, 0 otherwise.
      */
     Integer deleteCountryVisitById(int countryVisitId);
 }
