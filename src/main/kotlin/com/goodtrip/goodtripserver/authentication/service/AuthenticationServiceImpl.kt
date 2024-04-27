@@ -9,6 +9,7 @@ import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepositor
 import com.goodtrip.goodtripserver.encrypting.PasswordHasher
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
 
 
@@ -42,6 +43,9 @@ class AuthenticationServiceImpl : AuthenticationService {
     }
 
     override fun register(request: RegisterRequest): AuthenticationResponse {
+        if (authenticationRepository.existsUserByUsername(request.username)) {
+            throw BadCredentialsException("Username ${request.username} already exists")
+        }
         val salt = hasher.personalSalt
         val hashedPassword = hasher.hashPassword(request.password, salt)
         val user = User(
