@@ -113,18 +113,48 @@ class TripControllerTest {
 
     @Test
     fun deleteNoteById() {
+        `when`(tripService.deleteNote(0)).thenReturn(ResponseEntity.ok().body("Note was deleted"))
+        mockMvc.perform(delete("/trip/note/{noteId}", 0))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$").value("Note was deleted"))
+        verify(tripService, times(1)).deleteNote(0)
     }
 
     @Test
     fun addNote() {
+        val noteJson = objectMapper.writeValueAsString(noteRequest()[0])
+        `when`(tripService.addNote(0, noteRequest()[0])).thenReturn(ResponseEntity.ok().body("Note was added"))
+        mockMvc.perform(
+            post("/trip/note/{userId}", 0)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(noteJson)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$").value("Note was added"))
+        verify(tripService, times(1)).addNote(0, noteRequest()[0])
     }
 
     @Test
     fun addCountryVisit() {
+        val countryJson = objectMapper.writeValueAsString(countryRequest()[0])
+        `when`(tripService.addCountryVisit(1, countryRequest()[0])).thenReturn(
+            ResponseEntity.ok().body("Country was added")
+        )
+        mockMvc.perform(
+            post("/trip/country/{tripId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(countryJson)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$").value("Country was added"))
+        verify(tripService, times(1)).addCountryVisit(1, countryRequest()[0])
     }
 
     @Test
     fun deleteCountryVisit() {
+        `when`(tripService.deleteCountryVisit(0)).thenReturn(ResponseEntity.ok().body("Country was deleted"))
+        mockMvc.perform(delete("/trip/country/{countryVisitId}", 0))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$").value("Country was deleted"))
+        verify(tripService, times(1)).deleteCountryVisit(0)
     }
 
 

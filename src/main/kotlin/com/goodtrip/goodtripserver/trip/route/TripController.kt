@@ -56,7 +56,6 @@ class TripController {
         return tripService.deleteNote(noteId)
     }
 
-    //TODO чекнуть что с id
     @ResponseBody
     @PostMapping("/note/{userId}")
     fun addNote(@PathVariable userId: Int, @RequestBody note: AddNoteRequest): ResponseEntity<String> {
