@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @EnableTransactionManagement
@@ -40,5 +41,20 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
                 manager.flush();
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public List<TripView> getAuthorsTrips(int userId, int startingNumber) {
+        return manager.createQuery("SELECT trip FROM Trip trip, FollowingRelation relation " +
+                        "WHERE relation.userId = :userId " +
+                        "AND relation.authorId = trip.userId " +
+                        "ORDER BY trip.publicationTimestamp DESC ",Trip.class)
+                .setParameter("userId",userId)
+                .setFirstResult(startingNumber)
+                .setMaxResults(10)
+                .getResultStream()
+                .map(TripView::new)
+                .collect(Collectors.toList());
     }
 }

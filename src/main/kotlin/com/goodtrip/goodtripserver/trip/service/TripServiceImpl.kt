@@ -31,7 +31,7 @@ class TripServiceImpl : TripService {
     private lateinit var authenticationRepository: AuthenticationRepository
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
-        val trips = tripRepository.getTripsByUserId(userId)
+        val trips = tripRepository.getTripsByUserIdOrderByPublicationTimestamp(userId)
         return ResponseEntity.ok(trips)
     }
 
