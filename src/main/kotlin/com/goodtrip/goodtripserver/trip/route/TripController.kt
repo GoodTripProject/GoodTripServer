@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.trip.route
 
 import com.goodtrip.goodtripserver.database.models.Trip
+import com.goodtrip.goodtripserver.database.models.TripView
 import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
 import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
@@ -74,5 +75,17 @@ class TripController {
     @Transactional
     fun deleteCountryVisit(@PathVariable countryVisitId: Int): ResponseEntity<String> {
         return tripService.deleteCountryVisit(countryVisitId)
+    }
+
+    @ResponseBody
+    @PutMapping("/update_trip")
+    fun updateTrip(@RequestBody trip: Trip): ResponseEntity<String> {
+        return tripService.updateTrip(trip)
+    }
+
+    @ResponseBody
+    @GetMapping("/get_authors_trips?userId={userId}&start={start}}")
+    fun getAuthorsTrips(@PathVariable userId: Int, @PathVariable start: Int): ResponseEntity<List<TripView>> {
+        return tripService.getAuthorsTrips(userId, start)
     }
 }

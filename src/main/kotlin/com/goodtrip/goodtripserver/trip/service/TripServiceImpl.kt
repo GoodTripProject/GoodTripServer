@@ -1,9 +1,6 @@
 package com.goodtrip.goodtripserver.trip.service
 
-import com.goodtrip.goodtripserver.database.models.CityVisit
-import com.goodtrip.goodtripserver.database.models.CountryVisit
-import com.goodtrip.goodtripserver.database.models.Note
-import com.goodtrip.goodtripserver.database.models.Trip
+import com.goodtrip.goodtripserver.database.models.*
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import com.goodtrip.goodtripserver.database.repositories.CountryVisitRepository
 import com.goodtrip.goodtripserver.database.repositories.NoteRepository
@@ -92,7 +89,7 @@ class TripServiceImpl : TripService {
 
     override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
         if (tripRepository.existsById(note.tripId)) {
-            noteRepository.save(Note(note.title, note.photoUrl,note.text, note.googlePlaceId, note.tripId))
+            noteRepository.save(Note(note.title, note.photoUrl, note.text, note.googlePlaceId, note.tripId))
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.badRequest().body("Trip with id '${note.tripId}' not exist")
@@ -123,4 +120,18 @@ class TripServiceImpl : TripService {
         }
         return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")
     }
+
+    override fun updateTrip(trip: Trip): ResponseEntity<String> {
+        if (!tripRepository.existsById(trip.id)) {
+            return ResponseEntity.badRequest().body("Trip with id '${trip.id}' not exist")
+        }
+        tripRepository.save(trip)
+        return ResponseEntity.ok("Trip updated successfully")
+    }
+
+    override fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>> {
+        return ResponseEntity.ok().body(tripRepository.getAuthorsTrips(userId, start))
+    }
+
+
 }
