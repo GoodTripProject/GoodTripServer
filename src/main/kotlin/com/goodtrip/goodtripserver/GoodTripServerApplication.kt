@@ -1,4 +1,4 @@
-package com.example.goodtripserver
+package com.goodtrip.goodtripserver
 
 import com.goodtrip.goodtripserver.authentication.config.SecurityConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan
     exclude = [JdbcTemplateAutoConfiguration::class, SecurityAutoConfiguration::class],
     scanBasePackageClasses = [SecurityConfiguration::class]
 )
-@ComponentScan(basePackages = ["com.goodtrip.goodtripserver"])
+
 class GoodTripServerApplication
 
 fun main(args: Array<String>) {
