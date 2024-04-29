@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.trip.route
 
+import com.goodtrip.goodtripserver.authentication.route.AuthenticationController
 import com.goodtrip.goodtripserver.database.models.Trip
 import com.goodtrip.goodtripserver.database.models.TripView
 import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
@@ -7,6 +8,8 @@ import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.trip.service.TripService
 import jakarta.transaction.Transactional
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/trip")
 class TripController {
+    private val LOG: Logger = LoggerFactory.getLogger(AuthenticationController::class.java)
 
     @Autowired
     lateinit var tripService: TripService
@@ -84,8 +88,10 @@ class TripController {
     }
 
     @ResponseBody
-    @GetMapping("/get_authors_trips?userId={userId}&start={start}")
-    fun getAuthorsTrips(@PathVariable userId: Int, @PathVariable start: Int): ResponseEntity<List<TripView>> {
-        return tripService.getAuthorsTrips(userId, start)
+    @GetMapping("/get_authors_trips/{user_id}/{start}")
+    fun getAuthorsTrips(@PathVariable(name = "user_id") userId: String, @PathVariable start: String): ResponseEntity<List<TripView>> {
+        val result =  tripService.getAuthorsTrips(userId.toInt(), start.toInt())
+        LOG.debug(result.toString())
+        return result
     }
 }

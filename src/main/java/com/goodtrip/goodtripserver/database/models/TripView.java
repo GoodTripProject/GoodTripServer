@@ -1,12 +1,8 @@
 package com.goodtrip.goodtripserver.database.models;
 
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -38,11 +34,11 @@ public class TripView {
 
     private List<CountryVisit> visits;
 
-    public TripView(Trip trip, User user){
+    public TripView(Trip trip, User user) {
         id = trip.getId();
-        displayName = user.getName()+" "+user.getSurname();
+        displayName = user.getName() + " " + user.getSurname();
         userMainPhotoUrl = user.getImageLink();
-        title  = trip.getTitle();
+        title = trip.getTitle();
         visits = trip.getVisits();
         moneyInUsd = trip.getMoneyInUsd();
         mainPhotoUrl = trip.getMainPhotoUrl();
