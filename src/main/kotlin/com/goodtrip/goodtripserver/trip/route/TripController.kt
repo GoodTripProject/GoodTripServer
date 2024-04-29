@@ -8,7 +8,6 @@ import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.trip.service.TripService
 import jakarta.transaction.Transactional
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/trip")
 class TripController {
-    private val LOG: Logger = LoggerFactory.getLogger(AuthenticationController::class.java)
+    private val logger = LoggerFactory.getLogger(AuthenticationController::class.java)
 
     @Autowired
     lateinit var tripService: TripService
@@ -90,8 +89,8 @@ class TripController {
     @ResponseBody
     @GetMapping("/get_authors_trips")
     fun getAuthorsTrips(@RequestParam userId: Int, @RequestParam start: Int): ResponseEntity<List<TripView>> {
-        val result =  tripService.getAuthorsTrips(userId, start)
-        LOG.debug(result.toString())
+        val result = tripService.getAuthorsTrips(userId, start)
+        logger.debug(result.toString())
         return result
     }
 }
