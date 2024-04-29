@@ -84,8 +84,8 @@ class TripController {
     }
 
     @ResponseBody
-    @GetMapping("/get_authors_trips?userId={userId}&start={start}}")
-    fun getAuthorsTrips(@PathVariable userId: Int, @PathVariable start: Int): ResponseEntity<List<TripView>> {
+    @GetMapping("/get_authors_trips")
+    fun getAuthorsTrips(@RequestParam userId: Int, @RequestParam start: Int): ResponseEntity<List<TripView>> {
         return tripService.getAuthorsTrips(userId, start)
     }
 }
