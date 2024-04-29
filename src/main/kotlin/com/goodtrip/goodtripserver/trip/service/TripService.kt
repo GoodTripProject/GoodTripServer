@@ -8,23 +8,23 @@ import org.springframework.http.ResponseEntity
 
 interface TripService {
 
-    fun getTrips(userId: Int): ResponseEntity<List<Trip>>
+    suspend fun getTrips(userId: Int): ResponseEntity<List<Trip>>
 
-    fun getTrip(tripId: Int): ResponseEntity<Any>
+    suspend fun getTrip(tripId: Int): ResponseEntity<Any>
 
-    fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String>
+    suspend fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String>
 
-    fun deleteTrip(tripId: Int): ResponseEntity<String>
+    suspend fun deleteTrip(tripId: Int): ResponseEntity<String>
 
-    fun getNote(noteId: Int): ResponseEntity<Any>
+    suspend fun getNote(noteId: Int): ResponseEntity<Any>
 
-    fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String>
+    suspend fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String>
 
-    fun deleteNote(noteId: Int): ResponseEntity<String>
+    suspend fun deleteNote(noteId: Int): ResponseEntity<String>
 
-    fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String>
+    suspend fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String>
 
-    fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
+    suspend fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
 
 
 }

@@ -12,6 +12,8 @@ import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
 import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import jakarta.transaction.Transactional
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -29,22 +31,28 @@ class TripServiceImpl : TripService {
 
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
-    override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
+    override suspend fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
-        val trips = tripRepository.getTripsByUserId(userId)
+        val trips = withContext(Dispatchers.IO) {
+            tripRepository.getTripsByUserId(userId)
+        }
         return ResponseEntity.ok(trips)
     }
 
-    override fun getTrip(tripId: Int): ResponseEntity<Any> {
-        val trip = tripRepository.getTripById(tripId)
+    override suspend fun getTrip(tripId: Int): ResponseEntity<Any> {
+        val trip = withContext(Dispatchers.IO) {
+            tripRepository.getTripById(tripId)
+        }
         if (trip.isEmpty) {
             return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
         }
         return ResponseEntity.ok(trip.get())
     }
 
-    override fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String> {
-        if (!authenticationRepository.existsById(userId)) {
+    override suspend fun addTrip(userId: Int, trip: AddTripRequest): ResponseEntity<String> {
+        if (!withContext(Dispatchers.IO) {
+                authenticationRepository.existsById(userId)
+            }) {
             return ResponseEntity.badRequest().body("User with id '${userId}' not exist")
         }
         val countries = ArrayList<CountryVisit>()
@@ -74,15 +82,19 @@ class TripServiceImpl : TripService {
     }
 
     @Transactional
-    override fun deleteTrip(tripId: Int): ResponseEntity<String> {
-        if (tripRepository.deleteTripById(tripId) <= 0) {
+    override suspend fun deleteTrip(tripId: Int): ResponseEntity<String> {
+        if (withContext(Dispatchers.IO) {
+                tripRepository.deleteTripById(tripId)
+            } <= 0) {
             return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
         }
         return ResponseEntity.ok("Trip deleted successfully")
     }
 
-    override fun getNote(noteId: Int): ResponseEntity<Any> {
-        val note = noteRepository.getNoteById(noteId)
+    override suspend fun getNote(noteId: Int): ResponseEntity<Any> {
+        val note = withContext(Dispatchers.IO) {
+            noteRepository.getNoteById(noteId)
+        }
         if (note.isEmpty) {
             return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
         }
@@ -90,35 +102,47 @@ class TripServiceImpl : TripService {
     }
 
 
-    override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
-        if (tripRepository.existsById(note.tripId)) {
-            noteRepository.save(Note(note.title, note.photoUrl,note.text, note.googlePlaceId, note.tripId))
+    override suspend fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
+        if (withContext(Dispatchers.IO) {
+                tripRepository.existsById(note.tripId)
+            }) {
+            withContext(Dispatchers.IO) {
+                noteRepository.save(Note(note.title, note.photoUrl, note.text, note.googlePlaceId, note.tripId))
+            }
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.badRequest().body("Trip with id '${note.tripId}' not exist")
     }
 
     @Transactional
-    override fun deleteNote(noteId: Int): ResponseEntity<String> {
-        if (noteRepository.deleteNoteById(noteId) > 0) {
+    override suspend fun deleteNote(noteId: Int): ResponseEntity<String> {
+        if (withContext(Dispatchers.IO) {
+                noteRepository.deleteNoteById(noteId)
+            } > 0) {
             return ResponseEntity.ok("Note deleted successfully")
         }
         return ResponseEntity.badRequest().body("Note with id '$noteId' not exist")
     }
 
-    override fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String> {
-        if (!tripRepository.existsById(tripId)) {
+    override suspend fun addCountryVisit(tripId: Int, country: AddCountryRequest): ResponseEntity<String> {
+        if (!withContext(Dispatchers.IO) {
+                tripRepository.existsById(tripId)
+            }) {
             return ResponseEntity.badRequest().body("Trip with id '$tripId' not exist")
         }
         val cities = ArrayList<CityVisit>()
         country.cities.forEach { cities.add(CityVisit(it.city, it.longitude, it.latitude)) }
-        countryVisitRepository.save(CountryVisit(country.country, cities, tripId))
+        withContext(Dispatchers.IO) {
+            countryVisitRepository.save(CountryVisit(country.country, cities, tripId))
+        }
         return ResponseEntity.ok().build()
     }
 
     @Transactional
-    override fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String> {
-        if (countryVisitRepository.deleteCountryVisitById(countryVisitId) > 0) {
+    override suspend fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String> {
+        if (withContext(Dispatchers.IO) {
+                countryVisitRepository.deleteCountryVisitById(countryVisitId)
+            } > 0) {
             return ResponseEntity.ok("Country deleted successfully")
         }
         return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")

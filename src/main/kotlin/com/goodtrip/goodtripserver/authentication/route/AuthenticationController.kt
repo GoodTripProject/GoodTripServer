@@ -4,6 +4,7 @@ import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
+import kotlinx.coroutines.delay
 import lombok.RequiredArgsConstructor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,17 +20,21 @@ class AuthenticationController {
 
     @Autowired
     private lateinit var authenticationService: AuthenticationService
+//    var cnt = 0
 
     @ResponseBody
     @PostMapping("/login")
-    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
+    suspend fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
+//        if (cnt++ == 0) {
+//            delay(10000)
+//        }
         LOG.info("authorizationRequest username:" + authorizationRequest.username + ", password:" + authorizationRequest.password)
         return ResponseEntity.ok(authenticationService.login(authorizationRequest))
     }
 
     @ResponseBody
     @PostMapping("/register")
-    fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
+    suspend fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
         LOG.info("registerRequest username:" + registerRequest.username + ", password:" + registerRequest.password)
         return ResponseEntity.ok(authenticationService.register(registerRequest))
     }

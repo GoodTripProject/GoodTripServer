@@ -19,60 +19,60 @@ class TripController {
 
     @ResponseBody
     @GetMapping("/all/{userId}")
-    fun getUserTrips(@PathVariable userId: Int): ResponseEntity<List<Trip>> {
+    suspend fun getUserTrips(@PathVariable userId: Int): ResponseEntity<List<Trip>> {
         return tripService.getTrips(userId)
     }
 
     @ResponseBody
     @GetMapping("/{tripId}")
-    fun getTripById(@PathVariable tripId: Int): ResponseEntity<Any> {
+    suspend fun getTripById(@PathVariable tripId: Int): ResponseEntity<Any> {
         return tripService.getTrip(tripId)
     }
 
 
     @ResponseBody
     @PostMapping("/{userId}")
-    fun addTrip(@PathVariable userId: Int, @RequestBody trip: AddTripRequest): ResponseEntity<String> {
+    suspend fun addTrip(@PathVariable userId: Int, @RequestBody trip: AddTripRequest): ResponseEntity<String> {
         return tripService.addTrip(userId, trip)
     }
 
     @ResponseBody
     @DeleteMapping("/{tripId}")
     @Transactional
-    fun deleteTripById(@PathVariable tripId: Int): ResponseEntity<String> {
+    suspend fun deleteTripById(@PathVariable tripId: Int): ResponseEntity<String> {
         return tripService.deleteTrip(tripId)
     }
 
     @ResponseBody
     @GetMapping("/note/{noteId}")
-    fun getNoteById(@PathVariable noteId: Int): ResponseEntity<Any> {
+    suspend fun getNoteById(@PathVariable noteId: Int): ResponseEntity<Any> {
         return tripService.getNote(noteId)
     }
 
     @ResponseBody
     @DeleteMapping("/note/{noteId}")
     @Transactional
-    fun deleteNoteById(@PathVariable noteId: Int): ResponseEntity<String> {
+    suspend fun deleteNoteById(@PathVariable noteId: Int): ResponseEntity<String> {
         return tripService.deleteNote(noteId)
     }
 
     //TODO чекнуть что с id
     @ResponseBody
     @PostMapping("/note/{userId}")
-    fun addNote(@PathVariable userId: Int, @RequestBody note: AddNoteRequest): ResponseEntity<String> {
+    suspend fun addNote(@PathVariable userId: Int, @RequestBody note: AddNoteRequest): ResponseEntity<String> {
         return tripService.addNote(userId, note)
     }
 
     @ResponseBody
     @PostMapping("/country/{tripId}")
-    fun addCountryVisit(@PathVariable tripId: Int, @RequestBody country: AddCountryRequest): ResponseEntity<String> {
+    suspend fun addCountryVisit(@PathVariable tripId: Int, @RequestBody country: AddCountryRequest): ResponseEntity<String> {
         return tripService.addCountryVisit(tripId, country)
     }
 
     @ResponseBody
     @DeleteMapping("/country/{countryVisitId}")
     @Transactional
-    fun deleteCountryVisit(@PathVariable countryVisitId: Int): ResponseEntity<String> {
+    suspend fun deleteCountryVisit(@PathVariable countryVisitId: Int): ResponseEntity<String> {
         return tripService.deleteCountryVisit(countryVisitId)
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -44,13 +46,15 @@ class PlacesServiceImpl : PlacesService {
         placeId = this.get("place_id").toString()//TODO потом проверить
     )
 
-    override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
+    override suspend fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
         val url = getUrl(placeRequest)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(URI.create(url))
             .build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = withContext(Dispatchers.IO) {
+            client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
 
         if (response.statusCode() == HttpStatus.OK.value()) {
             val places = mutableListOf<PlacesResponse>()
