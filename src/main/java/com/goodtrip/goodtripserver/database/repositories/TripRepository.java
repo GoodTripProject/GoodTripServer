@@ -1,8 +1,6 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.Trip;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -17,7 +15,7 @@ public interface TripRepository extends CrudRepository<Trip, Integer>, TripBaseR
      * @param userId id of user.
      * @return list of trips.
      */
-    List<Trip> getTripsByUserIdOrderByPublicationTimestamp(int userId);
+    List<Trip> getTripsByUserIdOrderByPublicationTimestampDesc(int userId);
 
 
     /**
