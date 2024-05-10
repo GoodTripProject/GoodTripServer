@@ -7,15 +7,20 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("communication")
+@RestController("/communication")
 class CommunicationController {
 
     @Autowired
     private lateinit var communicationService: CommunicationService
 
     @PostMapping("/follow")
-    fun follow(@RequestParam userId: Int, @RequestParam authorId: Int): ResponseEntity<String> {
-        return communicationService.follow(userId, authorId)
+    fun follow(@RequestParam userId: Int, @RequestParam author: String): ResponseEntity<String> {
+        return communicationService.follow(userId, author)
+    }
+
+    @PostMapping("/unfollow")
+    fun unfollow(@RequestParam userId: Int, @RequestParam author: String): ResponseEntity<String> {
+        return communicationService.unfollow(userId, author)
     }
 
 }
