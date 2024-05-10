@@ -4,7 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Date;
@@ -44,7 +44,7 @@ public class Trip {
 
     @Column(name = "publication_timestamp")
     @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
+    @UpdateTimestamp
     private Timestamp publicationTimestamp;
 
     @Enumerated(EnumType.ORDINAL)
@@ -73,5 +73,46 @@ public class Trip {
         this.state = state;
         this.notes = notes;
         this.visits = visits;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Integer getMoneyInUsd() {
+        return moneyInUsd;
+    }
+
+    @Nullable
+    public String getMainPhotoUrl() {
+        return mainPhotoUrl;
+    }
+
+    public Date getDepartureDate() {
+        return departureDate;
+    }
+
+    public Date getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public Timestamp getPublicationTimestamp() {
+        return publicationTimestamp;
+    }
+
+    public TripState getState() {
+        return state;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public List<CountryVisit> getVisits() {
+        return visits;
     }
 }
