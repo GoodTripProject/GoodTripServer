@@ -1,10 +1,15 @@
 package com.goodtrip.goodtripserver.communication.service
 
 import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
 
+@Service
 class CommunicationServiceImpl : CommunicationService {
     override fun follow(userId: Int, authorId: Int): ResponseEntity<String> {
-        TODO("Not yet implemented")
+        if (false /* пользователь уже подписан*/) {
+            return ResponseEntity.badRequest().body("User is already subscribed")
+        }
+        return ResponseEntity.ok().body("You are now subscribed to the user: $authorId")
     }
 
     override fun unfollow(userId: Int, authorId: Int): ResponseEntity<String> {
