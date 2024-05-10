@@ -1,9 +1,7 @@
 package com.goodtrip.goodtripserver.communication.service
 
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
 
-@Service
 interface CommunicationService {
     fun follow(userId: Int, authorId: Int): ResponseEntity<String>
 
