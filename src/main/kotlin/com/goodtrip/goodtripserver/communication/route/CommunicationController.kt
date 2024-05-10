@@ -23,4 +23,14 @@ class CommunicationController {
         return communicationService.unfollow(userId, author)
     }
 
+    @PostMapping("/like")
+    fun like(@RequestParam userId: Int, @RequestParam tripId: Int): ResponseEntity<String> {
+        return communicationService.like(userId, tripId)
+    }
+
+    @PostMapping("/delete_like")
+    fun deleteLike(@RequestParam userId: Int, @RequestParam tripId: Int): ResponseEntity<String> {
+        return communicationService.deleteLike(userId, tripId)
+    }
+
 }

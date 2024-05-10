@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.communication.service
 
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -9,6 +10,7 @@ class CommunicationServiceImpl : CommunicationService {
         if (false /* пользователь уже подписан*/) {
             return ResponseEntity.badRequest().body("User is already subscribed")
         }
+        TODO("call db function")
         return ResponseEntity.ok().body("You are now subscribed to the user: $author")
     }
 
@@ -16,14 +18,17 @@ class CommunicationServiceImpl : CommunicationService {
         if (false /* пользователь не подписан*/) {
             return ResponseEntity.badRequest().body("User is already unsubscribed")
         }
+        TODO("call db function")
         return ResponseEntity.ok().body("You are no longer following the user: $author")
     }
 
     override fun like(userId: Int, tripId: Int): ResponseEntity<String> {
-        TODO("Not yet implemented")
+        TODO("call db function")
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun deleteLike(userId: Int, tripId: Int): ResponseEntity<String> {
-        TODO("Not yet implemented")
+        TODO("call db function")
+        return ResponseEntity(HttpStatus.OK)
     }
 }
