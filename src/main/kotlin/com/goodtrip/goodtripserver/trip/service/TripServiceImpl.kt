@@ -57,6 +57,7 @@ class TripServiceImpl : TripService {
             .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
             .toList()
         tripRepository.saveTripAndWire(
+            null,
             userId,
             trip.title,
             trip.moneyInUsd,
@@ -125,7 +126,18 @@ class TripServiceImpl : TripService {
         if (!tripRepository.existsById(trip.id)) {
             return ResponseEntity.badRequest().body("Trip with id '${trip.id}' not exist")
         }
-        tripRepository.save(trip)
+        tripRepository.saveTripAndWire(
+            trip.id,
+            trip.userId,
+            trip.title,
+            trip.moneyInUsd,
+            trip.mainPhotoUrl,
+            trip.departureDate,
+            trip.arrivalDate,
+            trip.state,
+            trip.notes,
+            trip.visits
+        )
         return ResponseEntity.ok("Trip updated successfully")
     }
 
