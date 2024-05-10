@@ -59,10 +59,6 @@ public class Trip {
     @JoinColumn(name = "trip_id")
     private List<CountryVisit> visits;
 
-    public Integer getId() {
-        return id;
-    }
-
     public Trip(Integer userId, String title, Integer moneyInUsd, @Nullable String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> visits) {
         this.userId = userId;
         this.title = title;
@@ -73,6 +69,10 @@ public class Trip {
         this.state = state;
         this.notes = notes;
         this.visits = visits;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Integer getUserId() {

@@ -46,7 +46,7 @@ class TripTests {
     private TransactionTemplate template;
 
     protected Trip createTrip(List<Note> notes, List<CountryVisit> visits) {
-        tripRepository.saveTripAndWire(null,user.getId(), "1", 2, "aa", new Date(0), new Date(1), TripState.IN_PROCESS, notes, visits);
+        tripRepository.saveTripAndWire(null, user.getId(), "1", 2, "aa", new Date(0), new Date(1), TripState.IN_PROCESS, notes, visits);
         List<Trip> trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId());
         return trips.getFirst();
     }
@@ -143,7 +143,7 @@ class TripTests {
         Trip trip;
 
         private Note saveNote() {
-            return noteRepository.save(new Note("a", null,"nu", "b", trip.getId()));
+            return noteRepository.save(new Note("a", null, "nu", "b", trip.getId()));
         }
 
         @Transactional
