@@ -58,10 +58,10 @@ class FlightsServiceImpl : FlightsService {
                 result.add(
                     FlightsResponse(
                         flight = FlightSegment(
-                            departure = segments.first.departure,
-                            departureDate = segments.first.departureDate,
-                            arrival = segments.last.arrival,
-                            arrivalDate = segments.last.arrival,
+                            departure = segments.firstOrNull()!!.departure,
+                            departureDate = segments.firstOrNull()!!.departureDate,
+                            arrival = segments.lastOrNull()!!.arrival,
+                            arrivalDate = segments.lastOrNull()!!.arrival,
                         ),
                         currency = it.price.currency,
                         price = it.price.total,
