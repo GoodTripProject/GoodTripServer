@@ -3,7 +3,6 @@ package com.goodtrip.goodtripserver.places.route
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.service.PlacesService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
@@ -17,7 +16,6 @@ class PlacesController {
 
     @ResponseBody
     @PostMapping("/places")
-    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest): ResponseEntity<Any> {
-        return placesService.getNearPlaces(placeRequest)
-    }
+    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest) = placesService.getNearPlaces(placeRequest)
+
 }
