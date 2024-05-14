@@ -11,26 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class FlightsServiceImpl : FlightsService {
 
-    //    @Value("FLIGHTS_API_KEY")
-//    private lateinit var apiKey: String
-    //TODO разобраться
+    private val amadeus = Amadeus.builder("FLIGHTS_API_KEY", "FLIGHTS_API_SECRET_KEY").build()
 
-    //    @Value("FLIGHTS_API_SECRET_KEY")
-//    private lateinit var secretKey: String
-
-//    init {
-//        val prop = Properties()
-//        val stream = FileInputStream("application.properties")
-//        prop.load(stream);
-//        secretKey = prop.getProperty("FLIGHTS_API_SECRET_KEY")
-//        apiKey = prop.getProperty("FLIGHTS_API_KEY")
-//        println("apiKey: $apiKey")
-//    }
-
-
-    private var amadeus = Amadeus.builder("API_KEY", "SECRET_API_KEY").build()
-
-    //TODO потом удалить
     override fun getFlights(
         origin: String,
         destination: String,
@@ -74,6 +56,5 @@ class FlightsServiceImpl : FlightsService {
         }
         return ResponseEntity.ok(result)
     }
-
 
 }
