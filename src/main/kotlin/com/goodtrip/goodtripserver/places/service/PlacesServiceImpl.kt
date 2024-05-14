@@ -2,7 +2,7 @@ package com.goodtrip.goodtripserver.places.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.goodtrip.goodtripserver.places.model.City
+import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import org.springframework.core.env.Environment
@@ -92,9 +92,9 @@ class PlacesServiceImpl(private val environment: Environment) : PlacesService {
 
             return ResponseEntity.ok().body(
                 City(
-                    name = responseObject["results"][0]["formatted_address"].toString().drop(1).dropLast(1),
-                    lat = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
-                    lng = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
+                    city = responseObject["results"][0]["formatted_address"].toString().drop(1).dropLast(1),
+                    latitude = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
+                    longitude = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
                 )
             )
         }
