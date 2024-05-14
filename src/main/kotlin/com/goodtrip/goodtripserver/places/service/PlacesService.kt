@@ -7,4 +7,6 @@ interface PlacesService {
 
     fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any>
 
+    fun getCoordinates(city: String): ResponseEntity<Any>
+
 }
