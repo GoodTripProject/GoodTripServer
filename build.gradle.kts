@@ -27,6 +27,7 @@ repositories {
 
 dependencies {
     implementation("org.hibernate:hibernate-spatial:6.4.4.Final")
+    implementation("com.amadeus:amadeus-java:5.7.2")
 
     implementation("jakarta.transaction:jakarta.transaction-api")
     implementation("org.springframework.boot:spring-boot-starter-web")

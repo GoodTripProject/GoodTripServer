@@ -2,6 +2,7 @@ package com.goodtrip.goodtripserver.places.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.goodtrip.goodtripserver.places.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import org.springframework.http.HttpStatus
@@ -35,6 +36,13 @@ class PlacesServiceImpl : PlacesService {
             .replaceFirst('%', '?')
     }
 
+    private fun getUrl(city: String) =
+        UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/textsearch/json")
+            .queryParam("query", city)
+            .queryParam("type", "locality")
+            .queryParam("key", "API_KEY")
+            .build()
+
     private fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
@@ -63,6 +71,31 @@ class PlacesServiceImpl : PlacesService {
                 places.add(place)
             }
             return ResponseEntity.ok(places)
+        }
+        return ResponseEntity.badRequest().body("Invalid request")
+    }
+
+    override fun getCoordinates(city: String): ResponseEntity<Any> {
+        val url = getUrl(city)
+        val client = HttpClient.newBuilder().build()
+        val request = HttpRequest.newBuilder()
+            .uri(url.toUri())
+            .build()
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        if (response.statusCode() == HttpStatus.OK.value()) {
+            val responseObject = objectMapper.readTree(response.body())
+            if (responseObject["status"].toString() == "\"INVALID_REQUEST\"") {
+                return ResponseEntity.badRequest().body("Invalid request")
+            }
+
+            return ResponseEntity.ok().body(
+                City(
+                    name = responseObject["results"][0]["formatted_address"].toString().drop(1).dropLast(1),
+                    lat = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
+                    lng = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
+                )
+            )
         }
         return ResponseEntity.badRequest().body("Invalid request")
     }

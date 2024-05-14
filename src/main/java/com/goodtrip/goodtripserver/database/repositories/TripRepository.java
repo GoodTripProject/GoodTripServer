@@ -15,7 +15,7 @@ public interface TripRepository extends CrudRepository<Trip, Integer>, TripBaseR
      * @param userId id of user.
      * @return list of trips.
      */
-    List<Trip> getTripsByUserId(int userId);
+    List<Trip> getTripsByUserIdOrderByPublicationTimestampDesc(int userId);
 
 
     /**
