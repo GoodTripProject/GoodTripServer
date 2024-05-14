@@ -91,12 +91,11 @@ class PlacesServiceImpl : PlacesService {
 
             return ResponseEntity.ok().body(
                 City(
-                    name = responseObject["results"][0]["formatted_address"].toString(),
+                    name = responseObject["results"][0]["formatted_address"].toString().drop(1).dropLast(1),
                     lat = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
                     lng = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
                 )
             )
-
         }
         return ResponseEntity.badRequest().body("Invalid request")
     }
