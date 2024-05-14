@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface TripBaseRepository {
-    void saveTripAndWire(Integer userId,
+    void saveTripAndWire(@jakarta.annotation.Nullable Integer tripId, Integer userId,
                          String title,
                          Integer moneyInUsd,
                          @Nullable String mainPhotoUrl,
@@ -19,6 +19,6 @@ public interface TripBaseRepository {
                          TripState state,
                          List<Note> notes,
                          List<CountryVisit> countries);
-    List<TripView> getAuthorsTrips(int userId, int startingNumber);
 
+    List<TripView> getAuthorsTrips(int userId, int startingNumber);
 }

@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.*;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,22 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
 
     @Override
     @Transactional
-    public void saveTripAndWire(Integer userId, String title, Integer moneyInUsd, String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> countries) {
+    public void saveTripAndWire(@Nullable Integer tripId, Integer userId, String title, Integer moneyInUsd, String mainPhotoUrl, Date departureDate, Date arrivalDate, TripState state, List<Note> notes, List<CountryVisit> countries) {
         Trip newTrip = new Trip(userId, title, moneyInUsd, mainPhotoUrl, departureDate, arrivalDate, state, new ArrayList<>(), new ArrayList<>());
-        manager.persist(newTrip);
+        newTrip.setId(tripId);
+        manager.merge(newTrip);
         manager.flush();
         for (Note note : notes) {
             note.setTripId(newTrip.getId());
-            manager.persist(note);
+            manager.merge(note);
         }
         for (CountryVisit visit : countries) {
             visit.setTripId(newTrip.getId());
-            manager.persist(visit);
+            manager.merge(visit);
             manager.flush();
             for (CityVisit cityVisit : visit.getCities()) {
                 cityVisit.setCountryVisitId(visit.getId());
-                manager.persist(cityVisit);
+                manager.merge(cityVisit);
                 manager.flush();
             }
         }
@@ -55,8 +57,8 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
         return manager.createQuery("SELECT trip FROM Trip trip, FollowingRelation relation " +
                         "WHERE relation.userId = :userId " +
                         "AND relation.authorId = trip.userId " +
-                        "ORDER BY trip.publicationTimestamp DESC ",Trip.class)
-                .setParameter("userId",userId)
+                        "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
+                .setParameter("userId", userId)
                 .setFirstResult(startingNumber)
                 .setMaxResults(10)
                 .getResultStream()
