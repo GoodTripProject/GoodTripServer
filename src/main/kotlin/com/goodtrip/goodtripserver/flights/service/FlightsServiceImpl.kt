@@ -4,18 +4,14 @@ import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.goodtrip.goodtripserver.flights.model.FlightSegment
 import com.goodtrip.goodtripserver.flights.model.FlightsResponse
-import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
-class FlightsServiceImpl(environment: Environment) : FlightsService {
+class FlightsServiceImpl : FlightsService {
 
-    private val amadeus = Amadeus.builder(
-        environment.getProperty("FLIGHTS_API_KEY")!!,
-        environment.getProperty("FLIGHTS_API_SECRET_KEY")!!
-    ).build()
+    private val amadeus = Amadeus.builder("FLIGHTS_API_KEY", "FLIGHTS_API_SECRET_KEY").build()
 
     override fun getFlights(
         origin: String,

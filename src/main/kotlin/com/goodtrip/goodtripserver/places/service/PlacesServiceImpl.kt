@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
-import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -16,7 +15,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @Service
-class PlacesServiceImpl(private val environment: Environment) : PlacesService {
+class PlacesServiceImpl : PlacesService {
 
     private val objectMapper = jacksonObjectMapper()
 
@@ -41,7 +40,7 @@ class PlacesServiceImpl(private val environment: Environment) : PlacesService {
         UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/textsearch/json")
             .queryParam("query", city)
             .queryParam("type", "locality")
-            .queryParam("key", environment.getProperty("PLACES_API_KEY"))
+            .queryParam("key", "API_KEY")
             .build()
 
     private fun JsonNode.getPlace() = PlacesResponse(
