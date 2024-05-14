@@ -4,33 +4,19 @@ import com.amadeus.Amadeus
 import com.amadeus.Params
 import com.goodtrip.goodtripserver.flights.model.FlightSegment
 import com.goodtrip.goodtripserver.flights.model.FlightsResponse
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
-class FlightsServiceImpl : FlightsService {
+class FlightsServiceImpl(environment: Environment) : FlightsService {
 
-    //    @Value("FLIGHTS_API_KEY")
-//    private lateinit var apiKey: String
-    //TODO разобраться
+    private val amadeus = Amadeus.builder(
+        environment.getProperty("FLIGHTS_API_KEY")!!,
+        environment.getProperty("FLIGHTS_API_SECRET_KEY")!!
+    ).build()
 
-    //    @Value("FLIGHTS_API_SECRET_KEY")
-//    private lateinit var secretKey: String
-
-//    init {
-//        val prop = Properties()
-//        val stream = FileInputStream("application.properties")
-//        prop.load(stream);
-//        secretKey = prop.getProperty("FLIGHTS_API_SECRET_KEY")
-//        apiKey = prop.getProperty("FLIGHTS_API_KEY")
-//        println("apiKey: $apiKey")
-//    }
-
-
-    private var amadeus = Amadeus.builder("API_KEY", "SECRET_API_KEY").build()
-
-    //TODO потом удалить
     override fun getFlights(
         origin: String,
         destination: String,
@@ -74,6 +60,5 @@ class FlightsServiceImpl : FlightsService {
         }
         return ResponseEntity.ok(result)
     }
-
 
 }
