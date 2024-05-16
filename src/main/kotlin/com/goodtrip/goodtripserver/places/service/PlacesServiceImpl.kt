@@ -54,7 +54,7 @@ class PlacesServiceImpl : PlacesService {
         lng = this["geometry"]["location"]["lng"].asDouble(),
         icon = this["icon"].toString(),
         rating = this.get("rating")?.asInt() ?: 0,
-        placeId = this.get("place_id").toString()//TODO потом проверить
+        placeId = this.get("place_id").toString()
     )
 
     override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
