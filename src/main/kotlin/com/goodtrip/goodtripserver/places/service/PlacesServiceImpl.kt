@@ -5,6 +5,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -19,9 +21,12 @@ class PlacesServiceImpl : PlacesService {
 
     private val objectMapper = jacksonObjectMapper()
 
+    @Autowired
+    private lateinit var environment: Environment
+
     private fun getUrl(placeRequest: PlaceRequest): String {
         val url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
-            .queryParam("location", placeRequest.location.replaceFirst('%', '?'))
+            .queryParam("location", "${placeRequest.lat}?2C${placeRequest.lng}")
             .queryParam("radius", placeRequest.radius.toString())
         if (!placeRequest.rankBy.isNullOrEmpty()) {
             url.queryParam("rankBy", placeRequest.rankBy)
@@ -29,7 +34,7 @@ class PlacesServiceImpl : PlacesService {
         placeRequest.type?.let {
             url.queryParam("rankBy", placeRequest.rankBy)
         }
-        return url.queryParam("key", "API_KEY")//TODO вставить ключ
+        return url.queryParam("key", environment.getProperty("PLACES_API_KEY"))
             .encode()
             .toUriString()
             .replace('?', '%')
@@ -40,7 +45,7 @@ class PlacesServiceImpl : PlacesService {
         UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/textsearch/json")
             .queryParam("query", city)
             .queryParam("type", "locality")
-            .queryParam("key", "API_KEY")
+            .queryParam("key", environment.getProperty("PLACES_API_KEY"))
             .build()
 
     private fun JsonNode.getPlace() = PlacesResponse(
@@ -49,7 +54,7 @@ class PlacesServiceImpl : PlacesService {
         lng = this["geometry"]["location"]["lng"].asDouble(),
         icon = this["icon"].toString(),
         rating = this.get("rating")?.asInt() ?: 0,
-        placeId = this.get("place_id").toString()//TODO потом проверить
+        placeId = this.get("place_id").toString()
     )
 
     override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {

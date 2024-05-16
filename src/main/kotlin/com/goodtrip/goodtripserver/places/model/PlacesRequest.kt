@@ -1,10 +1,9 @@
 package com.goodtrip.goodtripserver.places.model
 
-import jakarta.validation.constraints.NotBlank
-
 data class PlaceRequest(
-    @NotBlank(message = "field \"location\" can't be null")
-    val location: String,
+    val lng: Double,
+
+    val lat: Double,
 
     val radius: Int,
 
