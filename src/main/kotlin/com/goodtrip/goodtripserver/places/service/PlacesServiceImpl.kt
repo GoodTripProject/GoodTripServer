@@ -28,9 +28,6 @@ class PlacesServiceImpl : PlacesService {
         val url = UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
             .queryParam("location", "${placeRequest.lat}?2C${placeRequest.lng}")
             .queryParam("radius", placeRequest.radius.toString())
-        if (!placeRequest.rankBy.isNullOrEmpty()) {
-            url.queryParam("rankBy", placeRequest.rankBy)
-        }
         placeRequest.type?.let {
             url.queryParam("rankBy", placeRequest.rankBy)
         }
