@@ -16,10 +16,6 @@ class FlightsServiceImpl : FlightsService {
     @Autowired
     private lateinit var environment: Environment
 
-    private val amadeus =
-        Amadeus.builder(environment.getProperty("FLIGHT_API_KEY")!!, environment.getProperty("FLIGHT_API_SECRET_KEY")!!)
-            .build()
-
     override fun getFlights(
         origin: String,
         destination: String,
@@ -27,6 +23,10 @@ class FlightsServiceImpl : FlightsService {
         adults: String,
         returnDate: String?
     ): ResponseEntity<List<FlightsResponse>> {
+        val amadeus = Amadeus.builder(
+            environment.getProperty("FLIGHT_API_KEY")!!,
+            environment.getProperty("FLIGHT_API_SECRET_KEY")!!
+        ).build()
         val result = mutableListOf<FlightsResponse>()
         amadeus.shopping.flightOffersSearch.get(
             Params.with("originLocationCode", origin)
