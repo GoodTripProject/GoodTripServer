@@ -59,7 +59,6 @@ class PlacesServiceImpl : PlacesService {
 
     private fun getPhoto(node: JsonNode): String {
         val photo = node.get("photos")?.get(0) ?: return ""
-        val width = photo.get("width")?.toString() ?: return ""
         val url = getUrl(
             width = photo.get("width").toString(),
             height = photo.get("height").toString(),
