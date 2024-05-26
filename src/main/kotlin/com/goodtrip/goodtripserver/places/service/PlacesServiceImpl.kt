@@ -57,7 +57,6 @@ class PlacesServiceImpl : PlacesService {
             .build()
 
 
-    @Suppress("DEPRECATION")
     private fun getPhoto(node: JsonNode): String {
         val photo = node.get("photos")?.get(0) ?: return ""
         val width = photo.get("width")?.toString() ?: return ""
@@ -71,12 +70,7 @@ class PlacesServiceImpl : PlacesService {
             .uri(url.toUri())
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-//        if(response.statusCode() == HttpStatus.MOVED_TEMPORARILY.value()){
-////            return response.body().find
-//        }
-//        return response.body()
-        val el = Jsoup.parse(response.body()).select("A")
-        return el.text()
+        return Jsoup.parse(response.body()).select("A")[0].attribute("href").value
     }
 
     private fun JsonNode.getPlace() = PlacesResponse(
