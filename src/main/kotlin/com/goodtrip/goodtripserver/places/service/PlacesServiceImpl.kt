@@ -1,8 +1,6 @@
 package com.goodtrip.goodtripserver.places.service
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.module.kotlin.contains
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
@@ -75,12 +73,12 @@ class PlacesServiceImpl : PlacesService {
     }
 
     private fun JsonNode.getPlace() = PlacesResponse(
-        name = this["name"].toString(),
+        name = this["name"].toString().dropQuotes(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
         photo = getPhoto(this),
         rating = this.get("rating")?.asInt() ?: 0,
-        placeId = this.get("place_id").toString()
+        placeId = this.get("place_id").toString().dropQuotes()
     )
 
     override fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any> {
