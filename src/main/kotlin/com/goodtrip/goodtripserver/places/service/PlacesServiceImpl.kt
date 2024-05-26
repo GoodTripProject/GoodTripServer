@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
+import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
@@ -38,6 +39,8 @@ class PlacesServiceImpl : PlacesService {
             .replaceFirst('%', '?')
     }
 
+    private fun String.dropQuotes() = this.drop(1).dropLast(1)
+
     private fun getUrl(city: String) =
         UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/textsearch/json")
             .queryParam("query", city)
@@ -45,11 +48,42 @@ class PlacesServiceImpl : PlacesService {
             .queryParam("key", environment.getProperty("PLACES_API_KEY"))
             .build()
 
+    private fun getUrl(width: String, height: String, photoReference: String) =
+        UriComponentsBuilder.fromHttpUrl("https://maps.googleapis.com/maps/api/place/photo")
+            .queryParam("maxwidth", width)
+            .queryParam("maxheight", height)
+            .queryParam("photo_reference", photoReference)
+            .queryParam("key", environment.getProperty("PLACES_API_KEY"))
+            .build()
+
+
+    @Suppress("DEPRECATION")
+    private fun getPhoto(node: JsonNode): String {
+        val photo = node.get("photos")?.get(0) ?: return ""
+        val width = photo.get("width")?.toString() ?: return ""
+        val url = getUrl(
+            width = photo.get("width").toString(),
+            height = photo.get("height").toString(),
+            photoReference = photo.get("photo_reference").toString().dropQuotes()
+        )
+        val client = HttpClient.newBuilder().build()
+        val request = HttpRequest.newBuilder()
+            .uri(url.toUri())
+            .build()
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+//        if(response.statusCode() == HttpStatus.MOVED_TEMPORARILY.value()){
+////            return response.body().find
+//        }
+//        return response.body()
+        val el = Jsoup.parse(response.body()).select("A")
+        return el.text()
+    }
+
     private fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
-        icon = this["icon"].toString(),
+        photo = getPhoto(this),
         rating = this.get("rating")?.asInt() ?: 0,
         placeId = this.get("place_id").toString()
     )
@@ -65,7 +99,7 @@ class PlacesServiceImpl : PlacesService {
         if (response.statusCode() == HttpStatus.OK.value()) {
             val places = mutableListOf<PlacesResponse>()
             val responseObject = objectMapper.readTree(response.body())
-            if (responseObject["status"].toString() == "\"INVALID_REQUEST\"") {
+            if (responseObject["status"].toString().dropQuotes() == "INVALID_REQUEST") {
                 return ResponseEntity.badRequest().body("Invalid request")
             }
             responseObject["results"].forEach {
@@ -87,13 +121,13 @@ class PlacesServiceImpl : PlacesService {
 
         if (response.statusCode() == HttpStatus.OK.value()) {
             val responseObject = objectMapper.readTree(response.body())
-            if (responseObject["status"].toString() == "\"INVALID_REQUEST\"") {
+            if (responseObject["status"].toString().dropQuotes() == "INVALID_REQUEST") {
                 return ResponseEntity.badRequest().body("Invalid request")
             }
 
             return ResponseEntity.ok().body(
                 City(
-                    city = responseObject["results"][0]["formatted_address"].toString().drop(1).dropLast(1),
+                    city = responseObject["results"][0]["formatted_address"].toString().dropQuotes(),
                     latitude = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
                     longitude = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
                 )
