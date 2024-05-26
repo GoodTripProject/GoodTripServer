@@ -1,6 +1,8 @@
 package com.goodtrip.goodtripserver.places.service
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.module.kotlin.contains
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
@@ -96,8 +98,10 @@ class PlacesServiceImpl : PlacesService {
                 return ResponseEntity.badRequest().body("Invalid request")
             }
             responseObject["results"].forEach {
-                val place = it.getPlace()
-                places.add(place)
+                if (!it["types"].map { type -> type.asText() }.contains("political")) {
+                    val place = it.getPlace()
+                    places.add(place)
+                }
             }
             return ResponseEntity.ok(places)
         }
