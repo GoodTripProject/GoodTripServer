@@ -21,4 +21,6 @@ public interface TripBaseRepository {
                          List<CountryVisit> countries);
 
     List<TripView> getAuthorsTrips(int userId, int startingNumber);
+
+    List<TripView> getTripViewsOfSpecificUser(int authorId);
 }

@@ -4,6 +4,7 @@ import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
+import com.goodtrip.goodtripserver.authentication.service.UserService
 import lombok.RequiredArgsConstructor
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +20,9 @@ class AuthenticationController {
     @Autowired
     private lateinit var authenticationService: AuthenticationService
 
+    @Autowired
+    private lateinit var userService: UserService
+
     @ResponseBody
     @PostMapping("/login")
     fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
@@ -32,5 +36,9 @@ class AuthenticationController {
         logger.info("registerRequest username:" + registerRequest.username + ", password:" + registerRequest.password)
         return ResponseEntity.ok(authenticationService.register(registerRequest))
     }
+
+    @ResponseBody
+    @PostMapping("/update_photo")
+    fun updateUserPhoto(@RequestParam userId: Int, photoUrl: String) = userService.updateUserPhoto(userId, photoUrl)
 
 }

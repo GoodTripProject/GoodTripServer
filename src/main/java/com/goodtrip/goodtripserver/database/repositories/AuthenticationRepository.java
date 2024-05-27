@@ -41,4 +41,7 @@ public interface AuthenticationRepository extends CrudRepository<User, Integer> 
     boolean existsUserByUsername(String username);
 
     Optional<User> getUserByUsername(String username);
+
+    @Query("UPDATE User u  SET u.imageLink= :photoUrl where u.id= :id")
+    void updatePhotoUrlById(Integer id, String photoUrl);
 }

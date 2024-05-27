@@ -57,6 +57,7 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
         return manager.createQuery("SELECT trip FROM Trip trip, FollowingRelation relation " +
                         "WHERE relation.userId = :userId " +
                         "AND relation.authorId = trip.userId " +
+                        "AND trip.state = 2" +
                         "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
                 .setParameter("userId", userId)
                 .setFirstResult(startingNumber)
@@ -64,6 +65,22 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
                 .getResultStream()
                 .map((trip) -> {
                     Optional<User> user = authenticationRepository.findById(userId);
+                    return user.map(value -> new TripView(trip, value)).orElse(null);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TripView> getTripViewsOfSpecificUser(int authorId) {
+        return manager.createQuery("SELECT trip FROM Trip trip " +
+                        "WHERE trip.userId = :authorId " +
+                        "AND trip.state = 2" +
+                        "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
+                .setParameter("authorId", authorId)
+                .getResultStream()
+                .map((trip) -> {
+                    Optional<User> user = authenticationRepository.findById(authorId);
                     return user.map(value -> new TripView(trip, value)).orElse(null);
                 })
                 .filter(Objects::nonNull)
