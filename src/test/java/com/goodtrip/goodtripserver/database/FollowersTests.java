@@ -24,9 +24,9 @@ import java.util.UUID;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FollowersTests {
     @Autowired
-    FollowersRepository repository;
+    private FollowersRepository repository;
     @Autowired
-    AuthenticationRepository authenticationRepository;
+    private AuthenticationRepository authenticationRepository;
     User user1;
     User user2;
 
