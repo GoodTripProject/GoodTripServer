@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.authentication.service
 
+import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -16,8 +17,8 @@ class UserServiceImpl : UserService {
         return authenticationRepository.getUserByUsername(email).get()
     }
 
-    override fun updateUserPhoto(userId: Int, photoUrl: String): ResponseEntity<String> {
-        authenticationRepository.updatePhotoUrlById(userId, photoUrl)
+    override fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String> {
+        authenticationRepository.updatePhotoUrlById(userId, photoUrl.url)
         return ResponseEntity.ok("Photo updated")
     }
 }
