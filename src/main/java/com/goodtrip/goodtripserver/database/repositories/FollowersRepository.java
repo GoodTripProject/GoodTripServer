@@ -1,10 +1,13 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.FollowingRelation;
+import com.goodtrip.goodtripserver.database.models.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.List;
 
 @EnableTransactionManagement
 public interface FollowersRepository extends CrudRepository<FollowingRelation, Integer> {
@@ -23,4 +26,10 @@ public interface FollowersRepository extends CrudRepository<FollowingRelation, I
             "AND authorId = (SELECT id FROM User WHERE handle = :authorHandle)")
     void deleteSubscription(Integer userId, String authorHandle);
 
+
+    @Query("SELECT u from User u, FollowingRelation r where r.userId = :userId and u.id = :userId")
+    List<User> getAllUserSubscriptions(int userId);
+
+    @Query("SELECT u from User u, FollowingRelation r where r.authorId = :userId and u.id = :userId")
+    List<User> getAllUserFollowers(int userId);
 }
