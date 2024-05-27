@@ -49,4 +49,10 @@ class CommunicationServiceImpl : CommunicationService {
         likeRepository.deleteByUserIdAndTripId(userId, tripId)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    override fun getFollowers(userId: Int) = ResponseEntity.ok().body(followersRepository.getAllUserFollowers(userId))
+
+
+    override fun getSubscriptions(userId: Int) =
+        ResponseEntity.ok().body(followersRepository.getAllUserSubscriptions(userId))
 }
