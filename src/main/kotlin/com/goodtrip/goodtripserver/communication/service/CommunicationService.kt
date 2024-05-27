@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.communication.service
 
+import com.goodtrip.goodtripserver.database.models.User
 import org.springframework.http.ResponseEntity
 
 interface CommunicationService {
@@ -10,5 +11,9 @@ interface CommunicationService {
     fun like(userId: Int, tripId: Int): ResponseEntity<String>
 
     fun deleteLike(userId: Int, tripId: Int): ResponseEntity<String>
+
+    fun getFollowers(userId: Int): ResponseEntity<List<User>>
+
+    fun getSubscriptions(userId: Int): ResponseEntity<List<User>>
 
 }
