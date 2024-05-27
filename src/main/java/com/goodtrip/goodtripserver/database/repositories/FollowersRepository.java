@@ -12,10 +12,10 @@ public interface FollowersRepository extends CrudRepository<FollowingRelation, I
     @Query(value = "INSERT INTO followers (user_id, author_id) " +
             "SELECT :userId,(SELECT id FROM users WHERE handle = :authorHandle);",
             nativeQuery = true)
-    void followUsersByHandles(Integer userId, String authorHandle);
+    void followUserByHandles(Integer userId, String authorHandle);
 
     @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM FollowingRelation WHERE userId = :userId " +
-            "AND authorId = (SELECT id FROM User WHERE handle = :authorHandle)) THEN 1 ELSE 0 END")
+            "AND authorId = (SELECT id FROM User WHERE handle = :authorHandle)) THEN true ELSE false END")
     boolean existsSubscription(Integer userId, String authorHandle);
 
     @Modifying
