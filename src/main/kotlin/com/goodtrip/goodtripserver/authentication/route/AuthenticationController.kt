@@ -3,6 +3,7 @@ package com.goodtrip.goodtripserver.authentication.route
 import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
+import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.authentication.service.AuthenticationService
 import com.goodtrip.goodtripserver.authentication.service.UserService
 import lombok.RequiredArgsConstructor
@@ -39,6 +40,7 @@ class AuthenticationController {
 
     @ResponseBody
     @PostMapping("/update_photo")
-    fun updateUserPhoto(@RequestParam userId: Int, photoUrl: String) = userService.updateUserPhoto(userId, photoUrl)
+    fun updateUserPhoto(@RequestParam userId: Int, @RequestBody photoUrl: UrlHandler) =
+        userService.updateUserPhoto(userId, photoUrl)
 
 }
