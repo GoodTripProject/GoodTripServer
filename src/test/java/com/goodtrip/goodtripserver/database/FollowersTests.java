@@ -48,6 +48,10 @@ public class FollowersTests {
     public void following_FollowingDoesNotExist_FollowingExist() {
         repository.followUserByHandles(user1.getId(), user2.getHandle());
         Assertions.assertTrue(repository.existsSubscription(user1.getId(), user2.getHandle()));
+        Assertions.assertFalse(repository.getAllUserSubscriptions(user1.getId()).isEmpty());
+        Assertions.assertTrue(repository.getAllUserFollowers(user1.getId()).isEmpty());
+        Assertions.assertFalse(repository.getAllUserFollowers(user2.getId()).isEmpty());
+        Assertions.assertTrue(repository.getAllUserSubscriptions(user2.getId()).isEmpty());
         repository.deleteSubscription(user1.getId(), user2.getHandle());
         Assertions.assertFalse(repository.existsSubscription(user1.getId(), user2.getHandle()));
     }
