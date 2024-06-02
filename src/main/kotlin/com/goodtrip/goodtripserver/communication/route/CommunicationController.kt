@@ -2,12 +2,10 @@ package com.goodtrip.goodtripserver.communication.route
 
 import com.goodtrip.goodtripserver.communication.service.CommunicationService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
-@RestController("/communication")
+@RestController()
+@RequestMapping("/communication")
 class CommunicationController {
 
     @Autowired
@@ -17,7 +15,7 @@ class CommunicationController {
     fun follow(@RequestParam userId: Int, @RequestParam author: String) = communicationService.follow(userId, author)
 
 
-    @PostMapping("/unfollow")
+    @DeleteMapping("/unfollow")
     fun unfollow(@RequestParam userId: Int, @RequestParam author: String) =
         communicationService.unfollow(userId, author)
 
@@ -26,7 +24,7 @@ class CommunicationController {
     fun like(@RequestParam userId: Int, @RequestParam tripId: Int) = communicationService.like(userId, tripId)
 
 
-    @PostMapping("/delete_like")
+    @DeleteMapping("/delete_like")
     fun deleteLike(@RequestParam userId: Int, @RequestParam tripId: Int) =
         communicationService.deleteLike(userId, tripId)
 

@@ -76,10 +76,14 @@ class TripController {
 
 
     @ResponseBody
-    @GetMapping("/get_authors_trips")
+    @GetMapping("/authors_trips")
     fun getAuthorsTrips(@RequestParam userId: Int, @RequestParam start: Int): ResponseEntity<List<TripView>> {
         val result = tripService.getAuthorsTrips(userId, start)
         logger.debug(result.toString())
         return result
     }
+
+    @ResponseBody
+    @GetMapping("/author_trips")
+    fun getAuthorTrips(@RequestParam handle: String) = tripService.getAuthorTrips(handle)
 }
