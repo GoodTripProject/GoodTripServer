@@ -47,4 +47,6 @@ public interface AuthenticationRepository extends CrudRepository<User, Integer> 
     @Modifying
     @Query("UPDATE User u  SET u.imageLink= :photoUrl where u.id= :id")
     void updatePhotoUrlById(Integer id, String photoUrl);
+
+    Optional<User> getUserByHandle(String handle);
 }
