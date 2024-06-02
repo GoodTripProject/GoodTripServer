@@ -10,6 +10,7 @@ import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -26,6 +27,7 @@ class TripServiceImpl : TripService {
 
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
+
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
         val trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(userId)
@@ -145,7 +147,13 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok().body(tripRepository.getAuthorsTrips(userId, start))
     }
 
-    override fun getAuthorTrips(userId: Int): ResponseEntity<List<TripView>> {
+    override fun getAuthorTrips(handle: String): ResponseEntity<List<TripView>> {
+        val userId: Int
+        try {
+            userId = authenticationRepository.getUserByUsername(handle).get().id
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
         return ResponseEntity.ok(tripRepository.getTripViewsOfSpecificUser(userId))
     }
 

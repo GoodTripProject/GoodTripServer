@@ -85,5 +85,5 @@ class TripController {
 
     @ResponseBody
     @GetMapping("/author_trips")
-    fun getAuthorTrips(@RequestParam userId: Int) = tripService.getAuthorTrips(userId)
+    fun getAuthorTrips(@RequestParam handle: String) = tripService.getAuthorTrips(handle)
 }
