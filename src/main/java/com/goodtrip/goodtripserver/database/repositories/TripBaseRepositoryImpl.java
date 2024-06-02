@@ -72,6 +72,7 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
     }
 
     @Override
+    @Transactional
     public List<TripView> getTripViewsOfSpecificUser(int authorId) {
         return manager.createQuery("SELECT trip FROM Trip trip " +
                         "WHERE trip.userId = :authorId " +
