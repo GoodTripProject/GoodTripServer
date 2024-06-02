@@ -73,18 +73,11 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
 
     @Override
     @Transactional
-    public List<TripView> getTripViewsOfSpecificUser(int authorId) {
+    public List<Trip> getTripsOfSpecificUser(int authorId) {
         return manager.createQuery("SELECT trip FROM Trip trip " +
                         "WHERE trip.userId = :authorId " +
                         "AND trip.state = 2" +
                         "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
-                .setParameter("authorId", authorId)
-                .getResultStream()
-                .map((trip) -> {
-                    Optional<User> user = authenticationRepository.findById(authorId);
-                    return user.map(value -> new TripView(trip, value)).orElse(null);
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .setParameter("authorId", authorId).getResultList();
     }
 }

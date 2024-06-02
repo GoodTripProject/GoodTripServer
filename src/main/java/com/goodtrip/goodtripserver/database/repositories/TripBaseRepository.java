@@ -1,9 +1,6 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
-import com.goodtrip.goodtripserver.database.models.CountryVisit;
-import com.goodtrip.goodtripserver.database.models.Note;
-import com.goodtrip.goodtripserver.database.models.TripState;
-import com.goodtrip.goodtripserver.database.models.TripView;
+import com.goodtrip.goodtripserver.database.models.*;
 import io.micrometer.common.lang.Nullable;
 
 import java.sql.Date;
@@ -22,5 +19,5 @@ public interface TripBaseRepository {
 
     List<TripView> getAuthorsTrips(int userId, int startingNumber);
 
-    List<TripView> getTripViewsOfSpecificUser(int authorId);
+    List<Trip> getTripsOfSpecificUser(int authorId);
 }
