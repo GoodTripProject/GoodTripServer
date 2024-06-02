@@ -145,5 +145,9 @@ class TripServiceImpl : TripService {
         return ResponseEntity.ok().body(tripRepository.getAuthorsTrips(userId, start))
     }
 
+    override fun getAuthorTrips(userId: Int): ResponseEntity<List<TripView>> {
+        return ResponseEntity.ok(tripRepository.getTripViewsOfSpecificUser(userId))
+    }
+
 
 }

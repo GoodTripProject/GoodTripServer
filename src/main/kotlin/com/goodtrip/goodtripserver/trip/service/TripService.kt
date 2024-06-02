@@ -31,4 +31,6 @@ interface TripService {
 
     fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>>
 
+    fun getAuthorTrips(userId: Int): ResponseEntity<List<TripView>>
+
 }
