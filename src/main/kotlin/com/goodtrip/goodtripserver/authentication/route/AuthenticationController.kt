@@ -42,5 +42,4 @@ class AuthenticationController {
     @PostMapping("/update_photo")
     fun updateUserPhoto(@RequestParam userId: Int, @RequestBody photoUrl: UrlHandler) =
         userService.updateUserPhoto(userId, photoUrl)
-
 }
