@@ -150,7 +150,7 @@ class TripServiceImpl : TripService {
     override fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>> {
         val userId: Int
         try {
-            userId = authenticationRepository.getUserByUsername(handle).get().id
+            userId = authenticationRepository.getUserByHandle(handle).get().id
         } catch (e: NoSuchElementException) {
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
