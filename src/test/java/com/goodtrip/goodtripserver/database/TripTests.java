@@ -46,15 +46,15 @@ class TripTests {
     private TransactionTemplate template;
 
     protected Trip createTrip(List<Note> notes, List<CountryVisit> visits) {
-        tripRepository.saveTripAndWire(user.getId(), "1", 2, "aa", new Date(0), new Date(1), TripState.IN_PROCESS, notes, visits);
-        List<Trip> trips = tripRepository.getTripsByUserId(user.getId());
+        tripRepository.saveTripAndWire(null, user.getId(), "1", 2, "aa", new Date(0), new Date(1), TripState.IN_PROCESS, notes, visits);
+        List<Trip> trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId());
         return trips.getFirst();
     }
 
     @Transactional
     protected void deleteTrip(Integer tripId) {
         tripRepository.deleteTripById(tripId);
-        assertTrue(tripRepository.getTripsByUserId(user.getId()).isEmpty());
+        assertTrue(tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId()).isEmpty());
     }
 
     @BeforeAll
@@ -96,7 +96,7 @@ class TripTests {
 
     @NotNull
     private List<CountryVisit> getVisits() {
-        List<Trip> trips = tripRepository.getTripsByUserId(user.getId());
+        List<Trip> trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId());
         assertEquals(1, trips.size());
         List<CountryVisit> visits = trips.getFirst().getVisits();
         assertEquals(1, visits.size());
@@ -105,9 +105,9 @@ class TripTests {
 
     @NotNull
     private List<CountryVisit> getCountryVisits() {
-        List<Trip> trips = tripRepository.getTripsByUserId(user.getId());
+        List<Trip> trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId());
         assertEquals(1, trips.size());
-        List<CountryVisit> actualCountryVisit = tripRepository.getTripsByUserId(user.getId()).getFirst().getVisits();
+        List<CountryVisit> actualCountryVisit = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(user.getId()).getFirst().getVisits();
         assertEquals(1, actualCountryVisit.size());
         return actualCountryVisit;
     }
@@ -143,7 +143,7 @@ class TripTests {
         Trip trip;
 
         private Note saveNote() {
-            return noteRepository.save(new Note("a", null,"nu", "b", trip.getId()));
+            return noteRepository.save(new Note("a", null, "nu", "b", trip.getId()));
         }
 
         @Transactional

@@ -27,13 +27,15 @@ repositories {
 
 dependencies {
     implementation("org.hibernate:hibernate-spatial:6.4.4.Final")
-
+    implementation("com.amadeus:amadeus-java:5.7.2")
+    implementation("org.jsoup:jsoup:1.17.2")
     implementation("jakarta.transaction:jakarta.transaction-api")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.2.2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 //    implementation("org.springframework.boot:spring-boot-starter-webflux")
 //    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
@@ -44,7 +46,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.12.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.12.5")
     implementation("org.springframework.boot:spring-boot-configuration-processor:3.2.2")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

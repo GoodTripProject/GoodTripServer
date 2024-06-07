@@ -39,7 +39,7 @@ class ApplicationConfig {
 
     @Bean
     fun userService(): UserService {
-        return UserServiceImpl();
+        return UserServiceImpl()
     }
 
     @Bean

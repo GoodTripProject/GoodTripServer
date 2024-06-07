@@ -1,6 +1,7 @@
 package com.goodtrip.goodtripserver.trip.service
 
 import com.goodtrip.goodtripserver.database.models.Trip
+import com.goodtrip.goodtripserver.database.models.TripView
 import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
 import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
@@ -26,5 +27,10 @@ interface TripService {
 
     suspend fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
 
+    fun updateTrip(trip: Trip): ResponseEntity<String>
+
+    fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>>
+
+    fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>>
 
 }

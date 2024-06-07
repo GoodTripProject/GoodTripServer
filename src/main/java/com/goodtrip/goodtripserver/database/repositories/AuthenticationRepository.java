@@ -1,9 +1,11 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
 import com.goodtrip.goodtripserver.database.models.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -41,4 +43,10 @@ public interface AuthenticationRepository extends CrudRepository<User, Integer> 
     boolean existsUserByUsername(String username);
 
     Optional<User> getUserByUsername(String username);
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u  SET u.imageLink= :photoUrl where u.id= :id")
+    void updatePhotoUrlById(Integer id, String photoUrl);
+
+    Optional<User> getUserByHandle(String handle);
 }

@@ -4,8 +4,10 @@ import com.goodtrip.goodtripserver.authentication.config.JwtService
 import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
+import com.goodtrip.goodtripserver.database.models.FollowingRelation
 import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
+import com.goodtrip.goodtripserver.database.repositories.FollowersRepository
 import com.goodtrip.goodtripserver.encrypting.PasswordHasher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +15,6 @@ import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrElse
 
 
 @Service
@@ -27,6 +28,9 @@ class AuthenticationServiceImpl : AuthenticationService {
 
     @Autowired
     private lateinit var hasher: PasswordHasher
+
+    @Autowired
+    private lateinit var followersRepository: FollowersRepository
 
     override suspend fun login(request: AuthorizationRequest): AuthenticationResponse {
         val salt = withContext(Dispatchers.IO) {
@@ -77,6 +81,9 @@ class AuthenticationServiceImpl : AuthenticationService {
                 )
             )
         }
+        followersRepository.save(
+            FollowingRelation(userWithId.id, userWithId.id)
+        )
         return AuthenticationResponse(
             id = userWithId.id,
             handle = userWithId.handle,

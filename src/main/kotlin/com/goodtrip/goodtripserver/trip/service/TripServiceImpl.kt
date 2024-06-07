@@ -31,11 +31,12 @@ class TripServiceImpl : TripService {
 
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
+
     override suspend fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
 
         val trips = withContext(Dispatchers.IO) {
-            tripRepository.getTripsByUserId(userId)
-        }
+            tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(userId)
+            }
         return ResponseEntity.ok(trips)
     }
 
@@ -68,6 +69,7 @@ class TripServiceImpl : TripService {
             .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
             .toList()
         tripRepository.saveTripAndWire(
+            null,
             userId,
             trip.title,
             trip.moneyInUsd,
@@ -147,4 +149,43 @@ class TripServiceImpl : TripService {
         }
         return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")
     }
+
+    override suspend fun updateTrip(trip: Trip): ResponseEntity<String> {
+        if (!withContext(Dispatchers.IO) {
+                tripRepository.existsById(trip.id)
+            }) {
+            return ResponseEntity.badRequest().body("Trip with id '${trip.id}' not exist")
+        }
+        tripRepository.saveTripAndWire(
+            trip.id,
+            trip.userId,
+            trip.title,
+            trip.moneyInUsd,
+            trip.mainPhotoUrl,
+            trip.departureDate,
+            trip.arrivalDate,
+            trip.state,
+            trip.notes,
+            trip.visits
+        )
+        return ResponseEntity.ok("Trip updated successfully")
+    }
+
+    override suspend fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>> {
+        return ResponseEntity.ok().body(tripRepository.getAuthorsTrips(userId, start))
+    }
+
+    override suspend fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>> {
+        val userId: Int
+        try {
+            userId = withContext(Dispatchers.IO) {
+                authenticationRepository.getUserByHandle(handle)
+            }.get().id
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+        return ResponseEntity.ok(tripRepository.getTripsOfSpecificUser(userId))
+    }
+
+
 }
