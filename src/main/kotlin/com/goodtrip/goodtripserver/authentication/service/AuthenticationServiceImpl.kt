@@ -81,9 +81,11 @@ class AuthenticationServiceImpl : AuthenticationService {
                 )
             )
         }
-        followersRepository.save(
-            FollowingRelation(userWithId.id, userWithId.id)
-        )
+        withContext(Dispatchers.IO) {
+            followersRepository.save(
+                FollowingRelation(userWithId.id, userWithId.id)
+            )
+        }
         return AuthenticationResponse(
             id = userWithId.id,
             handle = userWithId.handle,

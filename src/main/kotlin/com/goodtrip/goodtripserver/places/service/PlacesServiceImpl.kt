@@ -2,14 +2,14 @@ package com.goodtrip.goodtripserver.places.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.goodtrip.goodtripserver.trip.model.City
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
+import com.goodtrip.goodtripserver.trip.model.City
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -59,7 +59,7 @@ class PlacesServiceImpl : PlacesService {
             .build()
 
 
-    private fun getPhoto(node: JsonNode): String {
+    private suspend fun getPhoto(node: JsonNode): String {
         val photo = node.get("photos")?.get(0) ?: return ""
         val url = getUrl(
             width = photo.get("width").toString(),
@@ -70,11 +70,13 @@ class PlacesServiceImpl : PlacesService {
         val request = HttpRequest.newBuilder()
             .uri(url.toUri())
             .build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = withContext(Dispatchers.IO) {
+            client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
         return Jsoup.parse(response.body()).select("A")[0].attribute("href").value
     }
 
-    private fun JsonNode.getPlace() = PlacesResponse(
+    private suspend fun JsonNode.getPlace() = PlacesResponse(
         name = this["name"].toString().dropQuotes(),
         lat = this["geometry"]["location"]["lat"].asDouble(),
         lng = this["geometry"]["location"]["lng"].asDouble(),
@@ -110,13 +112,15 @@ class PlacesServiceImpl : PlacesService {
         return ResponseEntity.badRequest().body("Invalid request")
     }
 
-    override fun getCoordinates(city: String): ResponseEntity<Any> {
+    override suspend fun getCoordinates(city: String): ResponseEntity<Any> {
         val url = getUrl(city)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(url.toUri())
             .build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = withContext(Dispatchers.IO) {
+            client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
 
         if (response.statusCode() == HttpStatus.OK.value()) {
             val responseObject = objectMapper.readTree(response.body())

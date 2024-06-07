@@ -15,7 +15,7 @@ class FlightsController {
     private lateinit var flightsService: FlightsService
 
     @GetMapping
-    fun getFlights(
+    suspend fun getFlights(
         @RequestParam(required = true) origin: String,
         @RequestParam(required = true) destination: String,
         @RequestParam(required = true) departureDate: String,

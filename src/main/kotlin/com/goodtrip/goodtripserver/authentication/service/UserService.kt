@@ -10,6 +10,6 @@ interface UserService {
 
     fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String>
 
-    fun getUserByHandle(handle: String): ResponseEntity<User>
+    suspend fun getUserByHandle(handle: String): ResponseEntity<User>
 
 }

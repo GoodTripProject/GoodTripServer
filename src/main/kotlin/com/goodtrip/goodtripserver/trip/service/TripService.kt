@@ -27,10 +27,10 @@ interface TripService {
 
     suspend fun deleteCountryVisit(countryVisitId: Int): ResponseEntity<String>
 
-    fun updateTrip(trip: Trip): ResponseEntity<String>
+    suspend fun updateTrip(trip: Trip): ResponseEntity<String>
 
-    fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>>
+    suspend fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>>
 
-    fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>>
+    suspend fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>>
 
 }

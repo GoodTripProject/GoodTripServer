@@ -1,9 +1,6 @@
 package com.goodtrip.goodtripserver.trip.service
 
-import com.goodtrip.goodtripserver.database.models.CityVisit
-import com.goodtrip.goodtripserver.database.models.CountryVisit
-import com.goodtrip.goodtripserver.database.models.Note
-import com.goodtrip.goodtripserver.database.models.Trip
+import com.goodtrip.goodtripserver.database.models.*
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import com.goodtrip.goodtripserver.database.repositories.CountryVisitRepository
 import com.goodtrip.goodtripserver.database.repositories.NoteRepository
@@ -15,6 +12,7 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 

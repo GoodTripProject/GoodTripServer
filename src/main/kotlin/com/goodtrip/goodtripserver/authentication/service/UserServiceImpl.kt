@@ -2,6 +2,8 @@ package com.goodtrip.goodtripserver.authentication.service
 
 import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,8 +25,10 @@ class UserServiceImpl : UserService {
         return ResponseEntity.ok("Photo updated")
     }
 
-    override fun getUserByHandle(handle: String) = try {
-        ResponseEntity.ok().body(authenticationRepository.getUserByHandle(handle).get())
+    override suspend fun getUserByHandle(handle: String) = try {
+        ResponseEntity.ok().body(withContext(Dispatchers.IO) {
+            authenticationRepository.getUserByHandle(handle)
+        }.get())
     } catch (e: NoSuchElementException) {
         ResponseEntity(HttpStatus.NOT_FOUND)
     }

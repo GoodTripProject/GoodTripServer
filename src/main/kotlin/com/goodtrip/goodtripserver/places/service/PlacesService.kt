@@ -7,6 +7,6 @@ interface PlacesService {
 
     suspend fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any>
 
-    fun getCoordinates(city: String): ResponseEntity<Any>
+    suspend fun getCoordinates(city: String): ResponseEntity<Any>
 
 }
