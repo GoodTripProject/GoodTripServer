@@ -11,7 +11,7 @@ data class PlacesResponse(
 
     val lng: Double,
 
-    val icon: String,//TODO поменять на фото
+    val photo: String,
 
     val rating: Int,
 

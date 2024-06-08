@@ -1,9 +1,6 @@
 package com.goodtrip.goodtripserver.trip.service
 
-import com.goodtrip.goodtripserver.database.models.CityVisit
-import com.goodtrip.goodtripserver.database.models.CountryVisit
-import com.goodtrip.goodtripserver.database.models.Note
-import com.goodtrip.goodtripserver.database.models.Trip
+import com.goodtrip.goodtripserver.database.models.*
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import com.goodtrip.goodtripserver.database.repositories.CountryVisitRepository
 import com.goodtrip.goodtripserver.database.repositories.NoteRepository
@@ -13,6 +10,7 @@ import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -29,8 +27,10 @@ class TripServiceImpl : TripService {
 
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
+
     override fun getTrips(userId: Int): ResponseEntity<List<Trip>> {
-        val trips = tripRepository.getTripsByUserId(userId)
+
+        val trips = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(userId)
         return ResponseEntity.ok(trips)
     }
 
@@ -59,6 +59,7 @@ class TripServiceImpl : TripService {
             .map { Note(it.title, it.photoUrl, it.googlePlaceId) }
             .toList()
         tripRepository.saveTripAndWire(
+            null,
             userId,
             trip.title,
             trip.moneyInUsd,
@@ -91,7 +92,7 @@ class TripServiceImpl : TripService {
 
     override fun addNote(userId: Int, note: AddNoteRequest): ResponseEntity<String> {
         if (tripRepository.existsById(note.tripId)) {
-            noteRepository.save(Note(note.title, note.photoUrl,note.text, note.googlePlaceId, note.tripId))
+            noteRepository.save(Note(note.title, note.photoUrl, note.text, note.googlePlaceId, note.tripId))
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.badRequest().body("Trip with id '${note.tripId}' not exist")
@@ -122,4 +123,39 @@ class TripServiceImpl : TripService {
         }
         return ResponseEntity.badRequest().body("Country with id '$countryVisitId' not exist")
     }
+
+    override fun updateTrip(trip: Trip): ResponseEntity<String> {
+        if (!tripRepository.existsById(trip.id)) {
+            return ResponseEntity.badRequest().body("Trip with id '${trip.id}' not exist")
+        }
+        tripRepository.saveTripAndWire(
+            trip.id,
+            trip.userId,
+            trip.title,
+            trip.moneyInUsd,
+            trip.mainPhotoUrl,
+            trip.departureDate,
+            trip.arrivalDate,
+            trip.state,
+            trip.notes,
+            trip.visits
+        )
+        return ResponseEntity.ok("Trip updated successfully")
+    }
+
+    override fun getAuthorsTrips(userId: Int, start: Int): ResponseEntity<List<TripView>> {
+        return ResponseEntity.ok().body(tripRepository.getAuthorsTrips(userId, start))
+    }
+
+    override fun getAuthorTrips(handle: String): ResponseEntity<List<Trip>> {
+        val userId: Int
+        try {
+            userId = authenticationRepository.getUserByHandle(handle).get().id
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+        return ResponseEntity.ok(tripRepository.getTripsOfSpecificUser(userId))
+    }
+
+
 }

@@ -4,11 +4,14 @@ import com.goodtrip.goodtripserver.authentication.config.JwtService
 import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.AuthorizationRequest
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
+import com.goodtrip.goodtripserver.database.models.FollowingRelation
 import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
+import com.goodtrip.goodtripserver.database.repositories.FollowersRepository
 import com.goodtrip.goodtripserver.encrypting.PasswordHasher
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
 
 
@@ -23,6 +26,9 @@ class AuthenticationServiceImpl : AuthenticationService {
 
     @Autowired
     private lateinit var hasher: PasswordHasher
+
+    @Autowired
+    private lateinit var followersRepository: FollowersRepository
 
     override fun login(request: AuthorizationRequest): AuthenticationResponse {
         val salt = authenticationRepository.getSalt(request.username).get()
@@ -42,6 +48,9 @@ class AuthenticationServiceImpl : AuthenticationService {
     }
 
     override fun register(request: RegisterRequest): AuthenticationResponse {
+        if (authenticationRepository.existsUserByUsername(request.username)) {
+            throw BadCredentialsException("Username ${request.username} already exists")
+        }
         val salt = hasher.personalSalt
         val hashedPassword = hasher.hashPassword(request.password, salt)
         val user = User(
@@ -62,6 +71,9 @@ class AuthenticationServiceImpl : AuthenticationService {
                 request.surname,
                 salt
             )
+        )
+        followersRepository.save(
+            FollowingRelation(userWithId.id, userWithId.id)
         )
         return AuthenticationResponse(
             id = userWithId.id,
