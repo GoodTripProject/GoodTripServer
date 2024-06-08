@@ -43,7 +43,7 @@ class TripControllerTest {
         `when`(tripService.getTrips(1)).thenReturn(ResponseEntity.ok().body(Utils.getListOfTrips()))
         mockMvc.perform(get("/trip/all/{userId}", 1))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(1))//не знаю, как проверить содержимое
+            .andExpect(jsonPath("$.size()").value(1))
         verify(tripService, times(1)).getTrips(1)
     }
 

@@ -47,10 +47,10 @@ class TripServiceImplTest {
 
     @Test
     fun getUserTrips() {
-        `when`(tripRepository.getTripsByUserId(0)).thenReturn(Utils.getListOfTrips())
-        val res = tripRepository.getTripsByUserId(0)
+        `when`(tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(0)).thenReturn(Utils.getListOfTrips())
+        val res = tripRepository.getTripsByUserIdOrderByPublicationTimestampDesc(0)
         assertEquals(Utils.getListOfTrips(), res)
-        verify(tripRepository, times(1)).getTripsByUserId(0)
+        verify(tripRepository, times(1)).getTripsByUserIdOrderByPublicationTimestampDesc(0)
     }
 
 
@@ -68,6 +68,7 @@ class TripServiceImplTest {
         val tripRequest = Utils.getListOfTrips()[0]
         tripBaseRepository.saveTripAndWire(
             tripRequest.id,
+            tripRequest.userId,
             tripRequest.title,
             tripRequest.moneyInUsd,
             tripRequest.mainPhotoUrl,
@@ -80,6 +81,7 @@ class TripServiceImplTest {
 
         verify(tripBaseRepository, times(1)).saveTripAndWire(
             tripRequest.id,
+            tripRequest.userId,
             tripRequest.title,
             tripRequest.moneyInUsd,
             tripRequest.mainPhotoUrl,
