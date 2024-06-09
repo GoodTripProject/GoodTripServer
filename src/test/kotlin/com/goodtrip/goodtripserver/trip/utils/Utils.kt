@@ -39,6 +39,27 @@ object Utils {
         ).body?.token!!
     }
 
+    internal fun `get token, handle and id`(
+        requestHeaders: HttpHeaders,
+        restTemplate: TestRestTemplate
+    ): Triple<String, String, Int> {
+        val registerRequest = RegisterRequest(
+            username = "${getRandomString(20)}@gmail.com",
+            password = getRandomString(10),
+            handle = getRandomString(10),
+            name = getRandomString(15),
+            surname = getRandomString(15),
+        )
+        val registerHttpEntity = HttpEntity(registerRequest, requestHeaders)
+        val responseBody = restTemplate.exchange(
+            "/auth/register",
+            HttpMethod.POST,
+            registerHttpEntity,
+            AuthenticationResponse::class.java
+        ).body
+        return Triple(responseBody?.token!!, responseBody.handle, responseBody.id)
+    }
+
     internal fun tripRequest(): AddTripRequest {
         return AddTripRequest(
             "Russian drill",
@@ -121,7 +142,7 @@ object Utils {
         )
     }
 
-   private fun getListOfCities(): List<CityVisit> {
+    private fun getListOfCities(): List<CityVisit> {
         return listOf(
             CityVisit("Magnitogorsk", 0.0, 0.0),
             CityVisit("Tolyatti", 1.0, 1.0),

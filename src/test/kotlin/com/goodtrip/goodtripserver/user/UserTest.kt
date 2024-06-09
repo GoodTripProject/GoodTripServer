@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.user
 
+import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.trip.utils.Utils
 import org.assertj.core.api.Assertions.assertThat
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.*
+import kotlin.random.Random
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -57,6 +59,47 @@ class UserTest {
             User::class.java
         )
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+    }
+
+    @Test
+    fun updatePhotoTest() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        val (token, handle, id) = Utils.`get token, handle and id`(headers, restTemplate)
+        headers.setBearerAuth(token)
+        val url = UrlHandler(Utils.getRandomString(20))
+        val httpEntity = HttpEntity(url, headers)
+        val response = restTemplate.exchange(
+            "/auth/update_photo?userId=$id",
+            HttpMethod.POST,
+            httpEntity,
+            String::class.java
+        )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        val response2 = restTemplate.exchange(
+            "/user?handle=$handle",
+            HttpMethod.GET,
+            httpEntity,
+            User::class.java
+        )
+        assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(response2.body?.imageLink).isEqualTo(url.url)
+    }
+
+    @Test
+    fun updatePhotoWithoutTokenTest() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        val url = UrlHandler(Utils.getRandomString(20))
+        val httpEntity = HttpEntity(url, headers)
+        val response = restTemplate.exchange(
+            "/auth/update_photo?userId=${Random.nextInt()}",
+            HttpMethod.POST,
+            httpEntity,
+            String::class.java
+        )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
+
     }
 
 
