@@ -120,13 +120,17 @@ class PlacesServiceImpl : PlacesService {
                 return ResponseEntity.badRequest().body("Invalid request")
             }
 
-            return ResponseEntity.ok().body(
-                City(
-                    city = responseObject["results"][0]["formatted_address"].toString().dropQuotes(),
-                    latitude = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
-                    longitude = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
+            return try {
+                ResponseEntity.ok().body(
+                    City(
+                        city = responseObject["results"][0]["formatted_address"].toString().dropQuotes(),
+                        latitude = responseObject["results"][0]["geometry"]["location"]["lat"].asDouble(),
+                        longitude = responseObject["results"][0]["geometry"]["location"]["lng"].asDouble()
+                    )
                 )
-            )
+            } catch (e: NullPointerException) {
+                return ResponseEntity(HttpStatus.BAD_REQUEST)
+            }
         }
         return ResponseEntity.badRequest().body("Invalid request")
     }

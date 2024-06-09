@@ -22,6 +22,6 @@ class PlacesController {
 
     @ResponseBody
     @GetMapping("/coordinates")
-    fun getCoordinates(@RequestParam(required = true) city: String) = placesService.getCoordinates(city)
+    fun getCoordinates(@RequestParam city: String) = placesService.getCoordinates(city)
 
 }
