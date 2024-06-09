@@ -1,13 +1,44 @@
 package com.goodtrip.goodtripserver.trip.utils
 
+import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
+import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.database.models.*
 import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
 import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
 import com.goodtrip.goodtripserver.trip.model.City
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import java.sql.Date
 
 object Utils {
+
+    internal fun getRandomString(length: Int): String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
+
+    internal fun getToken(requestHeaders: HttpHeaders, restTemplate: TestRestTemplate): String {
+        val registerRequest = RegisterRequest(
+            username = "${getRandomString(20)}@gmail.com",
+            password = getRandomString(10),
+            handle = getRandomString(10),
+            name = getRandomString(15),
+            surname = getRandomString(15),
+        )
+        val registerHttpEntity = HttpEntity(registerRequest, requestHeaders)
+        return restTemplate.exchange(
+            "/auth/register",
+            HttpMethod.POST,
+            registerHttpEntity,
+            AuthenticationResponse::class.java
+        ).body?.token!!
+    }
+
     internal fun tripRequest(): AddTripRequest {
         return AddTripRequest(
             "Russian drill",

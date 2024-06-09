@@ -1,11 +1,9 @@
 package com.goodtrip.goodtripserver.places
 
-
-import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
-import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
 import com.goodtrip.goodtripserver.trip.model.City
+import com.goodtrip.goodtripserver.trip.utils.Utils
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,35 +18,12 @@ class PlacesTest {
     @Autowired
     private lateinit var restTemplate: TestRestTemplate
 
-    private fun getRandomString(length: Int): String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
-    }
-
-    private fun getToken(requestHeaders: HttpHeaders): String {
-        val registerRequest = RegisterRequest(
-            username = "${getRandomString(20)}@gmail.com",
-            password = getRandomString(10),
-            handle = getRandomString(10),
-            name = getRandomString(15),
-            surname = getRandomString(15),
-        )
-        val registerHttpEntity = HttpEntity(registerRequest, requestHeaders)
-        return restTemplate.exchange(
-            "/auth/register",
-            HttpMethod.POST,
-            registerHttpEntity,
-            AuthenticationResponse::class.java
-        ).body?.token!!
-    }
 
     @Test
     fun nearPlacesTest() {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.APPLICATION_JSON
-        val token = getToken(requestHeaders)
+        val token = Utils.getToken(requestHeaders, restTemplate)
         requestHeaders.add("Authorization", "Bearer $token")
         val placeRequest = PlaceRequest(
             lng = 151.1957362,
@@ -93,7 +68,7 @@ class PlacesTest {
     fun nearPlacesIncorrectRequestTest() {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.APPLICATION_JSON
-        val token = getToken(requestHeaders)
+        val token = Utils.getToken(requestHeaders, restTemplate)
         requestHeaders.add("Authorization", "Bearer $token")
         val placeRequest = PlaceRequest(
             lng = Random.nextDouble(1000.0, 10000.0),
@@ -118,7 +93,7 @@ class PlacesTest {
     fun getCoordinatesTest() {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.APPLICATION_JSON
-        val token = getToken(requestHeaders)
+        val token = Utils.getToken(requestHeaders, restTemplate)
         requestHeaders.add("Authorization", "Bearer $token")
         val httpEntity = HttpEntity("", requestHeaders)
         val response = restTemplate.exchange("/coordinates?city=Moscow", HttpMethod.GET, httpEntity, City::class.java)
@@ -140,7 +115,7 @@ class PlacesTest {
     fun getCoordinatesBadRequestTest() {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.APPLICATION_JSON
-        val token = getToken(requestHeaders)
+        val token = Utils.getToken(requestHeaders, restTemplate)
         requestHeaders.add("Authorization", "Bearer $token")
         val httpEntity = HttpEntity("", requestHeaders)
         val response = restTemplate.exchange("/coordinates?city=M3123124", HttpMethod.GET, httpEntity, City::class.java)
