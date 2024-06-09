@@ -34,7 +34,7 @@ class AuthenticationServiceImpl : AuthenticationService {
         val salt = authenticationRepository.getSalt(request.username).get()
         val user = authenticationRepository
             .findUserByUsernameAndHashedPassword(request.username, hasher.hashPassword(request.password, salt))
-            .get()//TODO заменить на нормальную ошибку
+            .get()
         val jwtToken = jwtService.generateToken(user)
 
         return AuthenticationResponse(
