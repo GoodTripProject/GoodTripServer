@@ -4,7 +4,7 @@ import com.goodtrip.goodtripserver.communication.service.CommunicationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
-@RestController()
+@RestController
 @RequestMapping("/communication")
 class CommunicationController {
 
