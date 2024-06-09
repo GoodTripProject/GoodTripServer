@@ -2,6 +2,7 @@ package com.goodtrip.goodtripserver.authentication.service
 
 import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
+import org.apache.coyote.BadRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,8 +25,8 @@ class UserServiceImpl : UserService {
     }
 
     override fun getUserByHandle(handle: String) = try {
-        ResponseEntity.ok().body(authenticationRepository.getUserByHandle(handle).get())
-    } catch (e: NoSuchElementException) {
+        ResponseEntity.ok().body(authenticationRepository.getUserByHandle(handle).orElseThrow { BadRequestException() })
+    } catch (e: BadRequestException) {
         ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
