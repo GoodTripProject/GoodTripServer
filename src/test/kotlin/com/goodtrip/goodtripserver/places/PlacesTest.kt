@@ -5,6 +5,7 @@ import com.goodtrip.goodtripserver.authentication.model.AuthenticationResponse
 import com.goodtrip.goodtripserver.authentication.model.RegisterRequest
 import com.goodtrip.goodtripserver.places.model.PlaceRequest
 import com.goodtrip.goodtripserver.places.model.PlacesResponse
+import com.goodtrip.goodtripserver.trip.model.City
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,11 +27,7 @@ class PlacesTest {
             .joinToString("")
     }
 
-
-    @Test
-    fun nearPlacesTest() {
-        val requestHeaders = HttpHeaders()
-        requestHeaders.contentType = MediaType.APPLICATION_JSON
+    private fun getToken(requestHeaders: HttpHeaders): String {
         val registerRequest = RegisterRequest(
             username = "${getRandomString(20)}@gmail.com",
             password = getRandomString(10),
@@ -38,15 +35,20 @@ class PlacesTest {
             name = getRandomString(15),
             surname = getRandomString(15),
         )
-        val loginHttpEntity = HttpEntity(registerRequest, requestHeaders)
-        val token =
-            restTemplate.exchange(
-                "/auth/register",
-                HttpMethod.POST,
-                loginHttpEntity,
-                AuthenticationResponse::class.java
-            )
-                .body?.token
+        val registerHttpEntity = HttpEntity(registerRequest, requestHeaders)
+        return restTemplate.exchange(
+            "/auth/register",
+            HttpMethod.POST,
+            registerHttpEntity,
+            AuthenticationResponse::class.java
+        ).body?.token!!
+    }
+
+    @Test
+    fun nearPlacesTest() {
+        val requestHeaders = HttpHeaders()
+        requestHeaders.contentType = MediaType.APPLICATION_JSON
+        val token = getToken(requestHeaders)
         requestHeaders.add("Authorization", "Bearer $token")
         val placeRequest = PlaceRequest(
             lng = 151.1957362,
@@ -91,22 +93,7 @@ class PlacesTest {
     fun nearPlacesIncorrectRequestTest() {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.APPLICATION_JSON
-        val registerRequest = RegisterRequest(
-            username = "${getRandomString(20)}@gmail.com",
-            password = getRandomString(10),
-            handle = getRandomString(10),
-            name = getRandomString(15),
-            surname = getRandomString(15),
-        )
-        val loginHttpEntity = HttpEntity(registerRequest, requestHeaders)
-        val token =
-            restTemplate.exchange(
-                "/auth/register",
-                HttpMethod.POST,
-                loginHttpEntity,
-                AuthenticationResponse::class.java
-            )
-                .body?.token
+        val token = getToken(requestHeaders)
         requestHeaders.add("Authorization", "Bearer $token")
         val placeRequest = PlaceRequest(
             lng = Random.nextDouble(1000.0, 10000.0),
@@ -121,10 +108,52 @@ class PlacesTest {
                 "/places",
                 HttpMethod.POST,
                 httpEntity,
-                Array<PlacesResponse>::class.java
-            ) //TODO check what is wrong
+                String::class.java
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
         assertThat(response.body).isEqualTo("Invalid request")
+    }
+
+    @Test
+    fun getCoordinatesTest() {
+        val requestHeaders = HttpHeaders()
+        requestHeaders.contentType = MediaType.APPLICATION_JSON
+        val token = getToken(requestHeaders)
+        requestHeaders.add("Authorization", "Bearer $token")
+        val httpEntity = HttpEntity("", requestHeaders)
+        val response = restTemplate.exchange("/coordinates?city=Moscow", HttpMethod.GET, httpEntity, City::class.java)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        val body = response.body
+        assertThat(body?.city).isEqualTo("Moscow, Russia")
+        assertThat(body?.longitude).isEqualTo(37.6172999)
+        assertThat(body?.latitude).isEqualTo(55.755826)
+
+        val response2 = restTemplate.exchange("/coordinates?city=Vladivostok", HttpMethod.GET, httpEntity, City::class.java)
+        assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
+        val body2 = response2.body
+        assertThat(body2?.city).isEqualTo("Vladivostok, Primorsky Krai, Russia")
+        assertThat(body2?.longitude).isEqualTo(131.9112975)
+        assertThat(body2?.latitude).isEqualTo(43.1332484)
+    }
+
+    @Test
+    fun getCoordinatesBadRequestTest() {
+        val requestHeaders = HttpHeaders()
+        requestHeaders.contentType = MediaType.APPLICATION_JSON
+        val token = getToken(requestHeaders)
+        requestHeaders.add("Authorization", "Bearer $token")
+        val httpEntity = HttpEntity("", requestHeaders)
+        val response = restTemplate.exchange("/coordinates?city=M3123124", HttpMethod.GET, httpEntity, City::class.java)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun getCoordinatesWithoutToken(){
+        val requestHeaders = HttpHeaders()
+        requestHeaders.contentType = MediaType.APPLICATION_JSON
+        val httpEntity = HttpEntity("", requestHeaders)
+        val response = restTemplate.exchange("/coordinates?city=Vladivostok", HttpMethod.GET, httpEntity, City::class.java)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
     }
 
 }
