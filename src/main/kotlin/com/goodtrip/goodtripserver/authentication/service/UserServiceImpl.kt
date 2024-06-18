@@ -4,6 +4,7 @@ import com.goodtrip.goodtripserver.authentication.model.UrlHandler
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.apache.coyote.BadRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,8 +29,8 @@ class UserServiceImpl : UserService {
     override suspend fun getUserByHandle(handle: String) = try {
         ResponseEntity.ok().body(withContext(Dispatchers.IO) {
             authenticationRepository.getUserByHandle(handle)
-        }.get())
-    } catch (e: NoSuchElementException) {
+        }.orElseThrow { BadRequestException() })
+    } catch (e: BadRequestException) {
         ResponseEntity(HttpStatus.NOT_FOUND)
     }
 

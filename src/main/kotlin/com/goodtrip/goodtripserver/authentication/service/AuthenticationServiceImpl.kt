@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
+import java.net.URI
 
 
 @Service
@@ -48,7 +49,7 @@ class AuthenticationServiceImpl : AuthenticationService {
             token = jwtToken,
             name = user.name,
             surname = user.surname,
-            url = null
+            url = if (user.imageLink == null) null else URI.create(user.imageLink).toURL()
         )
     }
 
