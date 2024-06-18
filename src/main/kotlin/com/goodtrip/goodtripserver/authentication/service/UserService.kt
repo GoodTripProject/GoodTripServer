@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
 
 interface UserService {
-    suspend fun loadUserByUsername(email: String?): UserDetails
+    fun loadUserByUsername(email: String?): UserDetails
 
     suspend fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String>
 

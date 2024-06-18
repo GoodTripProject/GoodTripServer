@@ -8,7 +8,6 @@ import org.apache.coyote.BadRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,11 +16,8 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
 
-    override suspend fun loadUserByUsername(email: String?): UserDetails {
-        return withContext(Dispatchers.IO) {
-            authenticationRepository.getUserByUsername(email)
-        }.get()
-    }
+    override fun loadUserByUsername(email: String?) = authenticationRepository.getUserByUsername(email).get()
+
 
     override suspend fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String> {
         withContext(Dispatchers.IO) {
