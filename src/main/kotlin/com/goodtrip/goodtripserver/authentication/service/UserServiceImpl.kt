@@ -17,12 +17,16 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var authenticationRepository: AuthenticationRepository
 
-    override fun loadUserByUsername(email: String?): UserDetails {
-        return authenticationRepository.getUserByUsername(email).get()
+    override suspend fun loadUserByUsername(email: String?): UserDetails {
+        return withContext(Dispatchers.IO) {
+            authenticationRepository.getUserByUsername(email)
+        }.get()
     }
 
-    override fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String> {
-        authenticationRepository.updatePhotoUrlById(userId, photoUrl.url)
+    override suspend fun updateUserPhoto(userId: Int, photoUrl: UrlHandler): ResponseEntity<String> {
+        withContext(Dispatchers.IO) {
+            authenticationRepository.updatePhotoUrlById(userId, photoUrl.url)
+        }
         return ResponseEntity.ok("Photo updated")
     }
 
