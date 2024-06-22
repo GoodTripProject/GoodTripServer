@@ -9,6 +9,8 @@ import com.goodtrip.goodtripserver.database.models.User
 import com.goodtrip.goodtripserver.database.repositories.AuthenticationRepository
 import com.goodtrip.goodtripserver.database.repositories.FollowersRepository
 import com.goodtrip.goodtripserver.encrypting.PasswordHasher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.BadCredentialsException
@@ -31,10 +33,14 @@ class AuthenticationServiceImpl : AuthenticationService {
     @Autowired
     private lateinit var followersRepository: FollowersRepository
 
-    override fun login(request: AuthorizationRequest): AuthenticationResponse {
-        val salt = authenticationRepository.getSalt(request.username).get()
-        val user = authenticationRepository
-            .findUserByUsernameAndHashedPassword(request.username, hasher.hashPassword(request.password, salt))
+    override suspend fun login(request: AuthorizationRequest): AuthenticationResponse {
+        val salt = withContext(Dispatchers.IO) {
+            authenticationRepository.getSalt(request.username)
+        }.get()
+        val user = withContext(Dispatchers.IO) {
+            authenticationRepository
+                .findUserByUsernameAndHashedPassword(request.username, hasher.hashPassword(request.password, salt))
+        }
             .get()
         val jwtToken = jwtService.generateToken(user)
         return AuthenticationResponse(
@@ -47,8 +53,10 @@ class AuthenticationServiceImpl : AuthenticationService {
         )
     }
 
-    override fun register(request: RegisterRequest): AuthenticationResponse {
-        if (authenticationRepository.existsUserByUsername(request.username)) {
+    override suspend fun register(request: RegisterRequest): AuthenticationResponse {
+        if (withContext(Dispatchers.IO) {
+                authenticationRepository.existsUserByUsername(request.username)
+            }) {
             throw BadCredentialsException("Username ${request.username} already exists")
         }
         val salt = hasher.personalSalt
@@ -62,19 +70,23 @@ class AuthenticationServiceImpl : AuthenticationService {
             salt
         )
         val jwtToken = jwtService.generateToken(user)
-        val userWithId = authenticationRepository.save(
-            User(
-                request.username,
-                request.handle,
-                hashedPassword,
-                request.name,
-                request.surname,
-                salt
+        val userWithId = withContext(Dispatchers.IO) {
+            authenticationRepository.save(
+                User(
+                    request.username,
+                    request.handle,
+                    hashedPassword,
+                    request.name,
+                    request.surname,
+                    salt
+                )
             )
-        )
-        followersRepository.save(
-            FollowingRelation(userWithId.id, userWithId.id)
-        )
+        }
+        withContext(Dispatchers.IO) {
+            followersRepository.save(
+                FollowingRelation(userWithId.id, userWithId.id)
+            )
+        }
         return AuthenticationResponse(
             id = userWithId.id,
             handle = userWithId.handle,

@@ -26,14 +26,14 @@ class AuthenticationController {
 
     @ResponseBody
     @PostMapping("/login")
-    fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
+    suspend fun authorize(@RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<AuthenticationResponse> {
         logger.info("authorizationRequest username: ${authorizationRequest.username} , password: ${authorizationRequest.password}")
         return ResponseEntity.ok(authenticationService.login(authorizationRequest))
     }
 
     @ResponseBody
     @PostMapping("/register")
-    fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
+    suspend fun register(@RequestBody registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse> {
         logger.info("registerRequest username: ${registerRequest.username} , password: ${registerRequest.password}")
         return ResponseEntity.ok(authenticationService.register(registerRequest))
     }
