@@ -20,6 +20,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     @Autowired
     private lateinit var userService: UserService
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,

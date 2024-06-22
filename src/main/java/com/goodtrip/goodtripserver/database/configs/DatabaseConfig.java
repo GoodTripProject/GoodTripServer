@@ -56,6 +56,8 @@ public class DatabaseConfig {
         final Properties hibernateProperties = new Properties();
 
         hibernateProperties.setProperty("hibernate.connection.url", environment.getProperty("spring.datasource.url"));
+        hibernateProperties.setProperty("hibernate.connection.username", environment.getProperty("spring.datasource.username"));
+        hibernateProperties.setProperty("hibernate.connection.password", environment.getProperty("spring.datasource.password"));
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.setProperty("hibernate.dialect", environment.getProperty("spring.jpa.properties.hibernate.dialect"));
         hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", "false");

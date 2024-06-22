@@ -1,5 +1,6 @@
 package com.goodtrip.goodtripserver.database.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class User implements Serializable, UserDetails {
     private String handle;
 
     @Column(name = "hashed_password")
+    @JsonIgnore
     private String hashedPassword;
 
     @Column(name = "image_link")
@@ -39,9 +41,11 @@ public class User implements Serializable, UserDetails {
     private String surname;
 
     @Column(name = "salt")
+    @JsonIgnore
     private String salt;
 
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private List<Trip> trips;
 
@@ -59,6 +63,7 @@ public class User implements Serializable, UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return hashedPassword;
     }
@@ -75,27 +80,36 @@ public class User implements Serializable, UserDetails {
         return surname;
     }
 
+    public String getImageLink() {
+        return imageLink;
+    }
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }

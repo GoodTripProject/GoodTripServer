@@ -3,6 +3,7 @@
 !src/**/build/
 .idea/
 gradle
+src/main/resources/
 
 # Ignore Gradle GUI config
 gradle-app.setting

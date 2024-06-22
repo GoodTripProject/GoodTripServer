@@ -1,15 +1,13 @@
 package com.goodtrip.goodtripserver.database.repositories;
 
-import com.goodtrip.goodtripserver.database.models.CountryVisit;
-import com.goodtrip.goodtripserver.database.models.Note;
-import com.goodtrip.goodtripserver.database.models.TripState;
+import com.goodtrip.goodtripserver.database.models.*;
 import io.micrometer.common.lang.Nullable;
 
 import java.sql.Date;
 import java.util.List;
 
 public interface TripBaseRepository {
-    void saveTripAndWire(Integer userId,
+    void saveTripAndWire(@jakarta.annotation.Nullable Integer tripId, Integer userId,
                          String title,
                          Integer moneyInUsd,
                          @Nullable String mainPhotoUrl,
@@ -19,4 +17,7 @@ public interface TripBaseRepository {
                          List<Note> notes,
                          List<CountryVisit> countries);
 
+    List<TripView> getAuthorsTrips(int userId, int startingNumber);
+
+    List<Trip> getTripsOfSpecificUser(int authorId);
 }

@@ -9,13 +9,14 @@ import java.util.Optional;
 public interface TripRepository extends CrudRepository<Trip, Integer>, TripBaseRepository {
     Integer deleteTripById(int tripId);
 
+
     /**
      * Get all trips of user.
      *
      * @param userId id of user.
      * @return list of trips.
      */
-    List<Trip> getTripsByUserId(int userId);
+    List<Trip> getTripsByUserIdOrderByPublicationTimestampDesc(int userId);
 
 
     /**
