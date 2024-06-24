@@ -29,9 +29,9 @@ class SecurityConfiguration {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { requests ->
                 requests
-//                    .requestMatchers("/auth/login").permitAll()
-//                    .requestMatchers("/auth/register").permitAll()
-                    .anyRequest().permitAll()
+                    .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers("/auth/register").permitAll()
+                    .anyRequest().authenticated()
             }
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider)
