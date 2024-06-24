@@ -19,7 +19,7 @@ public class CountryVisit implements Serializable {
     @Column(name = "country")
     private String country;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "country_visit_id")
     private List<CityVisit> cities;
 
