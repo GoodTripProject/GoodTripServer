@@ -16,7 +16,7 @@ class FlightsServiceImpl : FlightsService {
     @Autowired
     private lateinit var environment: Environment
 
-    override fun getFlights(
+    override suspend fun getFlights(
         origin: String,
         destination: String,
         departDate: String,

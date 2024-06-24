@@ -55,7 +55,7 @@ public class Trip {
     @JoinColumn(name = "trip_id")
     private List<Note> notes;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "trip_id")
     private List<CountryVisit> visits;
 

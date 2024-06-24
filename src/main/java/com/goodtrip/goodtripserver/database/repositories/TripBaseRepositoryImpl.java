@@ -80,4 +80,5 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
                         "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
                 .setParameter("authorId", authorId).getResultList();
     }
+
 }

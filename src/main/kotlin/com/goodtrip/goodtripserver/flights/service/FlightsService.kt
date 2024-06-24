@@ -4,7 +4,7 @@ import com.goodtrip.goodtripserver.flights.model.FlightsResponse
 import org.springframework.http.ResponseEntity
 
 interface FlightsService {
-    fun getFlights(
+    suspend fun getFlights(
         origin: String,
         destination: String,
         departDate: String,

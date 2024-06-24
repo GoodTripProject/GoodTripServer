@@ -29,6 +29,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         val authHeader = request.getHeader("Authorization")
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response)
+
             return
         }
         //Extract jwt token from header
@@ -50,6 +51,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
         }
         filterChain.doFilter(request, response)
+
 
     }
 }
