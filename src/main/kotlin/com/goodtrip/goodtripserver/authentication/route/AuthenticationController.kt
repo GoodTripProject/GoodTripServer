@@ -40,6 +40,6 @@ class AuthenticationController {
 
     @ResponseBody
     @PostMapping("/update_photo")
-    fun updateUserPhoto(@RequestParam userId: Int, @RequestBody photoUrl: UrlHandler) =
+    suspend fun updateUserPhoto(@RequestParam userId: Int, @RequestBody photoUrl: UrlHandler) =
         userService.updateUserPhoto(userId, photoUrl)
 }

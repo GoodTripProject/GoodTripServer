@@ -2,7 +2,6 @@ package com.goodtrip.goodtripserver.trip.route
 
 import com.goodtrip.goodtripserver.authentication.route.AuthenticationController
 import com.goodtrip.goodtripserver.database.models.Trip
-import com.goodtrip.goodtripserver.database.models.TripView
 import com.goodtrip.goodtripserver.trip.model.AddCountryRequest
 import com.goodtrip.goodtripserver.trip.model.AddNoteRequest
 import com.goodtrip.goodtripserver.trip.model.AddTripRequest
@@ -10,7 +9,6 @@ import com.goodtrip.goodtripserver.trip.service.TripService
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -77,11 +75,9 @@ class TripController {
 
     @ResponseBody
     @GetMapping("/authors_trips")
-    fun getAuthorsTrips(@RequestParam userId: Int, @RequestParam start: Int): ResponseEntity<List<TripView>> {
-        val result = tripService.getAuthorsTrips(userId, start)
-        logger.debug(result.toString())
-        return result
-    }
+    fun getAuthorsTrips(@RequestParam userId: Int, @RequestParam start: Int) =
+        tripService.getAuthorsTrips(userId, start).also { logger.debug(it.toString()) }
+
 
     @ResponseBody
     @GetMapping("/author_trips")

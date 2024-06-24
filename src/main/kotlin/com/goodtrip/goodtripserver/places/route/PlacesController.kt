@@ -18,7 +18,7 @@ class PlacesController {
 
     @ResponseBody
     @PostMapping("/places")
-    fun getNearPlaces(@RequestBody placeRequest: PlaceRequest) = placesService.getNearPlaces(placeRequest)
+    suspend fun getNearPlaces(@RequestBody placeRequest: PlaceRequest) = placesService.getNearPlaces(placeRequest)
 
     @ResponseBody
     @GetMapping("/coordinates")
