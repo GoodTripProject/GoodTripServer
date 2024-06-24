@@ -29,8 +29,10 @@ class UserServiceImpl : UserService {
         return ResponseEntity.ok("Photo updated")
     }
 
-    override fun getUserByHandle(handle: String) = try {
-        ResponseEntity.ok().body(authenticationRepository.getUserByHandle(handle).orElseThrow { BadRequestException() })
+    override suspend fun getUserByHandle(handle: String) = try {
+        ResponseEntity.ok().body(withContext(Dispatchers.IO) {
+            authenticationRepository.getUserByHandle(handle)
+        }.orElseThrow { BadRequestException() })
     } catch (e: BadRequestException) {
         ResponseEntity(HttpStatus.NOT_FOUND)
     }
