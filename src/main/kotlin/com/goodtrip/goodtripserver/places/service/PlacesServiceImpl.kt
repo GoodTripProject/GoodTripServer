@@ -70,11 +70,9 @@ class PlacesServiceImpl : PlacesService {
         val request = HttpRequest.newBuilder()
             .uri(url.toUri())
             .build()
-        val response =
-            withContext(Dispatchers.IO) {
-                client.send(request, HttpResponse.BodyHandlers.ofString())
-            }
-
+        val response = withContext(Dispatchers.IO) {
+            client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
         return Jsoup.parse(response.body()).select("A")[0].attribute("href").value
     }
 
@@ -106,7 +104,6 @@ class PlacesServiceImpl : PlacesService {
             responseObject["results"].forEach {
                 if (!it["types"].map { type -> type.asText() }.contains("political")) {
                     val place = it.getPlace()
-
                     places.add(place)
                 }
             }
