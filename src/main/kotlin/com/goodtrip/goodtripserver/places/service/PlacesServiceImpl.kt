@@ -115,13 +115,15 @@ class PlacesServiceImpl : PlacesService {
         return ResponseEntity.badRequest().body("Invalid request")
     }
 
-    override fun getCoordinates(city: String): ResponseEntity<Any> {
+    override suspend fun getCoordinates(city: String): ResponseEntity<Any> {
         val url = getUrl(city)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(url.toUri())
             .build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = withContext(Dispatchers.IO) {
+            client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
 
         if (response.statusCode() == HttpStatus.OK.value()) {
             val responseObject = objectMapper.readTree(response.body())
