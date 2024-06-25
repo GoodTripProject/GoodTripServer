@@ -1,7 +1,7 @@
 # GoodTripServer
 
 ## Description
-Server for Android application GoodTrip.
+Back-end part of the Android application [GoodTrip](https://github.com/GoodTripProject/GoodTripAndroid).
 
 ## Dependencies
 - JDK 21
