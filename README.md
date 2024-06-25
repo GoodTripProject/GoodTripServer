@@ -1,6 +1,7 @@
 # GoodTripServer
 
 ## Description
+
 Back-end part of the Android application [GoodTrip](https://github.com/GoodTripProject/GoodTripAndroid).
 
 ## Dependencies
@@ -43,6 +44,9 @@ If you want to test application enter:
 
        $ ./gradlew test
 
+## Documentation
+
+- Raw swagger [documentation](https://app.swaggerhub.com/apis-docs/SHTEINMAKS/GoodTrip/1.0.0)
 
 ## Getting in touch
 If you have issues/questions/problems, you can write:
