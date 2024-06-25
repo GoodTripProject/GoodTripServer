@@ -15,5 +15,5 @@ class UserController {
 
     @ResponseBody
     @GetMapping("/user")
-    fun getUser(@RequestParam handle: String) = userService.getUserByHandle(handle)
+    suspend fun getUser(@RequestParam handle: String) = userService.getUserByHandle(handle)
 }

@@ -64,7 +64,7 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
                 .setMaxResults(10)
                 .getResultStream()
                 .map((trip) -> {
-                    Optional<User> user = authenticationRepository.findById(userId);
+                    Optional<User> user = authenticationRepository.findById(trip.getUserId());
                     return user.map(value -> new TripView(trip, value)).orElse(null);
                 })
                 .filter(Objects::nonNull)
@@ -80,4 +80,5 @@ public class TripBaseRepositoryImpl implements TripBaseRepository {
                         "ORDER BY trip.publicationTimestamp DESC ", Trip.class)
                 .setParameter("authorId", authorId).getResultList();
     }
+
 }

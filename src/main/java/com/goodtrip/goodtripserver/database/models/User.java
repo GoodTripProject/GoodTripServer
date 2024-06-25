@@ -80,6 +80,10 @@ public class User implements Serializable, UserDetails {
         return surname;
     }
 
+    public String getImageLink() {
+        return imageLink;
+    }
+
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {

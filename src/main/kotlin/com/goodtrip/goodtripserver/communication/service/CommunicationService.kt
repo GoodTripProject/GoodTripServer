@@ -4,16 +4,16 @@ import com.goodtrip.goodtripserver.database.models.User
 import org.springframework.http.ResponseEntity
 
 interface CommunicationService {
-    fun follow(userId: Int, author: String): ResponseEntity<String>
+    suspend fun follow(userId: Int, author: String): ResponseEntity<String>
 
-    fun unfollow(userId: Int, author: String): ResponseEntity<String>
+    suspend fun unfollow(userId: Int, author: String): ResponseEntity<String>
 
-    fun like(userId: Int, tripId: Int): ResponseEntity<String>
+    suspend fun like(userId: Int, tripId: Int): ResponseEntity<String>
 
-    fun deleteLike(userId: Int, tripId: Int): ResponseEntity<String>
+    suspend fun deleteLike(userId: Int, tripId: Int): ResponseEntity<String>
 
-    fun getFollowers(userId: Int): ResponseEntity<List<User>>
+    suspend fun getFollowers(userId: Int): ResponseEntity<List<User>>
 
-    fun getSubscriptions(userId: Int): ResponseEntity<List<User>>
+    suspend fun getSubscriptions(userId: Int): ResponseEntity<List<User>>
 
 }

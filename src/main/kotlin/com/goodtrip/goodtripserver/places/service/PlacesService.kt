@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity
 
 interface PlacesService {
 
-    fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any>
+    suspend fun getNearPlaces(placeRequest: PlaceRequest): ResponseEntity<Any>
 
-    fun getCoordinates(city: String): ResponseEntity<Any>
+    suspend fun getCoordinates(city: String): ResponseEntity<Any>
 
 }

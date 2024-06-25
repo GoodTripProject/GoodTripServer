@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.springframework.core.env.Environment
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
@@ -12,10 +13,8 @@ import java.util.*
 
 @Service
 class JwtService {
-    companion object {
-        const val SECRET_KEY =
-            "EF6B58B503DAB031564EEDC7E14088E0938F36C87734E771333F1EEF8F31BE35" //TODO поменять потому что я забыл заменить его
-    }
+
+    private lateinit var environment: Environment
 
     fun extractUsername(token: String): String? = extractClaim(token, Claims::getSubject)
 
@@ -26,7 +25,7 @@ class JwtService {
 //    Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt) TODO заменить
 
     private fun getSignInKey(): Key {
-        val keyBytes = getKeyBytes(SECRET_KEY)
+        val keyBytes = getKeyBytes(environment.getProperty("SHA_SECRET_KEY")!!)
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
